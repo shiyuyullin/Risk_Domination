@@ -1,5 +1,5 @@
 #include <string>
-
+#include <map>
 
 
 //WORK IN PROGRESS STILL A
@@ -12,10 +12,8 @@ public:
 	int map[][];
 	map <string, int> continentRequirements;
 
-	Map(int nbOfCountries,) {
+	Map(int nbOfCountries) {
 		numberOfCountries = nbOfCountries;
-		ma
-
 	}
 
 private:
