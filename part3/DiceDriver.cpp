@@ -19,7 +19,6 @@ int main() {
 			cout << "Invalid roll number.\n" << endl;
 	}
 	MyDice1.Roll(rolls);
-	//-------INSERT HERE LATER TO RESET ROLLS TO 0-----------
 	MyDice1.Display(rolls);
 
 	cout << "Percentages of Dice Values (1-6) rolled\n";
