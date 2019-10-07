@@ -2,8 +2,11 @@
 class Dice {
 private:
 	int value, TotalRolls;
+	int *valueptr, *TotalRollsptr;
 	int DiceValues[3];
 	double percentage[6];
+	int* DVptr=DiceValues;
+	double* Pptr = percentage;
 
 public:
 	Dice();

@@ -4,8 +4,11 @@
 #include "Dice.h"
 using namespace std;
 
-Dice::Dice(void) : value(0), TotalRolls(0), DiceValues{}, percentage{}{
-
+Dice::Dice(void) : value(0), TotalRolls(0),DiceValues{}, percentage{}{
+	TotalRollsptr = &TotalRolls;
+	valueptr = &value; //A pointer to each variable is supplied
+	DVptr = DiceValues;
+	Pptr = percentage;
 } //initialize variables for the class
 //define roll method
 
@@ -22,14 +25,16 @@ void Dice::Roll(int n) {
 		percentage[(value - 1)]++;//increments the value of the die array (percentage)
 	}
 }
-
+//DisplayMethod that uses pointer
 
 void Dice::Display(int rolls) {
 	for (int i = 0; i < rolls; i++)
-		cout << "Container value " << (i + 1) << ": " << DiceValues[i] << endl;
+		cout << "Container value " << (i + 1) << ": " << *(DVptr + i) << endl;
+		//cout << "Container value " << (i + 1) << ": " << DiceValues[i] << endl;
 	
 	for (int i = 0; i < 6; i++)
-		cout << "Overall for Roll value " << (i + 1) << ": " << percentage[i] << endl;
+		cout << "Overall for Roll value " << (i + 1) << ": " << *(Pptr + i) << endl;
+		//cout << "Overall for Roll value " << (i + 1) << ": " << percentage[i] << endl;
 
 }
 
