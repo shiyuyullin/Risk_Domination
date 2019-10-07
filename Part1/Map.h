@@ -38,6 +38,8 @@ private:
 
 public:
 	Map();
+	Map(int nbOfCountries);
+	Map(string CountryNames[], int **adjacencyMatrix);
 	~Map();
 	bool Validate();
 	void printMap();
