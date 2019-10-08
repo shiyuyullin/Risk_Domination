@@ -8,7 +8,7 @@ int main() {
 
 	map loadedMap;
 	loadedMap = Maploader::loadingMap("ameroki.txt");
-
+	cout << loadedMap.countries[0]->getBoarders(0) << endl;
 	return 0;
 
 }

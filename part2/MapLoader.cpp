@@ -148,19 +148,20 @@ map Maploader::loadingMap(string fileName) {
 				inputFileStream >> ignore;
 			}
 		}
+		int count = -1;
 		if (serialNumS == "[borders]") {
 			while (!inputFileStream.eof()) {
 				int border = 0;
 				string line = "";
 				getline(inputFileStream, line);
 				istringstream row(line);
-				for (int j = 0; j < numberOfCountries; j++) {
-					int i = 0;
-					while (row >> border) {
-						resultMap.countries[j]->setBoarders(i, border);
-						i++;
-					}
+				//cout << line << endl;
+				int i = 0;
+				while (row >> border) {
+					resultMap.countries[count]->setBoarders(i, border);
+					i++;
 				}
+				count++;
 			}
 		}
 
