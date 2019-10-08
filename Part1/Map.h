@@ -2,6 +2,8 @@
 #include <map>
 #include <string>
 
+using namespace std;
+
 class Country
 {
 private:
@@ -32,7 +34,7 @@ class Map {
 private:
 	int* numberOfCountries;
 	int** mapOfCountries;
-	map <string, int> *continentRequirements;
+	std::map <std::string, int> *continentRequirements;
 	Country* listOfCountries;
 
 
