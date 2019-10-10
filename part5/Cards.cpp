@@ -9,7 +9,6 @@
 #include <chrono>
 #include <stdlib.h>
 #include <time.h>
-#include <array>
 
 using namespace std;
 
@@ -19,7 +18,7 @@ using namespace std;
 Class Card Constructors
 */
 Card::Card(int i) {
-	
+	type = new string;
 switch (i) {
 case 0: setType("infantry");
 		break;
@@ -289,74 +288,3 @@ void Hand::showHand() {
 		count++;
 	}
 }
-
-
-//int main()
-//{
-	
-// TESTING
-//int n = 38;
-//Deck aDeck= Deck(n);
-//
-//
-//std::cout << "Original Deck:" << endl;
-//aDeck.showDeck();
-//std::cout << endl << "Cavalry: " << countCavalry(aDeck.getDeck()) << "   " << "Artillery: " << countArtillery(aDeck.getDeck()) << "       " << "Infantry: " << countInfantry(aDeck.getDeck());
-//
-//std::cout << endl;
-////when you draw then push to hand
-//Hand hand1;
-//hand1.addToHand(aDeck.draw());
-//hand1.addToHand(aDeck.draw());
-//hand1.addToHand(aDeck.draw());
-//hand1.addToHand(aDeck.draw());
-//hand1.addToHand(aDeck.draw());
-//hand1.addToHand(aDeck.draw());
-//std::cout << endl << "Hand 1 has the following cards: " << endl;
-//int count = 0;
-//for (int i = 0; i < hand1.getHand().size(); i++) {
-//	std::cout << hand1.getHand().at(i).getType() << endl;
-//	count++;
-//}
-//std::cout << count << " cards..." << endl;
-//std::cout << endl;
-//
-//hand1.exchange();
-//
-//std::cout << endl << "Here are the cards in hand1 after exchange()" << endl;
-//count = 0;
-//for (int i = 0; i < hand1.getHand().size(); i++) {
-//	std::cout << hand1.getHand().at(i).getType() << endl;
-//	count++;
-//}
-//std:: cout << "After exchange, hand1 has: " << count << endl;
-//
-//std::cout << endl<< "Deck at the end" << endl;;
-//aDeck.showDeck();
-//
-//
-//
-//std::cout << endl << "Cavalry: " << countCavalry(aDeck.getDeck()) << "   " << "Artillery: " << countArtillery(aDeck.getDeck()) << "       " << "Infantry: " <<countInfantry(aDeck.getDeck());
-//
-//
-//
-//
-//
-//	
-//
-//
-//
-//
-//return 0;
-//}
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
