@@ -49,3 +49,4 @@ void Dice::percentages()
 	for (int i = 0; i < 6; i++)
 		cout<<"Percentage for Dice Value "<< (i+1)<<": "<<(percentage[i] / TotalRolls)<<endl;
 }
+
