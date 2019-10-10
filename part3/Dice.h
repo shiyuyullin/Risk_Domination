@@ -10,7 +10,6 @@ private:
 
 public:
 	Dice();
-
 	void Roll(int n);
 	void Display(int rolls);
 	void Reset(); //private fields set back to 0
