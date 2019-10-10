@@ -9,12 +9,12 @@ class Card {
 
 public:
 	Card(int t); //CARD CLASS ACCEPTING TYPE AS PARAMETER (0-INFANTRY, 1-ARTILLERY, 2-CAVALRY)
-	string getType() { return type; } //ACCESSOR FOR CARD
-	void setType(string str) { type = str; } //MUTATOR FOR CARD
+	string getType() { return *type; } //ACCESSOR FOR CARD
+	void setType(string str) { *type = str; } //MUTATOR FOR CARD
 	
 
 private:
-	string type; //TYPE INSTANCE VARIABLE ******
+	string *type; //TYPE INSTANCE VARIABLE ******
 };
 
 //DECK CLASS
