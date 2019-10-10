@@ -6,7 +6,7 @@ using namespace std;
 
 Dice::Dice(void) : value(0), TotalRolls(0),DiceValues{}, percentage{}{
 	TotalRollsptr = &TotalRolls;
-	valueptr = &value; //A pointer to each variable is supplied
+	valueptr = &value;
 	DVptr = DiceValues;
 	Pptr = percentage;
 } //initialize variables for the class
@@ -25,7 +25,7 @@ void Dice::Roll(int n) {
 		percentage[(value - 1)]++;//increments the value of the die array (percentage)
 	}
 }
-//DisplayMethod that uses pointer
+
 
 void Dice::Display(int rolls) {
 	for (int i = 0; i < rolls; i++)
