@@ -12,10 +12,10 @@ int main() {
 	srand(static_cast<unsigned int> (time(0)));
 	Dice* MyDice1 = new Dice();
 	int rolls = 0;
-	while (rolls <= 0 || rolls > 3) {
-		cout << "How many times would you like to roll? \nNumbers (1-3): " << endl;
+	while (rolls <= 0 || rolls > 100) {
+		cout << "How many times would you like to roll? \nNumbers (1-100): " << endl;
 		cin >> rolls;
-		if (rolls <= 0 || rolls > 3)
+		if (rolls <= 0 || rolls > 100)
 			cout << "Invalid roll number.\n" << endl;
 	}
 	MyDice1->Roll(rolls);
