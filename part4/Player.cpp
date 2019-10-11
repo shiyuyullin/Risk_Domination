@@ -13,7 +13,7 @@ Player::Player()
 
 Player::~Player()
 {
-	cout << "Destructor. YEET";
+	cout << "Destructor.";
 	delete dice;
 	dice = NULL;
 }
