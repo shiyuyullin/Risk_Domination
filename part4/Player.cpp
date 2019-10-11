@@ -1,10 +1,21 @@
 #include <iostream>
 #include "Player.h"
 using namespace std;
+//PLayer's dice object
 
-Dice dice;
+//Countries needed here
+//Deck needed here
 Player::Player()
 {
+	dice = new Dice();
+
+}
+
+Player::~Player()
+{
+	cout << "Destructor. YEET";
+	delete dice;
+	dice = NULL;
 }
 
 void Player::reinforce()
@@ -22,8 +33,16 @@ void Player::foritfy()
 	cout << "This method will fortify" << endl;
 }
 
-void Player::RollDice()
+void Player::RollDice(int n)
 {
-	dice.Roll(2);
+	dice->Roll(n);
 }
+
+void Player::DisplayRollInfo(int n) //Displays: Roll values stored in the array and
+									//Percentages
+{
+	dice->Display(n);
+	dice->percentages();
+}
+
 
