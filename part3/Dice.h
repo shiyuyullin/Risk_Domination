@@ -3,7 +3,7 @@ class Dice {
 private:
 	int value, TotalRolls;
 	int *valueptr, *TotalRollsptr;
-	int DiceValues[3];
+	int DiceValues[100];
 	double percentage[6];
 	int* DVptr=DiceValues;
 	double* Pptr = percentage;
@@ -15,4 +15,5 @@ public:
 	void Reset(); //private fields set back to 0
 	//private memeber fields
 	void percentages();
+	void DiceMain();
 };
