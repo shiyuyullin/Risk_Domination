@@ -8,6 +8,7 @@ using namespace std;
 Player::Player()
 {
 	dice = new Dice();
+	hand = new Hand();
 
 }
 
