@@ -7,7 +7,7 @@ class Player{
 private:
 	Dice* dice;//player dices
 	//Countries needed
-	//Deck needed
+	Hand* hand;
 
 public:
 	Player();
