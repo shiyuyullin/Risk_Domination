@@ -19,13 +19,16 @@ public:
     Country();
     Country(string n);
     Country(string n, int countNb, int cont, int own);
-	
+	Country(const Country& obj);
+	~Country();
 	int getCountryNumber();
 	int getOwner();
     int getContinent();
     int getNbOfArmies();
     string getName();
-    
+	void setOwner(int otherOwner);
+	void setContinent(int otherContinent);
+	void setCountryName(string otherName);
 	void setArmyNumber(int armNb);
 };
 
@@ -45,6 +48,8 @@ public:
 	~Map();
 	bool Validate();
 	void printMap();
-	
-	//private memeber fields
+	int** getMapOfCountries();
+	bool addEdge(int start, int destination);
 };
+
+void mapTestFunction();

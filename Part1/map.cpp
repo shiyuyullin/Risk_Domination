@@ -5,9 +5,12 @@
 #include <array>
 #include <map>
 #include <iostream>
+#include <Map.h>
 
 using namespace std;
 
+
+//
 class Country
 {
 
@@ -50,6 +53,8 @@ public:
 		*owner = own;
 	}
 
+	~Country() {};
+
 	int getCountryNumber()
 	{
 		return *countryNumber;
@@ -79,8 +84,27 @@ public:
 	{
 		*nbOfArmies = armNb;
 	}
+
+	void setCountyName(string otherName)
+	{
+		*name = otherName;
+	}
+
+	void setOwner(int otherOwner)
+	{
+		*owner = otherOwner;
+	}
+
+	void setContinent(int otherContinent)
+	{
+		*continent = otherContinent;
+	}
 };
 
+
+//MAP CLASS ENCOMPASSES THE TOTALITY OF THE GAME BOARD INCLUDING
+//ALL THE COUNTRIES AND THE EDGES BETWEEN THEM ARE STORED IN A 
+//ADJACENCY MATRIX.
 class Map
 {
 
@@ -91,6 +115,7 @@ private:
 	Country* listOfCountries;
 
 public:
+
 	Map() {}
 
 	Map(int nbOfCountries)
@@ -129,17 +154,18 @@ public:
 		}
 
 		listOfCountries = Countries;
-		//const int size = sizeof(**mapOfCountries) / sizeof(*mapOfCountries);
-		//cout << "\n" << size;
-		//cout << 12;
 	}
 
 	~Map() {};
 
-	bool validateMap(int continentNumber)
-	{
 
-		int size = *numberOfCountries;
+	//VALIDATE MAP USING THE FACT THAT (ADJ + I)^N 
+	//WILL GIVE YOU THE NUMBER OF PATHS BETWEEN TO VERTICES
+	//IF N = THE SIZE OF ADJ, THEN IF THERE ISN'T A ROW OR COLUMN
+	//THAT IS COMPLETY FULL THEN THE GRAPH IS INVALID.
+	bool validateMap(int continentStart, int continentEnd)
+	{
+		int size = continentEnd - continentStart + 1;
 		cout << size;
 		int** result = new int* [size];
 		for (int i = 0; i < size; i++)
@@ -159,13 +185,13 @@ public:
 			mapOfCountries[x][x] = 1;
 		}
 
-		for (int t = 0; t < *numberOfCountries; t++)
+		for (int t = 0; t < size; t++)
 		{
-			for (int i = 0; i < *numberOfCountries; i++)
+			for (int i = continentStart; i <= continentEnd; i++)
 			{
-				for (int j = 0; j < *numberOfCountries; j++)
+				for (int j = continentStart; j <= continentEnd; j++)
 				{
-					for (int k = 0; k < *numberOfCountries; k++)
+					for (int k = continentStart; k <= continentEnd; k++)
 					{
 						result[i][j] += mapOfCountries[i][k] * mapOfCountries[k][j];
 					}
@@ -175,10 +201,10 @@ public:
 
 
 		//JUST FOR TESTING
-		for (int i = 0; i < 6; i++)
+		for (int i = continentStart; i <= continentEnd; i++)
 		{
 			cout << "\n";
-			for (int j = 0; j < 6; j++)
+			for (int j = continentStart; j <= continentEnd; j++)
 			{
 				cout << result[i][j] << " ";
 			}
@@ -186,10 +212,10 @@ public:
 
 		bool connected;
 		int sum;
-		for (int j = 0; j < *numberOfCountries; j++)
+		for (int j = continentStart; j <= continentEnd; j++)
 		{
 			connected = true;
-			for (int k = 0; k < *numberOfCountries; k++)
+			for (int k = continentStart; k <= continentEnd; k++)
 			{
 				if (result[j][k] == 0)
 				{
@@ -229,54 +255,62 @@ public:
 		return mapOfCountries;
 	}
 
-	void addEdge(Country start, Country destination) {
+	bool addEdge(int start, int destination) {
 
+		if (start < 0 || start > * numberOfCountries ||
+			destination < 0 || destination > * numberOfCountries) {
+			return false;
+		}
+
+		mapOfCountries[start][destination] = 1;
+		mapOfCountries[destination][start] = 1;
+		return true;
 	}
-
-
-
-};
-
-class Route
-{
 };
 
 
-int main()
+void mapTestFunction()
 {
 
-	int** mapOfCountries;
-	mapOfCountries = new int* [6];
+	int** mapOfCountriesValid;
+	mapOfCountriesValid = new int* [6];
+	int** mapOfCountriesInvalid;
+	mapOfCountriesInvalid = new int* [6];
 
-	for (int i = 0; i < 6; i++)
-		mapOfCountries[i] = new int[6];
+	for (int i = 0; i < 6; i++) {
+		mapOfCountriesValid[i] = new int[6];
+		mapOfCountriesInvalid[i] = new int[6];
+	}
 
 	for (int i = 0; i < 6; i++)
 	{
 		for (int j = 0; j < 6; j++)
 		{
-			mapOfCountries[i][j] = 0;
+			mapOfCountriesValid[i][j] = 0;
+			mapOfCountriesInvalid[i][j] = 0;
 		}
 	}
 
-	mapOfCountries[0][1] = 1;
-	mapOfCountries[1][0] = 1;
+	mapOfCountriesValid[0][1] = 1;
+	mapOfCountriesValid[1][0] = 1;
+	mapOfCountriesValid[0][2] = 1;
+	mapOfCountriesValid[2][0] = 1;
+	mapOfCountriesValid[2][3] = 1;
+	mapOfCountriesValid[3][2] = 1;
+	mapOfCountriesValid[1][3] = 1;
+	mapOfCountriesValid[3][1] = 1;
+	mapOfCountriesValid[2][4] = 1;
+	mapOfCountriesValid[4][2] = 1;
+	mapOfCountriesValid[4][5] = 1;
+	mapOfCountriesValid[5][4] = 1;
 
-	mapOfCountries[0][2] = 1;
-	mapOfCountries[2][0] = 1;
+	mapOfCountriesInvalid[0][1] = 1;
+	mapOfCountriesInvalid[1][0] = 1;
+	mapOfCountriesInvalid[2][3] = 1;
+	mapOfCountriesInvalid[3][2] = 1;
+	mapOfCountriesInvalid[4][5] = 1;
+	mapOfCountriesInvalid[5][4] = 1;
 
-	mapOfCountries[2][3] = 1;
-	mapOfCountries[3][2] = 1;
-
-	mapOfCountries[1][3] = 1;
-	mapOfCountries[3][1] = 1;
-
-
-	mapOfCountries[2][4] = 1;
-	mapOfCountries[4][2] = 1;
-
-	mapOfCountries[4][5] = 1;
-	mapOfCountries[5][4] = 1;
 
 	Country listOFCountries[] = {
 		Country("England"),
@@ -287,61 +321,32 @@ int main()
 		Country("Wales"),
 		Country("Belgum"),
 		Country("Netherlands"),
-		Country("Denmark"),
-		Country("Germany"),
-		Country("Poland"),
-		Country("Czech_Rep"),
-		Country("Slovakia"),
-		Country("Hungary"),
-		Country("Austria"),
-		Country("Switzerland"),
-		Country("Italy"),
-		Country("Sicily"),
-		Country("Sardinia"),
-		Country("Corsica"),
-		Country("Majorca"),
-		Country("France"),
-		Country("Spain"),
-		Country("Portugal"),
-		Country("Luxembourg")
 	};
 
-	// 1 England 1 164 126
-	// 2 Scotland 1 158 44
-	// 3 N_Ireland 1 125 70
-	// 4 Rep_Ireland 1 106 90
-	// 5 Wales 1 141 109
-	// 6 Belgum 1 213 153
-	// 7 Netherlands 1 226 128
-	// 8 Denmark 2 275 76
-	// 9 Germany 2 261 149
-	// 10 Poland 2 346 141
-	// 11 Czech_Rep 2 308 173
-	// 12 Slovakia 2 356 190
-	// 13 Hungary 3 347 220
-	// 14 Austria 3 306 210
-	// 15 Switzerland 3 233 217
-	// 16 Italy 3 264 249
-	// 17 Sicily 3 294 363
-	// 18 Sardinia 3 240 321
-	// 19 Corsica 3 242 286
-	// 20 Majorca 4 184 319
-	// 21 France 4 176 202
-	// 22 Spain 4 96 285
-	// 23 Portugal 4 38 290
-	// 24 Luxembourg 4 227 172
 
 
 
-//Map test(listOFCountries, mapOfCountries);
-	Map test(mapOfCountries, listOFCountries, 6);
+	//Map test(listOFCountries, mapOfCountries);
+	//Continent test
+	Map testValid(mapOfCountriesValid, listOFCountries, 6);
+	Map testInvalid(mapOfCountriesInvalid, listOFCountries, 6);
 	//test.printMap();
 
-	if (test.validateMap(0)) {
-		cout << "\nMap is Valid!\n";
+	if (testValid.validateMap(0,3)) {
+		cout << "\nValid map is Valid!\n";
 	}
 	else {
-		cout << "\nMap is Invalid!\n";
+		cout << "\nValid map is Invalid!\n";
 	}
 
+	if (testInvalid.validateMap(0,5)) {
+		cout << "\nInvalid map is Valid!\n";
+	}
+	else {
+		cout << "\nInvalid map is Invalid!\n";
+	}
+
+
 }
+
+

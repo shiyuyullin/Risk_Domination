@@ -2,6 +2,7 @@
 #include "Dice.h"
 #include <iostream>
 #include "Player.h"
+#include "Map.h"
 using namespace std;
 
 int main() {
@@ -15,5 +16,6 @@ int main() {
 	player1.foritfy();
 	player1.reinforce();
 	player1.DisplayRollInfo(3);
+	mapTestFunction();
 	return 0;
 }
