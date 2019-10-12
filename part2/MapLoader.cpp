@@ -38,8 +38,13 @@ string country::getCountryName() {
 int country::getContinent() {
 	return *continentBelong;
 }
-int country::getBoarders(int index) {
-	return *boarders[index];
+void country::displayBorders() {
+	int i = 0;
+	while (*boarders[i] != 0) {
+		cout << *boarders[i] << " ";
+		i++;
+	}
+	cout << endl;
 }
 
 //Constructor and destructor for continent class
@@ -87,19 +92,15 @@ void map::setCountries(int index, country* c) {
 	countries[index] = c;
 }
 
-
-//Implementation of validating function
-//bool MapLoader::validator(string fileName) {
-
-//}
-
 //Implementation of loading function
 map Maploader::loadingMap(string fileName) {
-	ifstream inputFileStream(fileName);
-	map resultMap;
+	ifstream inputFileStream(fileName + ".txt");
+	map resultMap;//The map that will be returned once the function resolves
 	string temp = "";
-	int numberOfCountries = 0;
-	int numberOfContinents = 0;
+	int numberOfCountries = 0;//keeping number of countries
+	int numberOfContinents = 0;//keeping number of continents
+	map empty;//an empty map to return if the file is invalid
+	bool state = false;//Using for validating format of a map file
 	while (!inputFileStream.eof()) {
 		int j = 0;
 		inputFileStream >> temp;
@@ -108,27 +109,26 @@ map Maploader::loadingMap(string fileName) {
 			int i = 0;
 			while (temp != "[countries]") {
 				continent* tempContinent = new continent();
-				inputFileStream >> temp;
-				if (temp == "[countries]") {
-					break;
+				inputFileStream >> temp;//reading the continent's name
+				if (temp == "[countries]") {//once all the contents belong to the continent part are read, the loop will proceed one more time
+					break;					//then temp's value is [countries], and we break the loop.
 				}
 				tempContinent->setName(temp);
-				inputFileStream >> rewards;
+				inputFileStream >> rewards;//reading the rewards that are integers
 				tempContinent->setRewards(rewards);
-				tempContinent->setserialNumber(i);
-				inputFileStream >> temp;
+				tempContinent->setserialNumber(i+1);
+				inputFileStream >> temp;//reading the color, will be ignored
 				resultMap.setContinents(i, tempContinent);
 				numberOfContinents++;
 				i++;
 			}
-		}//All good until here 10.7 22:13
-
+		}
 		string serialNumS = "";
 		if (temp == "[countries]") {
 			int continentBelong = 0;
 			int ignore = 0;
-			int k = 0;
-			int serialNumN = 0;
+			int k = 0;//A counter, which will be used for store each country object into its corresponding index in the country array of map class.
+			int serialNumN = 0;//Temporarily store the serial number of a country
 			while (serialNumS != "[borders]") {
 				inputFileStream >> serialNumS;
 				if (serialNumS == "[borders]") {
@@ -143,9 +143,9 @@ map Maploader::loadingMap(string fileName) {
 				tempCountry->setContinent(continentBelong);
 				resultMap.setCountries(k, tempCountry);
 				numberOfCountries++;
-				k++;
-				inputFileStream >> ignore;
-				inputFileStream >> ignore;
+				k++;//The kth country has been created and stored, increment k for the next iteration
+				inputFileStream >> ignore;//The coordinate of a country is ignored
+				inputFileStream >> ignore;//coordinate ex. 300 400
 			}
 		}
 		int count = -1;
@@ -155,7 +155,6 @@ map Maploader::loadingMap(string fileName) {
 				string line = "";
 				getline(inputFileStream, line);
 				istringstream row(line);
-				//cout << line << endl;
 				int i = 0;
 				while (row >> border) {
 					resultMap.countries[count]->setBoarders(i, border);
@@ -163,10 +162,17 @@ map Maploader::loadingMap(string fileName) {
 				}
 				count++;
 			}
+			state = true;//All needed information have been read from a map file, the file is valid and a map is successfully created.
 		}
-
 	}
-	cout << "The map has been successfully loaded, enjoy your game!" << endl;
+	if (!state) {//If a map file is invalid then all of the previous conditions will not be satisified, and value of state stay false which means the map file is invalid.
+		std::cout << "The format of the file "<< fileName <<" is invalid, loading unsuccessful." << std::endl;
+		std::cout << "an empty map is returned" << std::endl;
+		cout << endl;
+		return empty;
+	}
+	std::cout << "The map "<< fileName <<" has been successfully loaded, enjoy your game!" << std::endl;
+	cout << endl;
 	inputFileStream.close();
 	return(resultMap);
 }
