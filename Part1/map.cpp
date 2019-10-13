@@ -1,19 +1,14 @@
-// ConsoleApplication3.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include <string>
 #include <array>
 #include <map>
 #include <iostream>
-#include <Map.h>
-
 using namespace std;
 
-
-//
 class Country
-{
 
+{
 private:
 	string* name;
 	int* continent;
@@ -26,7 +21,14 @@ public:
 
 	Country(string n)
 	{
-		string* name = &n;
+		name = new string;
+		*name = n;
+		name = new string;
+		countryNumber = new int;
+		continent = new int;
+		nbOfArmies = new int;
+		*nbOfArmies = 0;
+		owner = new int;
 	}
 
 	//Copy Constructor
@@ -46,10 +48,15 @@ public:
 
 	Country(string n, int countNb, int cont, int own)
 	{
+		name = new string;
 		*name = n;
+		countryNumber = new int;
 		*countryNumber = countNb;
+		continent = new int;
 		*continent = cont;
+		nbOfArmies = new int;
 		*nbOfArmies = 0;
+		owner = new int;
 		*owner = own;
 	}
 
@@ -74,7 +81,6 @@ public:
 	{
 		return *owner;
 	}
-
 	string getName()
 	{
 		return *name;
@@ -109,7 +115,7 @@ class Map
 {
 
 private:
-	int* numberOfCountries;
+	int* numberOfCountries = new int;
 	int** mapOfCountries;
 	map<string, int>* continentRequirements;
 	Country* listOfCountries;
@@ -211,7 +217,6 @@ public:
 		}
 
 		bool connected;
-		int sum;
 		for (int j = continentStart; j <= continentEnd; j++)
 		{
 			connected = true;
@@ -332,14 +337,14 @@ void mapTestFunction()
 	Map testInvalid(mapOfCountriesInvalid, listOFCountries, 6);
 	//test.printMap();
 
-	if (testValid.validateMap(0,3)) {
+	if (testValid.validateMap(0, 3)) {
 		cout << "\nValid map is Valid!\n";
 	}
 	else {
 		cout << "\nValid map is Invalid!\n";
 	}
 
-	if (testInvalid.validateMap(0,5)) {
+	if (testInvalid.validateMap(0, 5)) {
 		cout << "\nInvalid map is Valid!\n";
 	}
 	else {
