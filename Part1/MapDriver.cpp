@@ -83,10 +83,11 @@ int main()
 	}
 
 
-	Country testCountry("Test");
-	Country testCountry2("Test",2,3,4);
-	//cout << testCountry.getName();
-	//cout << testCountry.getContinent();
-	//cout << testCountry2.getCountryNumber();
+	Country test("Canada");
+	Country test2("USA", 12, 10, 11);
+	//Country(string n, int countNb, int cont, int own)
+	test.setContinent(2);
+	Country test3(test2);
+	cout << test3.getName();
 
 }

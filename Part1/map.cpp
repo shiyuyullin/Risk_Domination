@@ -23,7 +23,6 @@ public:
 	{
 		name = new string;
 		*name = n;
-		name = new string;
 		countryNumber = new int;
 		continent = new int;
 		nbOfArmies = new int;
