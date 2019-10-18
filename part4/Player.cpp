@@ -1,20 +1,16 @@
 #include <iostream>
 #include "Player.h"
 using namespace std;
-//PLayer's dice object
-
-//Countries needed here
-//Deck needed here
 Player::Player()
 {
 	dice = new Dice();
 	hand = new Hand();
-
+	//Countries needed here
 }
 
 Player::~Player()
 {
-	cout << "Destructor.";
+
 	delete dice;
 	dice = NULL;
 }
