@@ -8,11 +8,13 @@ class Country
 {
 private:
 
-	string* name;
+	string* countryName;
 	int* continent;
 	int* nbOfArmies;
 	int* owner;
 	int* countryNumber;
+	int* borders;//Boarders of a country. A pointer points to an array of ints
+	int* numberOfBorders;//A counter for number of borders, may be used for iteration throw the borders[]
 
 public:
 
@@ -32,9 +34,34 @@ public:
 	void setArmyNumber(int armNb);
 };
 
+
+class Continent {
+
+	int* serialNumber;
+	string* name;
+	int* rewards;
+	int* countryList;
+	int* numberOfCountries;
+
+public:
+	Continent();
+	void setserialNumber(int t);
+	void setName(string t);
+	void setRewards(int t);
+	int getSerialNum();
+	string getName();
+	int getReward();
+};
+
+
+
+
 class Map {
 
 private:
+	Country* arrOfCountries;//Maploader will return you a Map which the arrOfCountries are all country objects, you may use them for your functions
+	Continent* arrOfContinents;//arrOfContinents are all continents object 
+	int* numberOfContinenrs;
 	int* numberOfCountries;
 	int** mapOfCountries;
 	std::map <std::string, int>* continentRequirements;
