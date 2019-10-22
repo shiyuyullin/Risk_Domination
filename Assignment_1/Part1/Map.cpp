@@ -7,11 +7,19 @@ using namespace std;
 
 
 //Implementations for country class
-	Country::Country() {}
+	Country::Country() {
+		countryName = new string("");
+		countryNumber = new int(0);
+		continent = new int(0);
+		owner = new int(-1);
+		borders = new int[10];
+		numberOfBorders = new int(0);
+		nbOfArmies = new int(0);
+	}
 
 	Country::Country(string n)
 	{
-		countryName = new string;
+		countryName = new string();
 		*countryName = n;
 		countryNumber = new int;
 		continent = new int;
@@ -87,9 +95,16 @@ using namespace std;
 	{
 		return *owner;
 	}
-	string Country::getName()
+	string Country::getCountryName()
 	{
 		return *countryName;
+	}
+	int Country::getNumOfBorders() {
+		return *numberOfBorders;
+	}
+
+	void Country::setCountryNumber(int t) {
+		*countryNumber = t;
 	}
 
 	void Country::setArmyNumber(int armNb)
@@ -112,6 +127,14 @@ using namespace std;
 		*continent = otherContinent;
 	}
 
+	void Country::setBorders(int index, int t) {
+		borders[index] = t;
+	}
+
+	void Country::setNumOfBorders(int t) {
+		*numberOfBorders = t;
+	}
+
 //Implementations for continent class
 
 	Continent::Continent() {
@@ -119,9 +142,20 @@ using namespace std;
 		name = new string("none");
 		rewards = new int(0);
 		numberOfCountries = 0;
-		countryList = new int[15];
 	}
-
+	//Copy constructor
+	Continent::Continent(Continent& temp) {
+		serialNumber = new int(temp.getSerialNum());
+		name = new string(temp.getName());
+		rewards = new int(temp.getReward());
+		numberOfCountries = new int(temp.getNumOfCountries());
+	}
+	Continent::~Continent() {
+		delete serialNumber;
+		delete name;
+		delete rewards;
+		delete numberOfCountries;
+	}
 	//Setters for continent class
 	void Continent::setserialNumber(int t) {
 		*serialNumber = t;
@@ -131,6 +165,9 @@ using namespace std;
 	}
 	void Continent::setName(string s) {
 		*name = s;
+	}
+	void Continent::setNumOfCountries(int n) {
+		*numberOfCountries = n;
 	}
 	//Getters for continent class
 	string Continent::getName() {
@@ -142,6 +179,10 @@ using namespace std;
 	int Continent::getReward() {
 		return *rewards;
 	}
+	int Continent::getNumOfCountries() {
+		return *numberOfCountries;
+	}
+	
 
 
 //MAP CLASS ENCOMPASSES THE TOTALITY OF THE GAME BOARD INCLUDING
@@ -151,8 +192,6 @@ using namespace std;
 	Map::Map() {
 		numberOfContinenrs = new int(0);
 		numberOfCountries = new int(0);
-		arrOfCountries = new Country[70];
-		arrOfContinents = new Continent[15];
 	}
 
 	Map::Map(int nbOfCountries)
@@ -193,8 +232,27 @@ using namespace std;
 		listOfCountries = Countries;
 	}
 
-	Map::~Map() {};
+	Map::~Map() {//Please implement the destructor
+		for (int i = 0; i < 70; ++i) {
+			delete arrOfCountries[i];
+		}
+		for (int i = 0; i < 15; ++i) {
+			delete arrOfContinents[i];
+		}
+	};
 
+	//Setters
+	void Map::setContinent(int index, Continent* tempContinent) {
+		arrOfContinents[index] = tempContinent;
+	}
+
+	void Map::setCountry(int index, Country* tempCountry) {
+		arrOfCountries[index] = tempCountry;
+	}
+
+	void Map::setborder(int indexCountry, int indexBorders, int num) {
+		arrOfCountries[indexCountry]->setBorders(indexBorders, num);
+	}
 
 	//VALIDATE MAP USING THE FACT THAT (ADJ + I)^N 
 	//WILL GIVE YOU THE NUMBER OF PATHS BETWEEN TO VERTICES
