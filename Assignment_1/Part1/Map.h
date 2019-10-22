@@ -6,7 +6,6 @@ using namespace std;
 
 class Country
 {
-public:
 	string* countryName;
 	int* continent;
 	int* nbOfArmies;
@@ -14,6 +13,7 @@ public:
 	int* countryNumber;
 	int* borders;//Boarders of a country. A pointer points to an array of ints
 	int* numberOfBorders;//A counter for number of borders, may be used for iteration throw the borders[]
+public:
 	Country();
 	Country(string n);
 	Country(string n, int countNb, int cont, int own);
@@ -36,11 +36,11 @@ public:
 
 
 class Continent {
-public:
 	int* serialNumber;
 	string* name;
 	int* rewards;
 	int* numberOfCountries;
+public:
 	Continent();
 	Continent(Continent& temp);
 	void setserialNumber(int t);
@@ -59,7 +59,7 @@ public:
 
 class Map {
 
-public:
+
 	Country* arrOfCountries[70];//Maploader will return you a Map which the arrOfCountries are all country objects, you may use them for your functions
 	Continent* arrOfContinents[15];//arrOfContinents are all continents object 
 	int* numberOfContinenrs;
@@ -67,6 +67,7 @@ public:
 	int** mapOfCountries;
 	std::map <std::string, int>* continentRequirements;
 	Country* listOfCountries;
+public:
 	Map();
 	Map(int nbOfCountries);
 	Map(string CountryNames[], int** adjacencyMatrix);
