@@ -87,6 +87,8 @@ Map* Maploader::loadingMap(string fileName) {
 			cout << endl;
 			return empty;
 		}
+		resultMap->setNumberOfCountries(numberOfCountries);
+		resultMap->setNumberOfContinents(numberOfContinents);
 		std::cout << "The map " << fileName << " has been successfully loaded, enjoy your game!" << std::endl;
 		cout << endl;
 		inputFileStream.close();

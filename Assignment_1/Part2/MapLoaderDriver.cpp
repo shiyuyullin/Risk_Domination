@@ -10,9 +10,6 @@ int main() {
 	Map* loadedMap;
 
 	loadedMap = Maploader::loadingMap("ameroki");
-	cout << loadedMap->arrOfCountries[0]->getCountryNumber() << endl;
-	cout << loadedMap->arrOfCountries[0]->getCountryName() << endl;
-	cout << loadedMap->arrOfCountries[0]->getContinent() << endl;
 
 
 
