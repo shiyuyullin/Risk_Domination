@@ -62,7 +62,7 @@ class Map {
 
 	Country* arrOfCountries[70];//Maploader will return you a Map which the arrOfCountries are all country objects, you may use them for your functions
 	Continent* arrOfContinents[15];//arrOfContinents are all continents object 
-	int* numberOfContinenrs;
+	int* numberOfContinents;
 	int* numberOfCountries;
 	int** mapOfCountries;
 	std::map <std::string, int>* continentRequirements;
@@ -75,7 +75,9 @@ public:
 	~Map();
 	void setContinent(int index, Continent* tempContinent);//setter for arrOfContinent
 	void setCountry(int index, Country* tempCountry);//setter for arrOfCountry
-	void setborder(int index, int indexBorders, int num);
+	void setborder(int index, int indexBorders, int num);//setter for country's borders
+	void setNumberOfCountries(int numberOfCountries);//setter to set number of countries
+	void setNumberOfContinents(int numberOfContinents);//setter to set number of continents
 	bool validateMap(int continentStart, int continentEnd);
 	void printMap();
 	int** getMapOfCountries();

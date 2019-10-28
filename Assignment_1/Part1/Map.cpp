@@ -190,7 +190,7 @@ using namespace std;
 //ADJACENCY MATRIX.
 
 	Map::Map() {
-		numberOfContinenrs = new int(0);
+		numberOfContinents = new int(0);
 		numberOfCountries = new int(0);
 	}
 
@@ -252,6 +252,12 @@ using namespace std;
 
 	void Map::setborder(int indexCountry, int indexBorders, int num) {
 		arrOfCountries[indexCountry]->setBorders(indexBorders, num);
+	}
+	void Map::setNumberOfCountries(int num) {
+		*numberOfCountries = num;
+	}
+	void Map::setNumberOfContinents(int num) {
+		*numberOfContinents = num;
 	}
 
 	//VALIDATE MAP USING THE FACT THAT (ADJ + I)^N 
