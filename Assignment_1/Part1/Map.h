@@ -6,6 +6,7 @@ using namespace std;
 
 class Country
 {
+
 	string* countryName;
 	int* continent;
 	int* nbOfArmies;
@@ -36,6 +37,7 @@ public:
 
 
 class Continent {
+
 	int* serialNumber;
 	string* name;
 	int* rewards;
@@ -59,7 +61,6 @@ public:
 
 class Map {
 
-
 	Country* arrOfCountries[70];//Maploader will return you a Map which the arrOfCountries are all country objects, you may use them for your functions
 	Continent* arrOfContinents[15];//arrOfContinents are all continents object 
 	int* numberOfContinents;
@@ -81,6 +82,8 @@ public:
 	bool validateMap(int continentStart, int continentEnd);
 	void printMap();
 	int** getMapOfCountries();
+	int getNumOfCountries();
+	int getNumOfContinents();
 	bool addEdge(int start, int destination);
 	
 };

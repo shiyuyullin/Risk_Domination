@@ -349,12 +349,18 @@ using namespace std;
 
 		cout << "\n--------------------------------\n";
 	}
-
+	//Getters
 	int** Map::getMapOfCountries()
 	{
 		return mapOfCountries;
 	}
-
+	int Map::getNumOfCountries() {
+		return *numberOfCountries;
+	}
+	int Map::getNumOfContinents() {
+		return *numberOfContinents;
+	}
+	//----
 	bool Map::addEdge(int start, int destination) {
 
 		if (start < 0 || start > * numberOfCountries ||
