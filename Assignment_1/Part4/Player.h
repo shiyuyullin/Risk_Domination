@@ -1,13 +1,17 @@
 #pragma once
 #include <iostream>
-#include "Dice.h"
+#include "D:\Visual Studio\WorkSpace\Dice\Dice.h"
+#include "D:\Visual Studio\WorkSpace\Map\Map.h"
+#include "D:\Visual Studio\WorkSpace\Deck\Cards.h"
 #include <ostream>
 #include <vector>
+
 class Player{
 private:
 	Dice* dice;//player dices
-	//Countries needed
+	int* indexOfCountryOwned;
 	Hand* hand;
+	int* numberOfCountryOwned;
 
 public:
 	Player();
@@ -17,4 +21,5 @@ public:
 	void foritfy();
 	void RollDice(int n); //Test the dice obj for player
 	void DisplayRollInfo(int n); // These two here are to be generally put together
+	void incrementNumOfCountry();
 };
