@@ -6,7 +6,6 @@ using namespace std;
 
 class Country
 {
-
 	string* countryName;
 	int* continent;
 	int* nbOfArmies;
@@ -26,6 +25,7 @@ public:
 	int getNbOfArmies();
 	string getCountryName();
 	int getNumOfBorders();
+	int* getBorders();
 	void setCountryNumber(int n);
 	void setOwner(int otherOwner);
 	void setContinent(int otherContinent);
@@ -37,7 +37,6 @@ public:
 
 
 class Continent {
-
 	int* serialNumber;
 	string* name;
 	int* rewards;
@@ -84,6 +83,8 @@ public:
 	int** getMapOfCountries();
 	int getNumOfCountries();
 	int getNumOfContinents();
+	Country* getCountry(int index);
+	Continent* getContinent(int index);
 	bool addEdge(int start, int destination);
 	
 };

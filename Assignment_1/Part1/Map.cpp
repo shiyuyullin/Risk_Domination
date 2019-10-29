@@ -102,6 +102,9 @@ using namespace std;
 	int Country::getNumOfBorders() {
 		return *numberOfBorders;
 	}
+	int* Country::getBorders() {
+		return borders;
+	}
 
 	void Country::setCountryNumber(int t) {
 		*countryNumber = t;
@@ -359,6 +362,12 @@ using namespace std;
 	}
 	int Map::getNumOfContinents() {
 		return *numberOfContinents;
+	}
+	Country* Map::getCountry(int index) {
+		return arrOfCountries[index];
+	}
+	Continent* Map::getContinent(int index) {
+		return arrOfContinents[index];
 	}
 	//----
 	bool Map::addEdge(int start, int destination) {
