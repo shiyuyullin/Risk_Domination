@@ -13,4 +13,5 @@ public:
 	void Display(int rolls);
 	void Reset();
 	void percentages();
+	const int get_value_at(int n);
 };
