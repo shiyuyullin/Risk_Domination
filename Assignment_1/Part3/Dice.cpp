@@ -60,4 +60,7 @@ void Dice::percentages()
 		cout<<"Percentage for Dice Value "<< (i+1)<<": "<<(percentage[i] / *TotalRollsptr)<<endl;
 }
 
-
+const int Dice::get_value_at(int n)
+{
+	return DiceValues[n];
+}
