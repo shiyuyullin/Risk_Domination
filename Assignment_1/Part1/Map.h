@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <string>
+#include "D:\Visual Studio\WorkSpace\Player\Player.h"
 
 using namespace std;
 
@@ -9,7 +10,7 @@ class Country
 	string* countryName;
 	int* continent;
 	int* nbOfArmies;
-	int* owner;
+	Player* owner;
 	int* countryNumber;
 	int* borders;//Boarders of a country. A pointer points to an array of ints
 	int* numberOfBorders;//A counter for number of borders, may be used for iteration throw the borders[]
@@ -20,19 +21,19 @@ public:
 	Country(const Country& obj);
 	~Country();
 	int getCountryNumber();
-	int getOwner();
 	int getContinent();
 	int getNbOfArmies();
 	string getCountryName();
 	int getNumOfBorders();
 	int* getBorders();
+	Player* getOwner();
 	void setCountryNumber(int n);
-	void setOwner(int otherOwner);
 	void setContinent(int otherContinent);
 	void setCountryName(string otherName);
 	void setArmyNumber(int armNb);
 	void setBorders(int index, int t);
 	void setNumOfBorders(int t);
+	void setOwner(Player* p);
 };
 
 
@@ -40,7 +41,7 @@ class Continent {
 	int* serialNumber;
 	string* name;
 	int* rewards;
-	int* numberOfCountries;
+	int* numOfCountries;
 public:
 	Continent();
 	Continent(Continent& temp);

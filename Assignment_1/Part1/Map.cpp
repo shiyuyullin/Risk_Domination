@@ -11,8 +11,10 @@ using namespace std;
 		countryName = new string("");
 		countryNumber = new int(0);
 		continent = new int(0);
-		owner = new int(-1);
 		borders = new int[10];
+		for (int i = 0; i < 10; ++i) {
+			borders[i] = -1;
+		}
 		numberOfBorders = new int(0);
 		nbOfArmies = new int(0);
 	}
@@ -25,9 +27,11 @@ using namespace std;
 		continent = new int;
 		nbOfArmies = new int;
 		*nbOfArmies = 0;
-		owner = new int;
 		numberOfBorders = new int(0);
 		borders = new int[10];//dynamic array with initial size of 10;
+		for (int i = 0; i < 10; ++i) {
+			borders[i] = -1;
+		}
 	}
 
 	//Copy Constructor
@@ -39,8 +43,6 @@ using namespace std;
 		*continent = *obj.continent;
 		nbOfArmies = new int;
 		*nbOfArmies = *obj.nbOfArmies;
-		owner = new int;
-		*owner = *obj.owner;
 		countryNumber = new int;
 		*countryNumber = *obj.countryNumber;
 		*numberOfBorders = *obj.numberOfBorders;
@@ -60,10 +62,11 @@ using namespace std;
 		*continent = cont;
 		nbOfArmies = new int;
 		*nbOfArmies = 0;
-		owner = new int;
-		*owner = own;
 		numberOfBorders = new int(0);
 		borders = new int[10];
+		for (int i = 0; i < 10; ++i) {
+			borders[i] = -1;
+		}
 	}
 
 	Country::~Country() {
@@ -90,11 +93,7 @@ using namespace std;
 	{
 		return *nbOfArmies;
 	}
-
-	int Country::getOwner()
-	{
-		return *owner;
-	}
+	
 	string Country::getCountryName()
 	{
 		return *countryName;
@@ -104,6 +103,9 @@ using namespace std;
 	}
 	int* Country::getBorders() {
 		return borders;
+	}
+	Player* Country::getOwner() {
+		return owner;
 	}
 
 	void Country::setCountryNumber(int t) {
@@ -120,11 +122,6 @@ using namespace std;
 		*countryName = otherName;
 	}
 
-	void Country::setOwner(int otherOwner)
-	{
-		*owner = otherOwner;
-	}
-
 	void Country::setContinent(int otherContinent)
 	{
 		*continent = otherContinent;
@@ -138,26 +135,30 @@ using namespace std;
 		*numberOfBorders = t;
 	}
 
+	void Country::setOwner(Player* p) {
+		owner = p;
+	}
+
 //Implementations for continent class
 
 	Continent::Continent() {
 		serialNumber = new int(-1);
 		name = new string("none");
 		rewards = new int(0);
-		numberOfCountries = 0;
+		numOfCountries = 0;
 	}
 	//Copy constructor
 	Continent::Continent(Continent& temp) {
 		serialNumber = new int(temp.getSerialNum());
 		name = new string(temp.getName());
 		rewards = new int(temp.getReward());
-		numberOfCountries = new int(temp.getNumOfCountries());
+		numOfCountries = new int(temp.getNumOfCountries());
 	}
 	Continent::~Continent() {
 		delete serialNumber;
 		delete name;
 		delete rewards;
-		delete numberOfCountries;
+		delete numOfCountries;
 	}
 	//Setters for continent class
 	void Continent::setserialNumber(int t) {
@@ -170,7 +171,7 @@ using namespace std;
 		*name = s;
 	}
 	void Continent::setNumOfCountries(int n) {
-		*numberOfCountries = n;
+		*numOfCountries = n;
 	}
 	//Getters for continent class
 	string Continent::getName() {
@@ -183,7 +184,7 @@ using namespace std;
 		return *rewards;
 	}
 	int Continent::getNumOfCountries() {
-		return *numberOfCountries;
+		return *numOfCountries;
 	}
 	
 
