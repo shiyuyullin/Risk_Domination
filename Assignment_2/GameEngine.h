@@ -10,7 +10,6 @@ using namespace std;
 
 class GameEngine {
 private:
-	std::vector<Player*> turns;//an array that keeps trak who goes when(1,2,3,...N)
 	std::vector<Player*> players;//an array of player objects that will play per game
 	
 	int* numOfPlayers=new int;
@@ -31,3 +30,5 @@ public:
 	void map_assign();// call this first
 	void placeArmies(int n);//then this one
 };
+//There needs to be a constructor and destructor for this class
+//
