@@ -10,6 +10,36 @@ using namespace std;
 namespace fs = std::experimental::filesystem;
 
 #include <experimental/filesystem>
+//Constructor
+GameEngine::GameEngine()
+{
+	//map_select = selectMap();
+	//Creating new playersfor the players vector
+	*numOfPlayers = selectNumPlayers();
+	gameMap = map->loadingMap(*map_select); //check for exceptions
+	for (int i = 1; i <= *numOfPlayers; i++)
+		players.push_back(new Player(i));
+	// Shuffle Player Vector To Randomly Determine the order of play
+		// of the players. Uses Fisher–Yates shuffle.
+	for (int i = 0; i < players.size() - 1; i++) {
+		int j = i + rand() % (players.size() - i);
+		swap(players[i], players[j]);
+	}
+	//Just to test the turns 
+	for (int i = 0; i < players.size(); i++)
+		cout << "Turn " << (i + 1) << " goes to: " << players[i]->getPlayerId() << endl;
+
+}
+
+//destructor
+GameEngine::~GameEngine()
+{
+	for (int i = 0; i < *numOfPlayers; i++)
+		delete players[i];
+	delete numOfPlayers;
+	delete map_select;
+}
+
 
 void GameEngine::startGame()
 {
@@ -29,29 +59,6 @@ void GameEngine::startGame()
 	//if yes then start game
 	if (choice == 1)
 	{
-
-		//1.select map method
-		map_select = selectMap();
-		//2.select number of players method
-		*numOfPlayers = selectNumPlayers();
-		//3. use map loader to loap selected map
-		gameMap = map->loadingMap(*map_select); //check for exceptions
-		//4. create array of  players
-		for (int i = 1; i <= *numOfPlayers; i++)
-		{
-			players.push_back(new Player(i));
-		}
-
-		//5.create a deck of cards
-		Deck deck(gameMap->getNumOfCountries());
-		//6.assign empty hands of cards to each player
-
-		cout << "Success";
-
-		// Shuffle Player Vector To Randomly Determine the order of play
-		// of the players. Uses Fisher–Yates shuffle.
-		auto randomGeneration = default_random_engine{};
-		shuffle(begin(players), end(players), randomGeneration);
 
 		bool gameIsFinished = false;
 
@@ -202,18 +209,17 @@ int GameEngine::selectNumPlayers()
 	cout << "Select Number of Players" << endl;
 	cout << "========================" << endl;
 
-	cout << "(1)	 1 Player" << endl;
 	cout << "(2)	 2 Players" << endl;
 	cout << "(3)	 3 Players" << endl;
 	cout << "(4)	 4 Players" << endl;
 	cout << "(5)	 5 Players" << endl;
 	cout << "(6)	 6 Players" << endl;
 
-	while (num < 1 || num > 6)
+	while (num < 2 || num > 6)
 	{
 		cout << "Enter Number of Players in this game: ";
 		cin >> num;
-		if (num < 1 || num > 6)
+		if (num < 2 || num > 6)
 			cout << "Invalid number of players. Try again." << endl;
 	}
 	//Add code for exceptions
@@ -255,3 +261,4 @@ int GameEngine::CalculatePlayerOwnership(int playerId){
 	}
 	return controlledCountries;
 }
+

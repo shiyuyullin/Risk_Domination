@@ -9,7 +9,7 @@ using namespace std;
 Map *Maploader::loadingMap(string fileName)
 {
 	ifstream inputFileStream;
-	inputFileStream.open(fileName + ".txt");
+	inputFileStream.open("./Maps/"+fileName + ".txt");
 	if (!inputFileStream.fail())
 	{
 		Map *resultMap = new Map(); //The map that will be returned once the function resolves
