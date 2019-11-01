@@ -42,6 +42,7 @@ class Continent
 	string *name;
 	int *rewards;
 	int *numOfCountries;
+	Country *listOfCountries;
 
 public:
 	Continent();
@@ -54,18 +55,18 @@ public:
 	string getName();
 	int getReward();
 	int getNumOfCountries();
+	void setContinentCountry(int );
 	~Continent();
 };
 
 class Map
 {
 
-	Country *arrOfCountries[70];	//Maploader will return you a Map which the arrOfCountries are all country objects, you may use them for your functions
-	Continent *arrOfContinents[15]; //arrOfContinents are all continents object
+	Country *arrOfCountries;	//Maploader will return you a Map which the arrOfCountries are all country objects, you may use them for your functions
+	Continent *arrOfContinents; //arrOfContinents are all continents object
 	int *numberOfContinents;
 	int *numberOfCountries;
 	int **mapOfCountries;
-	Country *listOfCountries;
 	createAdjacencyMatrix();
 
 public:
@@ -87,6 +88,8 @@ public:
 	Country *getCountry(int index);
 	Continent *getContinent(int index);
 	void addEdge(int start, int destination);
+	void setContinentSizesAndMembers();
+
 };
 
 void mapTestFunction();

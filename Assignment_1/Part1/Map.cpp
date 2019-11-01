@@ -213,6 +213,11 @@ int Continent::getNumOfCountries()
 	return *numOfCountries;
 }
 
+void Continent::setContinentCountry(int index, Country* country){
+
+	listOfCountries[index] = country;
+}
+
 //MAP CLASS ENCOMPASSES THE TOTALITY OF THE GAME BOARD INCLUDING
 //ALL THE COUNTRIES AND THE EDGES BETWEEN THEM ARE STORED IN A
 //ADJACENCY MATRIX.
@@ -258,17 +263,18 @@ Map::Map(int **adjacencyMatrix, Country *Countries, int nbOfCountries)
 		}
 	}
 
-	listOfCountries = Countries;
+	arrOfCountries = Countries;
 }
 
 Map::~Map()
 { //Please implement the destructor
 
-	for(int i = 0; i < numberOfCountries; ++i) {
-        delete[] mapOfCountries[i];   
-    }
-    //Free the array of pointers
-    delete[] mapOfCountries;
+	for (int i = 0; i < numberOfCountries; ++i)
+	{
+		delete[] mapOfCountries[i];
+	}
+	//Free the array of pointers
+	delete[] mapOfCountries;
 
 	mapOfCountries = NULL;
 
@@ -286,7 +292,6 @@ Map::~Map()
 
 	delete numberOfContinents;
 	delete numberOfCountries;
-
 };
 
 //Setters
@@ -307,10 +312,12 @@ void Map::setborder(int indexCountry, int indexBorders, int num)
 void Map::setNumberOfCountries(int num)
 {
 	*numberOfCountries = num;
+	arrOfCountries = new int[num];
 }
 void Map::setNumberOfContinents(int num)
 {
 	*numberOfContinents = num;
+	arrOfContinents = new int[num];
 }
 
 //VALIDATE MAP USING THE FACT THAT (ADJ + I)^N
@@ -458,7 +465,35 @@ void Map::createAdjacencyMatrix()
 			mapOfCountries[i][j] = 0;
 		}
 	}
-	
+}
+
+void Map::setContinentSizesAndMembers()
+{
+
+	//Sets the size of the continents
+	int continentCounter;
+	int continentId;
+	for (int i = 0; i < *numberOfContinents; i++)
+	{
+		continentCounter = 0;
+		continentId = i + 1;
+		for (int j = 0; j < *numberOfCountries; j++)
+		{
+			if (continentId == arrOfCountries->getContinent())
+			{
+				continentCounter++;
+			}
+		}
+		arrOfContinents->setNumOfCountries(continentCounter);
+	}
+
+	//Sets the memebers of the continents
+	int counter = 0;
+
+	for (int i = 0; i < *numberOfContinents; i++)
+	{
+
+	}
 }
 
 void mapTestFunction()

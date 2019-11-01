@@ -29,6 +29,8 @@ Player::~Player()
 	hand = NULL;
 }
 
+
+// TOFIX TO ARGUMENTS 
 void Player::reinforce(Country *toReinfoce, int numberOfArmies)
 {
 
