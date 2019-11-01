@@ -18,16 +18,16 @@ private:
 	string* map_select = new string;
 	vector <Player*> players;
 	Maploader* map;
-	Map* aMap;
+	Map* gameMap;
 
 public:
-	void order_of_play();
+	void order_of_play(); //Not Sure IF We need this Can just Shuffle the vector
 	void map_assign();
 	const int number_of_armies_given(int AmtOfPlayers);
-	
 	vector<string> getListOfMaps();
 	void startGame();
 	string* selectMap();
 	int selectNumPlayers();
-
+	bool testVictoryCondition(Map* gameMap);
+	int CalculatePlayerOwnership(int playerId);
 };
