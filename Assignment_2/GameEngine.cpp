@@ -227,6 +227,30 @@ int GameEngine::selectNumPlayers()
 	return num;
 }
 
+const int GameEngine::number_of_armies_given(int AmtOfPlayers)
+{
+
+	switch (AmtOfPlayers)
+	{
+		std::cout << "Number of players: " << AmtOfPlayers << endl;
+	case 2:
+		std::cout << "Each player will have: 40 armies" << endl;
+		return 40; break;
+	case 3:
+		std::cout << "Each player will have: 35 armies" << endl;
+		return 35; break;
+	case 4: 
+		std::cout << "Each player will have: 30 armies" << endl;
+		return 30; break;
+	case 5:
+		std::cout << "Each player will have: 25 armies" << endl;
+		return 25; break;
+	case 6: 
+		std::cout << "Each player will have: 20 armies" << endl;
+		return 20; break;
+	}
+}
+
 bool GameEngine::testVictoryCondition()
 {
 
