@@ -20,8 +20,6 @@ private:
 	Map* gameMap;
 
 public:
-	
-	
 	const int number_of_armies_given(int AmtOfPlayers);
 	vector<string> getListOfMaps();
 	void startGame();
@@ -30,7 +28,6 @@ public:
 	bool testVictoryCondition(Map* gameMap);
 	int CalculatePlayerOwnership(int playerId);
 	//Ian functions:
-	void map_assign();
-	void createPlayers();
-	
+	void map_assign();// call this first
+	void placeArmies(int n);//then this one
 };
