@@ -9,24 +9,27 @@ Player::Player()
 	dice = new Dice();
 	hand = new Hand();
 	playerId = new int(0);
-	//Countries needed here
+	numOfCountriesOwned = new int(0);
+	indexOfCountries = new int[70];
 }
 
-Player::Player(int id)
+Player::Player(int id,int armyCount)
 {
 	dice = new Dice();
 	hand = new Hand();
 	playerId = new int(id);
-	//Countries needed here
+	armies = new int(armyCount);
+	numOfCountriesOwned = new int(0);
+	indexOfCountries = new int[70];
 }
 
 Player::~Player()
 {
-
-	delete dice;
+	delete playerId, armies, dice;
 	dice = NULL;
-	delete hand;
-	hand = NULL;
+	playerId = NULL;
+	delete[] indexOfCountries;
+	delete numOfCountriesOwned;
 }
 
 
