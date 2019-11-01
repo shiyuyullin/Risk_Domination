@@ -24,4 +24,5 @@ public:
 	void DisplayRollInfo(int n); // These two here are to be generally put together
 	void setPlayerId(int id);
 	int getPlayerId();
+	bool operator==( const Player &otherPlayer ) const ;
 };

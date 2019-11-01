@@ -20,7 +20,6 @@ Player::Player(int id)
 	//Countries needed here
 }
 
-
 Player::~Player()
 {
 
@@ -59,10 +58,17 @@ void Player::DisplayRollInfo(int n) //Displays: Roll values stored in the array 
 	dice->percentages();
 }
 
-void Player::setPlayerId(int id){
+void Player::setPlayerId(int id)
+{
 	*playerId = id;
 }
 
-int Player::getPlayerId(){
+int Player::getPlayerId()
+{
 	return *playerId;
+}
+
+bool operator==(const Player &otherPlayer) const
+{
+	return getPlayerId() == otherPlayer.getPlayerId();
 }
