@@ -227,7 +227,7 @@ int GameEngine::selectNumPlayers()
 	return num;
 }
 
-const int GameEngine::number_of_armies_given(int AmtOfPlayers)
+int GameEngine::number_of_armies_given(int AmtOfPlayers)
 {
 
 	switch (AmtOfPlayers)
