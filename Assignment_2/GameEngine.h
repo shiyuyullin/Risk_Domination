@@ -19,7 +19,7 @@ private:
 	Map* gameMap;
 
 public:
-	const int number_of_armies_given(int AmtOfPlayers);
+	
 	vector<string> getListOfMaps();
 	void startGame();
 	string* selectMap();
@@ -29,4 +29,5 @@ public:
 	//Ian functions:
 	void map_assign();// call this first
 	void placeArmies(int n);//then this one
+	const int number_of_armies_given(int AmtOfPlayers);
 };
