@@ -16,9 +16,10 @@ GameEngine::GameEngine()
 	//map_select = selectMap();
 	//Creating new playersfor the players vector
 	*numOfPlayers = selectNumPlayers();
+	int armyCnt = number_of_armies_given(players.size());
 	gameMap = map->loadingMap(*map_select); //check for exceptions
 	for (int i = 1; i <= *numOfPlayers; i++)
-		players.push_back(new Player(i));
+		players.push_back(new Player(i,armyCnt));
 	// Shuffle Player Vector To Randomly Determine the order of play
 		// of the players. Uses Fisher–Yates shuffle.
 	for (int i = 0; i < players.size() - 1; i++) {
@@ -30,7 +31,6 @@ GameEngine::GameEngine()
 		cout << "Turn " << (i + 1) << " goes to: " << players[i]->getPlayerId() << endl;
 
 }
-
 //destructor
 GameEngine::~GameEngine()
 {
