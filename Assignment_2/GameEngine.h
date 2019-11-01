@@ -24,6 +24,7 @@ public:
 	void startGame();
 	string* selectMap();
 	int selectNumPlayers();
+	Map* getMap() { return aMap; };
 	bool testVictoryCondition(Map* gameMap);
 	int CalculatePlayerOwnership(int playerId);
 	//Ian functions:
