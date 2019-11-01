@@ -10,7 +10,6 @@ using namespace std;
 
 class GameEngine {
 private:
-	int turn_decider;
 	std::vector<Player*> turns;//an array that keeps trak who goes when(1,2,3,...N)
 	std::vector<Player*> players;//an array of player objects that will play per game
 	
@@ -21,8 +20,8 @@ private:
 	Map* gameMap;
 
 public:
-	void order_of_play(); //Not Sure IF We need this Can just Shuffle the vector
-	void map_assign();
+	
+	
 	const int number_of_armies_given(int AmtOfPlayers);
 	vector<string> getListOfMaps();
 	void startGame();
@@ -30,4 +29,8 @@ public:
 	int selectNumPlayers();
 	bool testVictoryCondition(Map* gameMap);
 	int CalculatePlayerOwnership(int playerId);
+	//Ian functions:
+	void map_assign();
+	void createPlayers();
+	
 };
