@@ -10,6 +10,19 @@ using namespace std;
 namespace fs = std::experimental::filesystem;
 
 #include <experimental/filesystem>
+//Constructor needed.
+void GameEngine::order_of_play()
+{
+	//for loop that decides randomly the order f player turns
+	for (int i = 0; i < players.size() - 1; i++) {
+		int j = i + rand() % (players.size() - i);
+		swap(players[i], players[j]);
+	}
+	for (int i = 0; i < players.size(); i++) 
+		cout << "Turn " << (i + 1) << " go to: " << players[i]->getPlayerId() << endl;
+	
+}
+
 
 void GameEngine::startGame()
 {
@@ -255,3 +268,4 @@ int GameEngine::CalculatePlayerOwnership(int playerId){
 	}
 	return controlledCountries;
 }
+
