@@ -30,5 +30,3 @@ public:
 	void map_assign();// call this first
 	void placeArmies(int n);//then this one
 };
-//There needs to be a constructor and destructor for this class
-//
