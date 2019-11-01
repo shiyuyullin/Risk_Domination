@@ -15,7 +15,7 @@ private:
 
 public:
 	Player();
-	Player(int id);
+	Player(int id,int armyCount);
 	~Player();
 	void reinforce();
 	void attack();
