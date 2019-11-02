@@ -93,12 +93,7 @@ void Player::reinforce()
 		{
 			cout << endl;
 			cin >> tile >> armies;
-			owns = false;
-			if (tile >= 1 && tile < *numberOfCountryOwned)
-			{
-				onws = true;
-			}
-			if (owns && armies > 0 && armies <= armiesToDistribute))
+			if (!cin.fail() && tile >= 1 && tile < *numberOfCountryOwned && armies > 0 && armies <= armiesToDistribute)
 				{
 					mapIndex = indexOfCountryOwned[i - 1];
 					gameMap->getCountry(mapIndex)->addArmies(armies);
@@ -125,6 +120,7 @@ void Player::reinforce()
 			else
 			{
 				cout << "That's an invalid input, try again!" << endl;
+				cin.clear(); // Resets the cin to not being failed.
 			}
 		}
 	}
