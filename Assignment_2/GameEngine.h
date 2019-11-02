@@ -10,8 +10,6 @@ using namespace std;
 
 class GameEngine {
 private:
-	std::vector<Player*> players;//an array of player objects that will play per game
-	
 	int* numOfPlayers=new int;
 	string* map_select = new string;
 	vector <Player*> players;
