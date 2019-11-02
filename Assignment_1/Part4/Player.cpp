@@ -95,7 +95,7 @@ void Player::reinforce()
 			cin >> tile >> armies;
 			if (!cin.fail() && tile >= 1 && tile < *numberOfCountryOwned && armies > 0 && armies <= armiesToDistribute)
 				{
-					mapIndex = indexOfCountryOwned[i - 1];
+					mapIndex = indexOfCountryOwned[tile - 1];
 					gameMap->getCountry(mapIndex)->addArmies(armies);
 					cout << gameMap->getCountry(mapIndex)->getCountryName() << " now has ";
 					cout << gameMap->getCountry(mapIndex)->getNbOfArmies() << " armies" endl;
@@ -108,7 +108,7 @@ void Player::reinforce()
 					else
 					{
 						cout << "You've finished your reinforcement phase. This is how you countries stand: " << endl;
-						for (int i = 0; i < gameMap->getNumOwnedCountry(); i++)
+						for (int i = 0; i < *numberOfCountryOwned; i++)
 						{
 
 							index = indexOfCountryOwned[i];

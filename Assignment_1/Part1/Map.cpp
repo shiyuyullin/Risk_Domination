@@ -198,11 +198,6 @@ void Continent::setNumOfCountries(int n)
 	*numOfCountries = n;
 }
 
-void Continent::setContinentCountry(int index, Country *country)
-{
-
-	listOfCountries[index] = country;
-}
 //Getters for continent class
 string Continent::getName()
 {
@@ -221,9 +216,6 @@ int Continent::getNumOfCountries()
 	return *numOfCountries;
 }
 
-Country* Continent::getCountry(int index){
-	return listOfCountries[index];
-} 
 
 //MAP CLASS ENCOMPASSES THE TOTALITY OF THE GAME BOARD INCLUDING
 //ALL THE COUNTRIES AND THE EDGES BETWEEN THEM ARE STORED IN A
@@ -325,23 +317,12 @@ void Map::setContinentSizesAndMembers()
 		continentId = i + 1;
 		for (int j = 0; j < *numberOfCountries; j++)
 		{
-			if (continentId == arrOfCountries->getContinent())
+			if (continentId == arrOfCountries[j]->getContinent())
 			{
 				continentCounter++;
 			}
 		}
-		arrOfContinents->setNumOfCountries(continentCounter);
-	}
-
-	//Sets the memebers of the continents
-	int counter = 0;
-	for (int i = 0; i < *numberOfContinents; i++)
-	{
-		for (int j = 0; j < arrOfContinents[i].getNumOfCountries(); j++)
-		{
-			arrOfContinents[i]->setContinentCountry(j, arrOfCountries[counter]);
-			counter++;
-		}
+		arrOfContinents[i]->setNumOfCountries(continentCounter);
 	}
 }
 

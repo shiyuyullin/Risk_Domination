@@ -50,12 +50,10 @@ public:
 	void setName(string t);
 	void setRewards(int t);
 	void setNumOfCountries(int n);
-	void setContinentCountry(int index, Country* country);
 	int getSerialNum();
 	string getName();
 	int getReward();
 	int getNumOfCountries();
-	Country* getCountry(int index);
 	~Continent();
 };
 
