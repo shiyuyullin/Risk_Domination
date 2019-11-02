@@ -31,6 +31,7 @@ public:
 	void setContinent(int otherContinent);
 	void setCountryName(string otherName);
 	void setArmyNumber(int armNb);
+	void addArmies(int armNb);
 	void setBorders(int index, int t);
 	void setNumOfBorders(int t);
 	void setOwner(Player* p);
@@ -49,10 +50,12 @@ public:
 	void setName(string t);
 	void setRewards(int t);
 	void setNumOfCountries(int n);
+	void setContinentCountry(int index, Country* country);
 	int getSerialNum();
 	string getName();
 	int getReward();
 	int getNumOfCountries();
+	Country* getCountry(int index);
 	~Continent();
 };
 
@@ -87,6 +90,7 @@ public:
 	Country* getCountry(int index);
 	Continent* getContinent(int index);
 	bool addEdge(int start, int destination);
+	void setContinentSizesAndMembers();
 	
 };
 

@@ -86,9 +86,7 @@ void GameEngine::startGame()
 				if (choice == 1)
 				{
 
-					//Calculate Controlled Countries of the player.
-					//Calculate the Players continent Bonus
-					//Card Exchange
+					players[i]->reinforce();
 				}
 				else
 				{
@@ -108,6 +106,7 @@ void GameEngine::startGame()
 
 				if (choice == 1)
 				{
+					players[i]->attack();
 				}
 				else
 				{
@@ -127,6 +126,7 @@ void GameEngine::startGame()
 
 				if (choice == 1)
 				{
+					players[i]->fortify();
 				}
 				else
 				{
