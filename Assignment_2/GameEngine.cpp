@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <random>
 #include <experimental/filesystem>
-#include "Player.h"
 #include "GameEngine.h"
 
 using namespace std;
@@ -13,6 +12,9 @@ namespace fs = std::experimental::filesystem;
 //Constructor
 GameEngine::GameEngine()
 {
+	//Initializing all data members 
+	map_select = new string("");
+	numOfPlayers = new int(0);
 	//map_select = selectMap();
 	//Creating new playersfor the players vector
 	*numOfPlayers = selectNumPlayers();
@@ -28,7 +30,7 @@ GameEngine::GameEngine()
 	}
 	//Just to test the turns 
 	for (int i = 0; i < players.size(); i++)
-		cout << "Turn " << (i + 1) << " goes to: " << players[i]->getPlayerId() << endl;
+		cout << "Turn " << (i + 1) << " goes to: " << players[i]->getPlayerID() << endl;
 
 }
 //destructor
@@ -68,7 +70,7 @@ void GameEngine::startGame()
 			for (int i = 0; i < *numOfPlayers; i++)
 			{
 
-				int playerTurn = players[i]->getPlayerId();
+				int playerTurn = players[i]->getPlayerID();
 				cout << "It is player " << playerTurn << " turn." << endl;
 
 				// REINFORCE PHASE
@@ -130,10 +132,10 @@ void GameEngine::startGame()
 				{
 					cout << "Your turn is coming to an end. " << endl;
 				}
-
+				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				if (testVictoryCondition())
 				{
-					cout << "The Game is Over, Player " << playerTurn << " wins!".gameIsFinished = true;
+					cout << "The Game is Over, Player " << playerTurn << " wins!".gameIsFinished = true;//Don't know how to fix, please fix the code
 				}
 			}
 		}
@@ -227,7 +229,7 @@ int GameEngine::selectNumPlayers()
 	return num;
 }
 
-int GameEngine::number_of_armies_given(int AmtOfPlayers)
+const int GameEngine::number_of_armies_given(int AmtOfPlayers)
 {
 
 	switch (AmtOfPlayers)
@@ -254,13 +256,13 @@ int GameEngine::number_of_armies_given(int AmtOfPlayers)
 bool GameEngine::testVictoryCondition()
 {
 
-	int numberOfCountries = gameMap->getMapOfCountries();
-	int owner = gameMap->getCountry(0)->getOwner();
+	int numberOfCountries = gameMap->getNumOfCountries();
+	Player* owner = gameMap->getCountry(0)->getOwner();
 
 	for (int i = 1; i < numberOfCountries; i++)
 	{
 
-		int tempOwner = gameMap->getCountry(i)->getOwner();
+		Player* tempOwner = gameMap->getCountry(i)->getOwner();
 		if (owner != tempOwner)
 		{
 			return false;
@@ -273,11 +275,11 @@ bool GameEngine::testVictoryCondition()
 int GameEngine::CalculatePlayerOwnership(int playerId){
 
 	int controlledCountries = 0;
-
-	for (int i = 0; i < numberOfCountries; i++)
+	int counter = gameMap->getNumOfCountries();
+	for (int i = 0; i < counter; i++)
 	{
 
-		int tempOwner = gameMap->getCountry(i)->getOwner()->getPlayerId();
+		int tempOwner = gameMap->getCountry(i)->getOwner()->getPlayerID();
 		if (playerId == tempOwner)
 		{
 			controlledCountries++;
@@ -286,3 +288,6 @@ int GameEngine::CalculatePlayerOwnership(int playerId){
 	return controlledCountries;
 }
 
+Map* GameEngine::getMap() {
+	return gameMap;
+}
