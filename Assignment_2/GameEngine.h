@@ -17,7 +17,8 @@ private:
 	static Map* gameMap;
 
 public:
-	
+	GameEngine();
+	~GameEngine();
 	vector<string> getListOfMaps();
 	void startGame();
 	string* selectMap();
