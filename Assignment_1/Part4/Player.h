@@ -1,15 +1,17 @@
 #pragma once
 #include <iostream>
-#include "Dice.h"
-#include "Cards.h"
+#include "D:\Visual Studio\WorkSpace\Dice\Dice.h"//Path on my computer change it if needed
+#include "D:\Visual Studio\WorkSpace\Deck\Cards.h"//Path on my computer change it if needed
 #include <ostream>
 #include <vector>
+#include <algorithm>
 class Map;
+class GameEngine;
 
 class Player{
 private:
 	Dice* dice;//player dices
-	int* indexOfCountryOwned;
+	vector<int> indexOfCountryOwned;
 	Hand* hand;
 	int* numberOfCountryOwned;
 	int* playerId;
@@ -30,6 +32,5 @@ public:
 	void DisplayRollInfo(int n); // These two here are to be generally put together
 	void incrementNumOfCountry();
 	void decrementNumOfCountry();
-	void setIndexOfCountry(int serialNum);
-	void reOrganize();//if a player losses one of its country, reorganize his "indexOfCountryOwned"
+	void setIndexOfCountry(int serialNum);//just pass in the countries serial number
 };
