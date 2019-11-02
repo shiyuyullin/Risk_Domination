@@ -1,7 +1,8 @@
 #pragma once
 #include <map>
 #include <string>
-#include "D:\Visual Studio\WorkSpace\Player\Player.h"
+#include <vector>
+#include "Player.h"
 using namespace std;
 
 class Country
@@ -60,8 +61,8 @@ public:
 
 class Map {
 
-	Country* arrOfCountries[70];//Maploader will return you a Map which the arrOfCountries are all country objects, you may use them for your functions
-	Continent* arrOfContinents[15];//arrOfContinents are all continents object 
+	vector<Country*> arrOfCountries;//Maploader will return you a Map which the arrOfCountries are all country objects, you may use them for your functions
+	vector<Continent*> arrOfContinents;//arrOfContinents are all continents object 
 	int* numberOfContinents;
 	int* numberOfCountries;
 	int** mapOfCountries;
@@ -73,8 +74,8 @@ public:
 	Map(string CountryNames[], int** adjacencyMatrix);
 	Map(int** adjacencyMatrix, Country* Countries, int nbOfCountries);
 	~Map();
-	void setContinent(int index, Continent* tempContinent);//setter for arrOfContinent
-	void setCountry(int index, Country* tempCountry);//setter for arrOfCountry
+	void setContinent(Continent* tempContinent);//setter for arrOfContinent
+	void setCountry(Country* tempCountry);//setter for arrOfCountry
 	void setborder(int index, int indexBorders, int num);//setter for country's borders
 	void setNumberOfCountries(int numberOfCountries);//setter to set number of countries
 	void setNumberOfContinents(int numberOfContinents);//setter to set number of continents

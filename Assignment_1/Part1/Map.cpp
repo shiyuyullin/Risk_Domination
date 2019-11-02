@@ -75,7 +75,7 @@ using namespace std;
 		delete nbOfArmies;
 		delete owner;
 		delete countryNumber;
-		delete[]borders;
+		delete[] borders;
 		delete numberOfBorders;
 	};
 
@@ -237,10 +237,12 @@ using namespace std;
 	}
 
 	Map::~Map() {//Please implement the destructor
-		for (int i = 0; i < 70; ++i) {
+		int countrySize = arrOfCountries.size();
+		int continentSize = arrOfContinents.size();
+		for (int i = 0; i < countrySize; ++i) {
 			delete arrOfCountries[i];
 		}
-		for (int i = 0; i < 15; ++i) {
+		for (int i = 0; i < continentSize; ++i) {
 			delete arrOfContinents[i];
 		}
 		delete numberOfContinents;
@@ -248,12 +250,12 @@ using namespace std;
 	};
 
 	//Setters
-	void Map::setContinent(int index, Continent* tempContinent) {
-		arrOfContinents[index] = tempContinent;
+	void Map::setContinent(Continent* tempContinent) {
+		arrOfContinents.push_back(tempContinent);
 	}
 
-	void Map::setCountry(int index, Country* tempCountry) {
-		arrOfCountries[index] = tempCountry;
+	void Map::setCountry(Country* tempCountry) {
+		arrOfCountries.push_back(tempCountry);
 	}
 
 	void Map::setborder(int indexCountry, int indexBorders, int num) {
