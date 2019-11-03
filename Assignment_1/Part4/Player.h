@@ -16,6 +16,7 @@ private:
 	int* numberOfCountryOwned;
 	int* playerId;
 	int* armies;
+	
 
 public:
 	Player();
