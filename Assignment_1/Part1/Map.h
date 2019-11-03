@@ -1,8 +1,8 @@
-#pragma once
+﻿#pragma once
 #include <map>
 #include <string>
 #include <vector>
-#include "Player.h"
+#include "D:\Visual Studio\WorkSpace\Player\Player.h"
 using namespace std;
 
 class Country
@@ -91,5 +91,3 @@ public:
 	void setContinentSizesAndMembers();
 	
 };
-
-void mapTestFunction();
