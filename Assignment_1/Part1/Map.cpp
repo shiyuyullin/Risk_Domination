@@ -216,7 +216,6 @@ int Continent::getNumOfCountries()
 	return *numOfCountries;
 }
 
-
 //MAP CLASS ENCOMPASSES THE TOTALITY OF THE GAME BOARD INCLUDING
 //ALL THE COUNTRIES AND THE EDGES BETWEEN THEM ARE STORED IN A
 //ADJACENCY MATRIX.
@@ -389,6 +388,9 @@ bool Map::validateMap(int continentStart, int continentEnd)
 		}
 		if (connected)
 		{
+			for (int i = 0; i < size; i++)
+				delete[] result[i];
+			delete[] result;
 			return true;
 		}
 	}

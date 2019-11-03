@@ -49,13 +49,14 @@ void Player::reinforce()
 
 		if(choice == 1){
 			exchangeBonus = hand->exchange();
-			cout << "You've receive an additional " << exchangeBonus << armies << endl;
+			cout << "You've received an additional " << exchangeBonus << " armies" << endl;
 		}
 	}
 
 	//Calculate Player Continent Bonus
 	int continentBonus = 0;
 	int numberOfCountries;
+	int countryCounter = 0;
 	for (int i = 0; i < gameMap->getNumOfContinents(); i++)
 	{
 		numberOfCountries = gameMap->getContinent(i)->getNumOfCountries();
@@ -63,10 +64,11 @@ void Player::reinforce()
 		for (int j = 0; j < numberOfCountries; j++)
 		{
 
-			if (*playerId != gameMap->getContinent(i)->getCountry(j)->getOwner()->getPlayerId())
+			if (*playerId != gameMap->getCountry(countryCounter)->getOwner()->getPlayerId())
 			{
 				ownsAll = false;
 			}
+			countryCounter++;
 		}
 		if (ownsAll)
 		{
