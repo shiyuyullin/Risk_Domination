@@ -157,6 +157,11 @@ int Deck::countInfantry() {
 /*
 COUNT ARTILLERY CARDS IN HAND METHOD
 */
+
+int Hand::getNumberOfCards(){
+	return hand.size();
+}
+
 int Hand::countArtillery() {
 	int count = 0;
 	for (int i = 0; i < hand.size(); i++) {
@@ -166,6 +171,7 @@ int Hand::countArtillery() {
 
 	return count;
 }
+
 
 
 /*

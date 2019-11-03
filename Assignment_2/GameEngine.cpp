@@ -71,7 +71,7 @@ void GameEngine::startGame()
 			{
 
 				int playerTurn = players[i]->getPlayerID();
-				cout << "It is player " << playerTurn << " turn." << endl;
+				cout << "It is player " << playerTurn << "'s turn." << endl;
 
 				// REINFORCE PHASE
 				cout << "Would you like to Reinforce your board this turn, Yes(1) or No(2) ?: ";

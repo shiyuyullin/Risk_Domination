@@ -33,6 +33,25 @@ void Player::reinforce()
 	Map *gameMap = GameEngine::getMap();
 
 	int controlledCountries = *numberOfCountryOwned/3;
+	int choice = 0;
+	int exchangeBonus
+	cout << "You have: " << hand->getNumberOfCards() << " cards";
+	if(hand->getNumberOfCards() > 5){
+		cout << "you have to exchange some cards" << endl;
+		exchangeBonus = hand->exchange();
+	}else{
+		cout << "Would you like to exchange your cars, Yes(1) or No(2): ";
+		while(choice < 1 || choice > 2){
+			cin >> choice
+		}
+
+		cout << endl;
+
+		if(choice == 1){
+			exchangeBonus = hand->exchange();
+			cout << "You've receive an additional " << exchangeBonus << armies << endl;
+		}
+	}
 
 	//Calculate Player Continent Bonus
 	int continentBonus = 0;
@@ -55,7 +74,6 @@ void Player::reinforce()
 		}
 	}
 
-	int exchangeBonus = hand->exchange();
 
 	int armiesToDistribute = controlledCountries + continentBonus + exchangeBonus;
 	if (armiesToDistribute > 0)
@@ -68,18 +86,12 @@ void Player::reinforce()
 		// vector<int> ownedCountries;
 
 		int index;
-		for (int i = 0; i < gameMap->getNumOwnedCountry(); i++)
+		for (int i = 0; i <  *numberOfCountryOwned; i++)
 		{
-
-			// int tempOwner = gameMap->getCountry(i)->getOwner()->getPlayerId();
-			// if (*playerId == tempOwner)
-			// {
-			// 	ownedCountries.push_back(i);
 			index = indexOfCountryOwned[i];
 			cout << gameMap->getCountry(index)->getCountryName() << "(" << (i + 1) << ") " << endl;
 			cout << "has " << gameMap->getCountry(i)->getNbOfArmies() << " armies. " << endl
 				 << endl;
-			// }
 		}
 
 		cout << "Now input the country you'd like to to add armies followed by the" << endl;

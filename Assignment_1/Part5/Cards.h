@@ -54,11 +54,11 @@ public:
 	int exchange(); //EXCHANGE METHOD
 	std::vector <Card*> getHand() { return hand; } //ACCESSOR FOR HAND
 	void setHand(Hand temp); //Mutator for Hand object
-
 	void addToHand(Card card); //ADD CARDS TO HAND METHOD
 	void setArmies() { *armies += 5; } //SET NUMBER OF ARMIES (MUTATOR) increment by 5
 	int getArmies() { return *armies; } //RETURN NUMBER OF ARMIES (ACCESSOR)
 	void showHand(); //print all hand cards to the screen
+	int getNumberOfCards();
 	int countCavalry();
 	int countInfantry();
 	int countArtillery();
