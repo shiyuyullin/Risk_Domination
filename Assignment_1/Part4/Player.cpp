@@ -572,6 +572,36 @@ int Player::getNumOwnedCountry()
 {
 	return *numberOfCountryOwned;
 }
+//-------------IAN A2P2 
+//THIS FUNCTION WILL PLACE THE PLAYER'S INITITAL ARMY COUNT SPREAD OUT EVENLY THROUGHOUT THEIR COUNTRIES
+//START UP PHASE USAGE ONLY
+void Player::placeArmy()
+{
+	Map* gMap = GameEngine::getMap();
+
+	cout << "Here are all the countries you own, now placing initial armies:" << endl;
+
+	int index;
+	for (int i = 0; *armies!=0; i++)
+	{
+		if (i == indexOfCountryOwned.size()) {
+			i = 0;
+		}
+		index = *indexOfCountryOwned[i];
+		//cout <<"index:" << index -1<< endl;
+		//cout << "Armies:" << *armies << endl;
+		cout << gMap->getCountry(index -1)->getCountryName() << "(" << (i + 1) << ") " << endl;
+		gMap->getCountry(index-1)->setArmyNumber((gMap->getCountry(index-1)->getNbOfArmies())+1);
+		cout << "has " << gMap->getCountry(index-1)->getNbOfArmies() << " armies. " << endl
+			<< endl;
+		(*armies)--;
+		//cout << "Decremented armies:" << *armies << endl;
+		//cout << "Size:" << indexOfCountryOwned.size() << endl;
+		//THESE COMMENTS ARE ONLY HERE FOR TRACKING PURPOSE WHEN NEEDED
+		
+	}
+
+}
 
 int Player::findIndex(int serialNum)
 {
