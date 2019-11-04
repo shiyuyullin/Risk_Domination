@@ -37,12 +37,11 @@ GameEngine::GameEngine()
 //destructor
 GameEngine::~GameEngine()
 {
-	for (int i = 0; i < *numOfPlayers; i++) {
+	
+	for (int i = 0; i < *numOfPlayers; i++)
 		delete players[i];
-	}
 	delete numOfPlayers;
 	delete map_select;
-	delete armyCnt;
 }
 
 
