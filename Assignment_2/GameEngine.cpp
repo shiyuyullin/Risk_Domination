@@ -7,7 +7,7 @@
 
 using namespace std;
 namespace fs = std::experimental::filesystem;
-
+Map* GameEngine::gameMap;
 #include <experimental/filesystem>
 //Constructor
 GameEngine::GameEngine()
