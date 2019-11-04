@@ -11,7 +11,7 @@ class GameEngine;
 class Player{
 private:
 	Dice* dice;//player dices
-	vector<int> indexOfCountryOwned;
+	vector<int> *indexOfCountryOwned;
 	Hand* hand;
 	int* numberOfCountryOwned;
 	int* playerId;
