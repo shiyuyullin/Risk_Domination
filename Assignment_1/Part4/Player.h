@@ -19,19 +19,28 @@ private:
 	
 
 public:
+	//Constructor
 	Player();
 	Player(int id, int armyCount);
+	//Destructor
 	~Player();
+	//Getters
 	int getNumOwnedCountry();
-	int findIndex(int serialNum);//Finding the index of a country's serial number in the "indexOfCountryOwned"
 	int getPlayerID();
+	int findIndex(int serialNum);//Finding the index of a country's serial number in the "indexOfCountryOwned"
+	//Setters
 	void setPlayerID(int id);
+	//General Player functions
 	void reinforce();
 	void attack();
 	void foritfy();
+	//Dice Player association
 	void RollDice(int n); //Test the dice obj for player
 	void DisplayRollInfo(int n); // These two here are to be generally put together
+	//Country Vector mods
 	void incrementNumOfCountry();
 	void decrementNumOfCountry();
 	void setIndexOfCountry(int serialNum);//just pass in the countries serial number
+	//A2P2 Ian start up phase function
+	void placeArmy();
 };
