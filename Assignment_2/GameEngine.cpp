@@ -126,16 +126,16 @@ void GameEngine::startGame()
 
 				if (choice == 1)
 				{
-					players[i]->fortify();
+					players[i]->foritfy();
 				}
 				else
 				{
 					cout << "Your turn is coming to an end. " << endl;
 				}
-				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				if (testVictoryCondition())
 				{
-					cout << "The Game is Over, Player " << playerTurn << " wins!".gameIsFinished = true;//Don't know how to fix, please fix the code
+					cout << "The Game is Over, Player " << playerTurn << " wins!" << endl;;
+					gameIsFinished = true;
 				}
 			}
 		}

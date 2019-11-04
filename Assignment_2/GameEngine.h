@@ -23,8 +23,8 @@ public:
 	void startGame();
 	string* selectMap();
 	int selectNumPlayers();
-	static Map* getMap() {};
-	bool testVictoryCondition(Map* gameMap);
+	static Map* getMap();
+	bool testVictoryCondition();
 	int CalculatePlayerOwnership(int playerId);
 	//Ian functions:
 	void map_assign();// call this first
