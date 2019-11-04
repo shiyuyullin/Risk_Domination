@@ -260,10 +260,10 @@ const int GameEngine::number_of_armies_given(int AmtOfPlayers)//A2P2 IAN
 
 void GameEngine::map_assign_startUp()//A2P2 IAN
 {
-	cout << "Assinging the start up countries of the game!" << endl;
+	cout << "Assinging the start up countries of the game!"<<endl;
 	int player_tracker = 0;
-	for (int i = 0; i < gameMap->getNumOfCountries(); i++) {
-		gameMap->getCountry(i)->setOwner(players[player_tracker]);
+	for (int i = 0; i < getMap()->getNumOfCountries(); i++) {
+		getMap()->getCountry(i)->setOwner(players[player_tracker]);
 		players[player_tracker]->setIndexOfCountry(gameMap->getCountry(i)->getCountryNumber());
 		players[player_tracker]->incrementNumOfCountry();
 		player_tracker++;
