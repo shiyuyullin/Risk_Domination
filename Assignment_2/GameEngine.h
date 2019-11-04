@@ -11,7 +11,8 @@ using namespace std;
 class GameEngine {
 private:
 	std::vector<Player*> players;//an array of player objects that will play per game
-	int* numOfPlayers;
+	int* numOfPlayers = new int;
+	int* armyCnt = new int;
 	string* map_select;
 	Maploader* map;
 	static Map* gameMap;
