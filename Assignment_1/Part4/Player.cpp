@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "D:\Visual Studio\WorkSpace\Map\Map.h"				  //Path on my computer change it if needed
 #include "D:\Visual Studio\WorkSpace\GameEngine\GameEngine.h" //Path on my computer change it if needed
+Map* GameEngine::gameMap;
 using namespace std;
 Player::Player()
 {
@@ -9,6 +10,7 @@ Player::Player()
 	hand = new Hand();
 	numberOfCountryOwned = new int(0);
 	playerId = new int(0);
+	armies = new int(0);
 }
 
 Player::Player(int id, int armyCount)
@@ -28,13 +30,12 @@ Player::~Player()
 	int temp = indexOfCountryOwned.size();
 }
 
-void Player::reinforce(Map* GameMap)
+void Player::reinforce()
 {
-	Map* gameMap = GameMap;
-
+	Map* gameMap = GameEngine::getMap();
 	int controlledCountries = *numberOfCountryOwned/3;
 	int choice = 0;
-	int exchangeBonus;
+	int exchangeBonus = 0;
 	cout << "You have: " << hand->getNumberOfCards() << " cards";
 	if(hand->getNumberOfCards() > 5){
 		cout << "you have to exchange some cards" << endl;
@@ -101,7 +102,7 @@ void Player::reinforce(Map* GameMap)
 
 		int armies = 0;
 		int tile = -1;
-		bool owns;
+		bool owns = false;
 		int mapIndex = 0;
 		while (armiesToDistribute > 0)
 		{
@@ -145,9 +146,9 @@ void Player::reinforce(Map* GameMap)
 	}
 }
 //**************************************************************************************************************************************
-void Player::attack(Map* GameMap)
+void Player::attack()
 {
-	Map* a = GameMap;
+	Map* a = GameEngine::getMap();
 	int state = 0;
 	Country *tempCountry = new Country();	  //Country to attack from
 	Country *tempCountryToAtt = new Country(); //Country that will be attacked
@@ -435,9 +436,9 @@ void Player::attack(Map* GameMap)
 	}
 }
 
-void Player::foritfy(Map* GameMap)
+void Player::foritfy()
 {
-	Map* a = GameMap;
+	Map* a = GameEngine::getMap();
 	Country *sourceCountry = new Country();
 	Country *targetCountry = new Country();
 	Player *tempPlayer = this; //Get the player who calls this method
@@ -575,9 +576,9 @@ int Player::getNumOwnedCountry()
 //-------------IAN A2P2 
 //THIS FUNCTION WILL PLACE THE PLAYER'S INITITAL ARMY COUNT SPREAD OUT EVENLY THROUGHOUT THEIR COUNTRIES
 //START UP PHASE USAGE ONLY
-void Player::placeArmy(Map* GameMap)
+void Player::placeArmy()
 {
-	Map* gMap = GameMap;
+	Map* gMap = GameEngine::getMap();
 
 	cout << "Here are all the countries you own, now placing initial armies:" << endl;
 
