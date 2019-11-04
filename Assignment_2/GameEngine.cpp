@@ -9,6 +9,7 @@ using namespace std;
 namespace fs = std::experimental::filesystem;
 
 #include <experimental/filesystem>
+Map* GameEngine::gameMap; //This is extremely necessary to have if we declare a static variable in out .h file
 //Constructor
 GameEngine::GameEngine()
 {
@@ -18,12 +19,12 @@ GameEngine::GameEngine()
 	//map_select = selectMap();
 	//Creating new playersfor the players vector
 	*numOfPlayers = selectNumPlayers();
-	int armyCnt = number_of_armies_given(players.size());
-	gameMap = map->loadingMap(*map_select); //check for exceptions
+	*armyCnt = number_of_armies_given(*numOfPlayers);
+	gameMap = map->loadingMap(*map_select); //check for excepti
 	for (int i = 1; i <= *numOfPlayers; i++)
-		players.push_back(new Player(i,armyCnt));
-	// Shuffle Player Vector To Randomly Determine the order of play
-		// of the players. Uses Fisher–Yates shuffle.
+		players.push_back(new Player(i,*armyCnt));
+	// Shuffle Player Vector To Randomly Determine the order of play 
+	// of the players. Uses Fisher–Yates shuffle. A2P2 Ian
 	for (int i = 0; i < players.size() - 1; i++) {
 		int j = i + rand() % (players.size() - i);
 		swap(players[i], players[j]);
@@ -42,7 +43,55 @@ GameEngine::~GameEngine()
 	delete map_select;
 }
 
+const int GameEngine::number_of_armies_given(int AmtOfPlayers)//A2P2 IAN
+{
 
+	switch (AmtOfPlayers)
+	{
+		std::cout << "Number of players: " << AmtOfPlayers << endl;
+	case 2:
+		std::cout << "Each player will have: 40 armies" << endl;
+		return 40;
+	case 3:
+		std::cout << "Each player will have: 35 armies" << endl;
+		return 35; 
+	case 4: 
+		std::cout << "Each player will have: 30 armies" << endl;
+		return 30;
+	case 5:
+		std::cout << "Each player will have: 25 armies" << endl;
+		return 25;
+	case 6: 
+		std::cout << "Each player will have: 20 armies" << endl;
+		return 20; 
+	default:
+			return 0;
+	}
+}
+void GameEngine::map_assign_startUp()//A2P2 IAN
+{
+	cout << "Assinging the start up countries of the game!"<<endl;
+	int player_tracker = 0;
+	for (int i = 0; i < gameMap->getNumOfCountries(); i++) {
+		gameMap->getCountry(i)->setOwner(players[player_tracker]);
+		players[player_tracker]->setIndexOfCountry(gameMap->getCountry(i)->getCountryNumber());
+		players[player_tracker]->incrementNumOfCountry();
+		player_tracker++;
+		if (player_tracker == players.size())
+			player_tracker = 0;
+	}
+
+}
+void GameEngine::placeArmies_startUpPhase()//A2P2 IAN
+{
+	cout << "Each player must place their army (" << *armyCnt << ") in all of their coutries!" << endl;
+	for (int i = 0; i < players.size(); i++) {
+		cout << "Player " << players[i]->getPlayerId() << "!" << endl;
+		players[i]->placeArmy();
+		cout << "\n\n";
+	}
+
+}
 void GameEngine::startGame()
 {
 	int choice = 0;
