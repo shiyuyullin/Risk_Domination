@@ -11,11 +11,11 @@ using namespace std;
 class GameEngine {
 private:
 	std::vector<Player*> players;//an array of player objects that will play per game
-	int* numOfPlayers = new int;
-	int* armyCnt = new int;
+	int* numOfPlayers;
+	int* armyCnt;
 	string* map_select;
 	Maploader* map;
-	static Map* gameMap;
+	Map* gameMap;
 
 public:
 	//CONSTRUCTOR 
@@ -26,10 +26,10 @@ public:
 	void startGame();
 	string* selectMap();
 	int selectNumPlayers();
-	static Map* getMap();
 	bool testVictoryCondition();
 	//A2P2 START UP PHASE USAGE ONLY
 	void map_assign_startUp();// call this first
 	void placeArmies_startUpPhase();//then this one
 	const int number_of_armies_given(int AmtOfPlayers);
 };
+
