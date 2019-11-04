@@ -8,7 +8,7 @@ using namespace std;
 //Implementation of loading function
 Map* Maploader::loadingMap(string fileName) {
 	ifstream inputFileStream;
-	inputFileStream.open(fileName + ".txt");
+	inputFileStream.open("./Maps/"+fileName + ".maps");   //modify path of maps folder
 	if (!inputFileStream.fail()) {
 		Map* resultMap = new Map();//The map that will be returned once the function resolves
 		string temp = "";
@@ -95,7 +95,7 @@ Map* Maploader::loadingMap(string fileName) {
 		return(resultMap);
 	}
 	else {
-		cout << "Invalid file name, please program exit" << endl;
+		std::cout << "Invalid file name. Game exit...." << endl;
 		exit(0);
 	}
 }
