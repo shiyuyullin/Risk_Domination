@@ -589,9 +589,9 @@ cout << "Here are all the countries you own, now placing initial armies:" << end
 		index = *indexOfCountryOwned[i];
 		cout <<"index:" << index -1<< endl;
 		cout << "Armies:" << *armies << endl;
-		cout << GameEngine::gameMap->getCountry(index -1)->getCountryName() << "(" << (i + 1) << ") " << endl;
-		GameEngine::gameMap->getCountry(index-1)->setArmyNumber((GameEngine::gameMap->getCountry(index-1)->getNbOfArmies())+1);
-		cout << "has " << GameEngine::gameMap->getCountry(index-1)->getNbOfArmies() << " armies. " << endl
+		cout << GameEngine::getMap()->getCountry(index -1)->getCountryName() << "(" << (i + 1) << ") " << endl;
+		GameEngine::getMap()->getCountry(index-1)->setArmyNumber((GameEngine::getMap()->getCountry(index-1)->getNbOfArmies())+1);
+		cout << "has " << GameEngine::getMap()->getCountry(index-1)->getNbOfArmies() << " armies. " << endl
 			<< endl;
 		(*armies)--;
 		cout << "Decremented armies:" << *armies << endl;
