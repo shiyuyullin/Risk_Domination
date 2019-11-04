@@ -28,7 +28,6 @@ public:
 	int selectNumPlayers();
 	static Map* getMap();
 	bool testVictoryCondition();
-	int CalculatePlayerOwnership(int playerId);
 	//A2P2 START UP PHASE USAGE ONLY
 	void map_assign_startUp();// call this first
 	void placeArmies_startUpPhase();//then this one

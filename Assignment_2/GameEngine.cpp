@@ -321,21 +321,6 @@ bool GameEngine::testVictoryCondition()
 	return true;
 }
 
-int GameEngine::CalculatePlayerOwnership(int playerId){
-
-	int controlledCountries = 0;
-	int counter = gameMap->getNumOfCountries();
-	for (int i = 0; i < counter; i++)
-	{
-
-		int tempOwner = gameMap->getCountry(i)->getOwner()->getPlayerID();
-		if (playerId == tempOwner)
-		{
-			controlledCountries++;
-		}
-	}
-	return controlledCountries;
-}
 
 Map* GameEngine::getMap() {
 	return gameMap;
