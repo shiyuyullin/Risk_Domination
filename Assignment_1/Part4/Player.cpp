@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "D:\Visual Studio\WorkSpace\Map\Map.h"				  //Path on my computer change it if needed
 #include "D:\Visual Studio\WorkSpace\GameEngine\GameEngine.h" //Path on my computer change it if needed
-Map* GameEngine::gameMap;
+
 using namespace std;
 Player::Player()
 {
@@ -578,28 +578,25 @@ int Player::getNumOwnedCountry()
 //START UP PHASE USAGE ONLY
 void Player::placeArmy()
 {
-	Map* gMap = GameEngine::getMap();
-
-	cout << "Here are all the countries you own, now placing initial armies:" << endl;
+cout << "Here are all the countries you own, now placing initial armies:" << endl;
 
 	int index;
-	for (int i = 0; *armies != 0; i++)
+	for (int i = 0; *armies!=0; i++)
 	{
 		if (i == indexOfCountryOwned.size()) {
 			i = 0;
 		}
-		index = indexOfCountryOwned[i];
-		//cout <<"index:" << index -1<< endl;
-		//cout << "Armies:" << *armies << endl;
-		cout << gMap->getCountry(index - 1)->getCountryName() << "(" << (i + 1) << ") " << endl;
-		gMap->getCountry(index - 1)->setArmyNumber((gMap->getCountry(index - 1)->getNbOfArmies()) + 1);
-		cout << "has " << gMap->getCountry(index - 1)->getNbOfArmies() << " armies. " << endl
+		index = *indexOfCountryOwned[i];
+		cout <<"index:" << index -1<< endl;
+		cout << "Armies:" << *armies << endl;
+		cout << GameEngine::gameMap->getCountry(index -1)->getCountryName() << "(" << (i + 1) << ") " << endl;
+		GameEngine::gameMap->getCountry(index-1)->setArmyNumber((GameEngine::gameMap->getCountry(index-1)->getNbOfArmies())+1);
+		cout << "has " << GameEngine::gameMap->getCountry(index-1)->getNbOfArmies() << " armies. " << endl
 			<< endl;
 		(*armies)--;
-		//cout << "Decremented armies:" << *armies << endl;
-		//cout << "Size:" << indexOfCountryOwned.size() << endl;
-		//THESE COMMENTS ARE ONLY HERE FOR TRACKING PURPOSE WHEN NEEDED
-
+		cout << "Decremented armies:" << *armies << endl;
+		cout << "Size:" << indexOfCountryOwned.size() << endl;
+		
 	}
 
 }
