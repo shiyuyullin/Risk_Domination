@@ -89,7 +89,7 @@ void GameEngine::startGame()
 				if (choice == 1)
 				{
 
-					players[i]->reinforce(gameMap);
+					players[i]->reinforce();
 				}
 				else
 				{
@@ -109,7 +109,7 @@ void GameEngine::startGame()
 
 				if (choice == 1)
 				{
-					players[i]->attack(gameMap);
+					players[i]->attack();
 				}
 				else
 				{
@@ -129,7 +129,7 @@ void GameEngine::startGame()
 
 				if (choice == 1)
 				{
-					players[i]->foritfy(gameMap);
+					players[i]->foritfy();
 				}
 				else
 				{
@@ -277,7 +277,7 @@ void GameEngine::placeArmies_startUpPhase()//A2P2 IAN
 	cout << "Each player must place their army (" << *armyCnt << ") in all of their coutries!" << endl;
 	for (int i = 0; i < players.size(); i++) {
 		cout << "Player " << players[i]->getPlayerID() << "!" << endl;
-		players[i]->placeArmy(gameMap);
+		players[i]->placeArmy();
 		cout << "\n\n";
 	}
 
@@ -302,4 +302,7 @@ bool GameEngine::testVictoryCondition()
 	return true;
 }
 
+Map* GameEngine::getMap() {
+	return gameMap;
+}
 

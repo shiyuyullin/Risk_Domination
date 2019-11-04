@@ -15,7 +15,7 @@ private:
 	int* armyCnt;
 	string* map_select;
 	Maploader* map;
-	Map* gameMap;
+	static Map* gameMap;
 
 public:
 	//CONSTRUCTOR 
@@ -25,6 +25,7 @@ public:
 	vector<string> getListOfMaps();
 	void startGame();
 	string* selectMap();
+	static Map* getMap();
 	int selectNumPlayers();
 	bool testVictoryCondition();
 	//A2P2 START UP PHASE USAGE ONLY
