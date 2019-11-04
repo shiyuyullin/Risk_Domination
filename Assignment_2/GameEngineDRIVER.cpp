@@ -1,4 +1,5 @@
 #include "GameEngine.h"
+
 int main() {
   //The creation of the game engine obj
 	GameEngine* eng = new GameEngine();
@@ -11,15 +12,8 @@ int main() {
   
   
   //etc modify as you please
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  // Part 3 & 4 Test
+  eng->testPart3AND4();
+
 	delete eng;
 }

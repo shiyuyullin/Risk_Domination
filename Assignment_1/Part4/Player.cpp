@@ -575,6 +575,11 @@ int Player::getNumOwnedCountry()
 	return *numberOfCountryOwned;
 }
 
+Hand* Player::getHand()
+{
+	return hand;
+}
+
 //-------------IAN A2P2 
 //THIS FUNCTION WILL PLACE THE PLAYER'S INITITAL ARMY COUNT SPREAD OUT EVENLY THROUGHOUT THEIR COUNTRIES
 //START UP PHASE USAGE ONLY

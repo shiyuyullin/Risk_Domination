@@ -40,4 +40,5 @@ public:
 	void setIndexOfCountry(int serialNum);//just pass in the countries serial number
 	//A2P2 Ian start up phase function
 	void placeArmy();
+	Hand* getHand();
 };

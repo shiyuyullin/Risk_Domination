@@ -305,3 +305,100 @@ Map* GameEngine::getMap() {
 	return gameMap;
 }
 
+void GameEngine::testPart3AND4(){
+	  //Part3 And 4
+  // 	//FOR TESTING PURPOSES----------------------------------------------------------------
+  Map *testMap = new Map();
+  Player *testPlayer = new Player();
+  testPlayer->setPlayerID(1);
+
+  Country *tempCountry1 = new Country();
+  tempCountry1->setCountryName("Canada");
+  tempCountry1->setCountryNumber(1);
+  tempCountry1->setOwner(testPlayer);
+  testMap->setCountry(tempCountry1);
+
+  Country *tempCountry2 = new Country();
+  tempCountry2->setCountryName("USA");
+  tempCountry2->setCountryNumber(2);
+  tempCountry2->setOwner(testPlayer);
+  testMap->setCountry(tempCountry2);
+
+  Country *tempCountry3 = new Country();
+  tempCountry3->setCountryName("Mexico");
+  tempCountry3->setCountryNumber(2);
+  tempCountry3->setOwner(testPlayer);
+  testMap->setCountry(tempCountry3);
+
+  Country *tempCountry4 = new Country();
+  tempCountry4->setCountryName("France");
+  tempCountry4->setCountryNumber(3);
+  tempCountry4->setOwner(testPlayer);
+  testMap->setCountry(tempCountry4);
+
+  Country *tempCountry5 = new Country();
+  tempCountry5->setCountryName("England");
+  tempCountry5->setCountryNumber(4);
+  tempCountry5->setOwner(testPlayer);
+  testMap->setCountry(tempCountry5);
+
+  Country *tempCountry6 = new Country();
+  tempCountry6->setCountryName("Spain");
+  tempCountry6->setCountryNumber(5);
+  tempCountry6->setOwner(testPlayer);
+  testMap->setCountry(tempCountry6);
+
+  int numberOfCountries = testMap->getNumOfCountries();
+  Player *owner = testMap->getCountry(0)->getOwner();
+  bool finsihed = true;
+
+  for (int i = 1; i < numberOfCountries; i++)
+  {
+
+    Player *tempOwner = testMap->getCountry(i)->getOwner();
+    if (owner != tempOwner)
+    {
+      finsihed = false;
+      break;
+    }
+  }
+
+  cout << finsihed << endl;
+
+  //FOR TESTING PURPOSES----------------------------------------------------------------
+
+  Card *card1 = new Card(1);
+  Card *card2 = new Card(1);
+  Card *card3 = new Card(1);
+  Card *card4 = new Card(1);
+  Card *card5 = new Card(1);
+  Card *card6 = new Card(2);
+  Card *card7 = new Card(2);
+  Card *card8 = new Card(2);
+  Card *card9 = new Card(2);
+  Card *card10 = new Card(3);
+  Card *card11 = new Card(3);
+  Card *card12 = new Card(3);
+  Card *card13 = new Card(3);
+  Card *card14 = new Card(3);
+  Card *card15 = new Card(3);
+
+  testPlayer->getHand()->addToHand(card1);
+  testPlayer->getHand()->addToHand(card2);
+  testPlayer->getHand()->addToHand(card3);
+  testPlayer->getHand()->addToHand(card4);
+  testPlayer->getHand()->addToHand(card5);
+  testPlayer->getHand()->addToHand(card6);
+  testPlayer->getHand()->addToHand(card7);
+  testPlayer->getHand()->addToHand(card8);
+  testPlayer->getHand()->addToHand(card9);
+  testPlayer->getHand()->addToHand(card10);
+  testPlayer->getHand()->addToHand(card11);
+  testPlayer->getHand()->addToHand(card12);
+  testPlayer->getHand()->addToHand(card13);
+  testPlayer->getHand()->addToHand(card14);
+  testPlayer->getHand()->addToHand(card15);
+
+  testPlayer->reinforce();
+}
+

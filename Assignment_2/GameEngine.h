@@ -32,5 +32,6 @@ public:
 	void map_assign_startUp();// call this first
 	void placeArmies_startUpPhase();//then this one
 	const int number_of_armies_given(int AmtOfPlayers);
+	void testPart3AND4();
 };
 
