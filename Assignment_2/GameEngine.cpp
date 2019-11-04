@@ -2,13 +2,13 @@
 #include <vector>
 #include <algorithm>
 #include <random>
-#include <experimental/filesystem>
+#include <filesystem>
 #include "GameEngine.h"
 
 using namespace std;
-namespace fs = std::experimental::filesystem;
+namespace fs = filesystem;
 Map* GameEngine::gameMap;
-#include <experimental/filesystem>
+
 //Constructor
 GameEngine::GameEngine()
 {
@@ -16,7 +16,7 @@ GameEngine::GameEngine()
 	armyCnt = new int;
 	map_select = new string("");
 	numOfPlayers = new int(0);
-	//map_select = selectMap();
+	map_select = selectMap();
 	//Creating new playersfor the players vector
 	*numOfPlayers = selectNumPlayers();
 	*armyCnt = number_of_armies_given(*numOfPlayers);
@@ -147,10 +147,30 @@ void GameEngine::startGame()
 		exit(0);
 }
 
+string* GameEngine::selectMap() {
+
+	vector <string> list = getListOfMaps();
+	int choice = 0;
+	cout << "Select a map from the following list to play!" << endl;
+	int i = 1;
+	for (auto str : list)
+		std::cout << "(" << i++ << ") " << str << std::endl;
+	while (choice <1 || choice >= i) {
+		cout << endl << "Enter Map choice: ";
+		cin >> choice;choice = choice;
+		if (choice < 1 || choice >= i)
+			cout << "Invalid Option. Try again." << endl;
+	}
+
+	*map_select = list[choice-1];
+	cout << "Heree: " + *map_select<<endl;
+
+	return map_select;
+}
+
 vector<string> GameEngine::getListOfMaps()
 {
-
-	string dirPath = ".";
+	string dirPath = "./Maps";
 
 	vector<string> listOfFiles;
 	try
@@ -175,43 +195,19 @@ vector<string> GameEngine::getListOfMaps()
 			cout << "Error! This directory doesn't exist.";
 		}
 	}
-	catch (std::system_error &e)
+	catch (std::system_error& e)
 	{
 		std::cerr << "Exception : " << e.what();
 	}
 	return listOfFiles;
 }
 
-string *GameEngine::selectMap()
-{
-
-	vector<string> list = getListOfMaps();
-	int choice = 0;
-	cout << "Select a map from the following list to play!" << endl;
-	int i = 1;
-	for (auto str : list)
-		std::cout << "(" << i++ << ") " << str << std::endl;
-	while (choice < 1 || choice >= i)
-	{
-		cout << endl
-			 << "Enter Map choice: ";
-		cin >> choice;
-		if (choice < 1 || choice >= i)
-			cout << "Invalid Option. Try again." << endl;
-	}
-
-	*map_select = list[choice - 1];
-
-	return map_select;
-}
-
-int GameEngine::selectNumPlayers()
-{
+int GameEngine::selectNumPlayers() {
 	int num = 0;
-	cout << "========================" << endl;
-	;
+	cout << "========================" << endl;;
 	cout << "Select Number of Players" << endl;
 	cout << "========================" << endl;
+
 
 	cout << "(2)	 2 Players" << endl;
 	cout << "(3)	 3 Players" << endl;
@@ -219,14 +215,13 @@ int GameEngine::selectNumPlayers()
 	cout << "(5)	 5 Players" << endl;
 	cout << "(6)	 6 Players" << endl;
 
-	while (num < 2 || num > 6)
-	{
+	while (num < 2 || num >6) {
 		cout << "Enter Number of Players in this game: ";
 		cin >> num;
-		if (num < 2 || num > 6)
+		if (num < 2 || num >6)
 			cout << "Invalid number of players. Try again." << endl;
 	}
-	//Add code for exceptions
+
 
 	return num;
 }
