@@ -24,12 +24,15 @@ Player::Player(int id, int armyCount)
 
 Player::~Player()
 {
-	delete playerId;
-	delete armies;
 	delete dice;
-	dice = NULL;
-	playerId = NULL;
+	delete hand;
 	delete numberOfCountryOwned;
+	int temp = indexOfCountryOwned.size();
+	for (int i = 0; i < temp; ++i) {
+		delete indexOfCountryOwned[i];
+	}
+	delete armies;
+	delete playerId;
 }
 
 void Player::reinforce()
@@ -93,7 +96,7 @@ void Player::reinforce()
 		int index;
 		for (int i = 0; i <  *numberOfCountryOwned; i++)
 		{
-			index = indexOfCountryOwned[i];
+			index = *indexOfCountryOwned[i];
 			cout << gameMap->getCountry(index)->getCountryName() << "(" << (i + 1) << ") " << endl;
 			cout << "has " << gameMap->getCountry(i)->getNbOfArmies() << " armies. " << endl
 				 << endl;
@@ -112,7 +115,7 @@ void Player::reinforce()
 			cin >> tile >> armies;
 			if (!cin.fail() && tile >= 1 && tile < *numberOfCountryOwned && armies > 0 && armies <= armiesToDistribute)
 				{
-					mapIndex = indexOfCountryOwned[tile - 1];
+					mapIndex = *indexOfCountryOwned[tile - 1];
 					gameMap->getCountry(mapIndex)->addArmies(armies);
 					cout << gameMap->getCountry(mapIndex)->getCountryName() << " now has ";
 					cout << gameMap->getCountry(mapIndex)->getNbOfArmies() << " armies" << endl;
@@ -129,7 +132,7 @@ void Player::reinforce()
 						for (int i = 0; i < *numberOfCountryOwned; i++)
 						{
 
-							index = indexOfCountryOwned[i];
+							index = *indexOfCountryOwned[i];
 							cout << gameMap->getCountry(index)->getCountryName();
 							cout << " has " << gameMap->getCountry(i)->getNbOfArmies() << " armies." << endl;
 						}
@@ -151,11 +154,12 @@ void Player::reinforce()
 void Player::attack()
 {
 	Map* a = GameEngine::getMap();
+	//Map* a = gamemap;
 	int state = 0;
-	Country *tempCountry = new Country();	  //Country to attack from
+	Country* tempCountry = new Country();//Country to attack from
 	Country *tempCountryToAtt = new Country(); //Country that will be attacked
-	Player *Attacker = new Player();		   //The player who is attacking
-	Player *Defender = new Player();		   //The player who is attacked
+	Player* Attacker = this;//The player who is attacking
+	Player *Defender = new Player();//The player who is attacked
 	while (state != 2)
 	{
 		cout << "Please choose the following options: 1. attack 2. not attack." << endl;
@@ -174,7 +178,7 @@ void Player::attack()
 				cout << "Please choose one of the following country to attack from(The integer value before the country name):" << endl;
 				for (int i = 0; i < *numberOfCountryOwned; ++i)
 				{
-					tempCountry = a->getCountry(indexOfCountryOwned[i] - 1);
+					tempCountry = a->getCountry((*indexOfCountryOwned[i] - 1));
 					cout << "You own: " << endl;
 					cout << tempCountry->getCountryNumber() << ". " << tempCountry->getCountryName() << ", number of armies: " << tempCountry->getNbOfArmies() << endl;
 				}
@@ -182,18 +186,28 @@ void Player::attack()
 				while (state1)
 				{
 					cin >> tempValue;
-					tempCountry = a->getCountry(tempValue - 1); //get the country to attack from
-					int tempComparing = tempCountry->getNbOfArmies();
-					if (tempComparing < 2)
-					{
-						cout << "The attacking country has less than 2 armies, it cannot be used for attacking, please select another country: " << endl;
+					int countSerial = 0;
+					for (int i = 0; i < Attacker->getNumOwnedCountry(); ++i) {
+						if (tempValue != *indexOfCountryOwned[i]) {
+							countSerial++;
+						}
 					}
-					else
-					{
-						state1 = false;
+					if (countSerial == Attacker->getNumOwnedCountry()) {
+						cout << "You don't own this country, please enter a valid serial number: " << endl;
+					}
+					else {
+						tempCountry = a->getCountry(tempValue - 1); //get the country to attack from
+						int tempComparing = tempCountry->getNbOfArmies();
+						if (tempComparing < 2)
+						{
+							cout << "The attacking country has less than 2 armies, it cannot be used for attacking, please select another country: " << endl;
+						}
+						else
+						{
+							state1 = false;
+						}
 					}
 				}
-				Attacker = tempCountry->getOwner();		  //get the owner(player) of that country
 				numArmAtt = tempCountry->getNbOfArmies(); //Getting number of armies on attacking country
 				//Validating the attacking path
 				//first, get the borders of the selected country
@@ -397,8 +411,11 @@ void Player::attack()
 				//state change on defender
 				Defender->decrementNumOfCountry();
 				int tempSer = tempCountryToAtt->getCountryNumber();
-				indexOfCountryOwned.erase(std::remove(indexOfCountryOwned.begin(), indexOfCountryOwned.end(), tempSer), indexOfCountryOwned.end());
-				indexOfCountryOwned.shrink_to_fit();
+				int indexSerial = Defender->findIndex(tempSer);
+				Defender->removeIndex(indexSerial);
+				for (int i = 0; i < Defender->getNumOwnedCountry(); ++i) {
+					cout << Defender->getSerialAt(i) << endl;
+				}
 				//statechange on attacker
 				tempCountryToAtt->setOwner(Attacker);
 				Attacker->setIndexOfCountry(tempCountryToAtt->getCountryNumber());
@@ -441,8 +458,9 @@ void Player::attack()
 void Player::foritfy()
 {
 	Map* a = GameEngine::getMap();
-	Country *sourceCountry = new Country();
-	Country *targetCountry = new Country();
+	//Map* a = gamemap;
+	Country *sourceCountry;
+	Country *targetCountry;
 	Player *tempPlayer = this; //Get the player who calls this method
 	int numOfArmiesMove = 0;
 	int serialNumOfTargetCountry = -1;
@@ -458,24 +476,36 @@ void Player::foritfy()
 		//Displaying all of the owned countries
 		for (int i = 0; i < tempPlayer->getNumOwnedCountry(); ++i)
 		{
-			int serialNum = tempPlayer->indexOfCountryOwned[i];
-			Country *disPlay = a->getCountry(serialNum - 1);
+			int* serialNum = tempPlayer->indexOfCountryOwned[i];
+			Country *disPlay = a->getCountry(*serialNum - 1);
 			cout << disPlay->getCountryNumber() << ". " << disPlay->getCountryName() << " Armies: " << disPlay->getNbOfArmies() << endl;
 		}
 		while (true)
 		{
 			cout << "Enter the serial number(number before the country's name): ";
 			cin >> serialNumOfSourceCountry;
-			cout << endl;
-			sourceCountry = a->getCountry(serialNumOfSourceCountry - 1); //Getting the source country
-			originalArmOnSource = sourceCountry->getNbOfArmies();		 //Getting original armies on source country
-			if (originalArmOnSource <= 1)
-			{
-				cout << "Sorry, you cannot select this country as source country because its armies are smaller that or equal to 1." << endl;
-				cout << "Please try again" << endl;
-				continue;
+			int counterSerial = 0;//Counter to count 
+			for (int i = 0; i < tempPlayer->getNumOwnedCountry(); ++i) {
+				if (serialNumOfSourceCountry != *indexOfCountryOwned[i]) {
+					counterSerial++;
+				}
 			}
-			break;
+			cout << endl;
+			if (counterSerial == tempPlayer->getNumOwnedCountry()) {
+				cout << "You don't own this country, please enter a valid serial number: ";
+				cout << endl;
+			}
+			else {
+				sourceCountry = a->getCountry(serialNumOfSourceCountry - 1); //Getting the source country
+				originalArmOnSource = sourceCountry->getNbOfArmies();		 //Getting original armies on source country
+				if (originalArmOnSource <= 1)
+				{
+					cout << "Sorry, you cannot select this country as source country because its armies are smaller that or equal to 1." << endl;
+					cout << "Please try again" << endl;
+					continue;
+				}
+				break;
+			}
 		}
 		//Getting the borders of the source country and find whether it is adjacent to source country
 		int *tempBorders = sourceCountry->getBorders();
@@ -487,7 +517,7 @@ void Player::foritfy()
 			for (int j = 0; j < tempPlayer->getNumOwnedCountry(); ++j)
 			{ //loop through all countries that own by the player
 				//if the players owns that country and the country is not itself
-				if (tempBorders[counter] == indexOfCountryOwned[j])
+				if (tempBorders[counter] == *indexOfCountryOwned[j])
 				{
 					if (tempBorders[counter] != sourceCountry->getCountryNumber())
 					{
@@ -534,7 +564,10 @@ void Player::foritfy()
 	}
 }
 //***********************************************************************************************************************************************************
-
+void Player::removeIndex(int index) {
+	indexOfCountryOwned.erase((indexOfCountryOwned.begin() + index));
+	indexOfCountryOwned.shrink_to_fit();
+}
 void Player::RollDice(int n)
 {
 	dice->Roll(n);
@@ -563,8 +596,9 @@ void Player::decrementNumOfCountry()
 
 void Player::setIndexOfCountry(int serialNum)
 {
-	indexOfCountryOwned.push_back(serialNum);
-	*numberOfCountryOwned = *numberOfCountryOwned + 1;
+	int* temp = new int(serialNum);
+	indexOfCountryOwned.push_back(temp);
+	*numberOfCountryOwned = (*numberOfCountryOwned + 1);
 }
 int Player::getPlayerID()
 {
@@ -574,36 +608,35 @@ int Player::getNumOwnedCountry()
 {
 	return *numberOfCountryOwned;
 }
-
-Hand* Player::getHand()
-{
-	return hand;
+int Player::getSerialAt(int index) {
+	return *indexOfCountryOwned[index];
 }
 
 //-------------IAN A2P2 
 //THIS FUNCTION WILL PLACE THE PLAYER'S INITITAL ARMY COUNT SPREAD OUT EVENLY THROUGHOUT THEIR COUNTRIES
 //START UP PHASE USAGE ONLY
+
 void Player::placeArmy()
 {
-cout << "Here are all the countries you own, now placing initial armies:" << endl;
+	cout << "Here are all the countries you own, now placing initial armies:" << endl;
 
 	int index;
-	for (int i = 0; *armies!=0; i++)
+	for (int i = 0; *armies != 0; i++)
 	{
 		if (i == indexOfCountryOwned.size()) {
 			i = 0;
 		}
 		index = *indexOfCountryOwned[i];
-		cout <<"index:" << index -1<< endl;
+		cout << "index:" << index - 1 << endl;
 		cout << "Armies:" << *armies << endl;
-		cout << GameEngine::getMap()->getCountry(index -1)->getCountryName() << "(" << (i + 1) << ") " << endl;
-		GameEngine::getMap()->getCountry(index-1)->setArmyNumber((GameEngine::getMap()->getCountry(index-1)->getNbOfArmies())+1);
-		cout << "has " << GameEngine::getMap()->getCountry(index-1)->getNbOfArmies() << " armies. " << endl
+		cout << GameEngine::getMap()->getCountry(index - 1)->getCountryName() << "(" << (i + 1) << ") " << endl;
+		GameEngine::getMap()->getCountry(index - 1)->setArmyNumber((GameEngine::getMap()->getCountry(index - 1)->getNbOfArmies()) + 1);
+		cout << "has " << GameEngine::getMap()->getCountry(index - 1)->getNbOfArmies() << " armies. " << endl
 			<< endl;
-		(*armies)--;
+		*armies = (*armies - 1);
 		cout << "Decremented armies:" << *armies << endl;
 		cout << "Size:" << indexOfCountryOwned.size() << endl;
-		
+
 	}
 
 }
@@ -614,10 +647,12 @@ int Player::findIndex(int serialNum)
 	int tempsize = indexOfCountryOwned.size();
 	for (int i = 0; i < tempsize; i++)
 	{
-		if (indexOfCountryOwned[i] == serialNum)
+		if (*indexOfCountryOwned[i] == serialNum)
 		{
 			return i;
 		}
 	}
 	return (none);
 }
+
+

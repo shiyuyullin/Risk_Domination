@@ -11,7 +11,7 @@ class GameEngine;
 class Player{
 private:
 	Dice* dice;//player dices
-	vector<int> *indexOfCountryOwned;
+	vector<int*> indexOfCountryOwned;
 	Hand* hand;
 	int* numberOfCountryOwned;
 	int* playerId;
@@ -28,6 +28,7 @@ public:
 	int getNumOwnedCountry();
 	int findIndex(int serialNum);//Finding the index of a country's serial number in the "indexOfCountryOwned"
 	int getPlayerID();
+	int getSerialAt(int index);
 	//Setters
 	void setPlayerID(int id);
 	void reinforce();
@@ -38,7 +39,7 @@ public:
 	void incrementNumOfCountry();
 	void decrementNumOfCountry();
 	void setIndexOfCountry(int serialNum);//just pass in the countries serial number
+	void removeIndex(int index);
 	//A2P2 Ian start up phase function
 	void placeArmy();
-	Hand* getHand();
 };
