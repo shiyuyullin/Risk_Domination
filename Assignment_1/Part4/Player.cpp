@@ -25,29 +25,30 @@ Player::~Player()
 	delete dice;
 	delete hand;
 	delete numberOfCountryOwned;
+	delete armies;
 	int temp = indexOfCountryOwned.size();
 }
-
 void Player::reinforce()
 {
-	Map *gameMap = GameEngine::getMap();
+	Map* gameMap = GameEngine::getMap();
 
-	int controlledCountries = *numberOfCountryOwned/3;
+	int controlledCountries = *numberOfCountryOwned / 3;
 	int choice = 0;
-	int exchangeBonus
-	cout << "You have: " << hand->getNumberOfCards() << " cards";
-	if(hand->getNumberOfCards() > 5){
+	int exchangeBonus;
+		cout << "You have: " << hand->getNumberOfCards() << " cards";
+	if (hand->getNumberOfCards() > 5) {
 		cout << "you have to exchange some cards" << endl;
 		exchangeBonus = hand->exchange();
-	}else{
+	}
+	else {
 		cout << "Would you like to exchange your cars, Yes(1) or No(2): ";
-		while(choice < 1 || choice > 2){
-			cin >> choice
+		while (choice < 1 || choice > 2) {
+			cin >> choice;
 		}
 
 		cout << endl;
 
-		if(choice == 1){
+		if (choice == 1) {
 			exchangeBonus = hand->exchange();
 			cout << "You've received an additional " << exchangeBonus << " armies" << endl;
 		}
@@ -64,7 +65,7 @@ void Player::reinforce()
 		for (int j = 0; j < numberOfCountries; j++)
 		{
 
-			if (*playerId != gameMap->getCountry(countryCounter)->getOwner()->getPlayerId())
+			if (*playerId != gameMap->getCountry(countryCounter)->getOwner()->getPlayerID())
 			{
 				ownsAll = false;
 			}
@@ -83,17 +84,17 @@ void Player::reinforce()
 
 		cout << "Here are all the countries you control Select where you would like to place your armies" << endl;
 		cout << "You control: " << endl
-			 << endl;
+			<< endl;
 
 		// vector<int> ownedCountries;
 
 		int index;
-		for (int i = 0; i <  *numberOfCountryOwned; i++)
+		for (int i = 0; i < *numberOfCountryOwned; i++)
 		{
 			index = indexOfCountryOwned[i];
 			cout << gameMap->getCountry(index)->getCountryName() << "(" << (i + 1) << ") " << endl;
 			cout << "has " << gameMap->getCountry(i)->getNbOfArmies() << " armies. " << endl
-				 << endl;
+				<< endl;
 		}
 
 		cout << "Now input the country you'd like to to add armies followed by the" << endl;
@@ -101,36 +102,37 @@ void Player::reinforce()
 
 		int armies = 0;
 		int tile = -1;
-		bool owns;
+		bool owns = false;
 		int mapIndex = 0;
 		while (armiesToDistribute > 0)
 		{
 			cout << endl;
 			cin >> tile >> armies;
 			if (!cin.fail() && tile >= 1 && tile < *numberOfCountryOwned && armies > 0 && armies <= armiesToDistribute)
+			{
+				mapIndex = indexOfCountryOwned[tile - 1];
+				gameMap->getCountry(mapIndex)->addArmies(armies);
+				cout << gameMap->getCountry(mapIndex)->getCountryName() << " now has ";
+				cout << gameMap->getCountry(mapIndex)->getNbOfArmies() << " armies" << endl;
+				armiesToDistribute -= armies;
+				if (armiesToDistribute > 0)
 				{
-					mapIndex = indexOfCountryOwned[tile - 1];
-					gameMap->getCountry(mapIndex)->addArmies(armies);
-					cout << gameMap->getCountry(mapIndex)->getCountryName() << " now has ";
-					cout << gameMap->getCountry(mapIndex)->getNbOfArmies() << " armies" endl;
-					armiesToDistribute -= armies;
-					if (armiesToDistribute > 0)
+					cout << "You still have " << armiesToDistribute << " armies to distribute." << endl;
+					cout << "like before enter the country number and armies to distribute: ";
+					cout << endl;
+				}
+				else
+				{
+					cout << "You've finished your reinforcement phase. This is how you countries stand: " << endl;
+					for (int i = 0; i < *numberOfCountryOwned; i++)
 					{
-						cout << "You still have " << armiesToDistribute << " armies to distribute." << endl;
-						cout << "like before enter the country number and armies to distribute: "
-					}
-					else
-					{
-						cout << "You've finished your reinforcement phase. This is how you countries stand: " << endl;
-						for (int i = 0; i < *numberOfCountryOwned; i++)
-						{
 
-							index = indexOfCountryOwned[i];
-							cout << gameMap->getCountry(index)->getCountryName();
-							cout << " has " << gameMap->getCountry(i)->getNbOfArmies() << " armies." << endl
-						}
+						index = indexOfCountryOwned[i];
+						cout << gameMap->getCountry(index)->getCountryName();
+						cout << " has " << gameMap->getCountry(i)->getNbOfArmies() << " armies." << endl;
 					}
 				}
+			}
 			else
 			{
 				cout << "That's an invalid input, try again!" << endl;

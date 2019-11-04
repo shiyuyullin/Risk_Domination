@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
-#include "D:\Visual Studio\WorkSpace\Dice\Dice.h"//Path on my computer change it if needed
-#include "D:\Visual Studio\WorkSpace\Deck\Cards.h"//Path on my computer change it if needed
 #include <ostream>
 #include <vector>
 #include <algorithm>
+#include "D:\Visual Studio\WorkSpace\Deck\Cards.h"
+#include "D:\Visual Studio\WorkSpace\Dice\Dice.h"
 class Map;
 class GameEngine;
 
