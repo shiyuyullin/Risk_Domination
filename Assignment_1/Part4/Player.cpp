@@ -25,30 +25,29 @@ Player::~Player()
 	delete dice;
 	delete hand;
 	delete numberOfCountryOwned;
-	delete armies;
 	int temp = indexOfCountryOwned.size();
 }
-void Player::reinforce()
-{
-	Map* gameMap = GameEngine::getMap();
 
-	int controlledCountries = *numberOfCountryOwned / 3;
+void Player::reinforce(Map* GameMap)
+{
+	Map* gameMap = GameMap;
+
+	int controlledCountries = *numberOfCountryOwned/3;
 	int choice = 0;
 	int exchangeBonus;
-		cout << "You have: " << hand->getNumberOfCards() << " cards";
-	if (hand->getNumberOfCards() > 5) {
+	cout << "You have: " << hand->getNumberOfCards() << " cards";
+	if(hand->getNumberOfCards() > 5){
 		cout << "you have to exchange some cards" << endl;
 		exchangeBonus = hand->exchange();
-	}
-	else {
+	}else{
 		cout << "Would you like to exchange your cars, Yes(1) or No(2): ";
-		while (choice < 1 || choice > 2) {
+		while(choice < 1 || choice > 2){
 			cin >> choice;
 		}
 
 		cout << endl;
 
-		if (choice == 1) {
+		if(choice == 1){
 			exchangeBonus = hand->exchange();
 			cout << "You've received an additional " << exchangeBonus << " armies" << endl;
 		}
@@ -84,17 +83,17 @@ void Player::reinforce()
 
 		cout << "Here are all the countries you control Select where you would like to place your armies" << endl;
 		cout << "You control: " << endl
-			<< endl;
+			 << endl;
 
 		// vector<int> ownedCountries;
 
 		int index;
-		for (int i = 0; i < *numberOfCountryOwned; i++)
+		for (int i = 0; i <  *numberOfCountryOwned; i++)
 		{
 			index = indexOfCountryOwned[i];
 			cout << gameMap->getCountry(index)->getCountryName() << "(" << (i + 1) << ") " << endl;
 			cout << "has " << gameMap->getCountry(i)->getNbOfArmies() << " armies. " << endl
-				<< endl;
+				 << endl;
 		}
 
 		cout << "Now input the country you'd like to to add armies followed by the" << endl;
@@ -102,37 +101,37 @@ void Player::reinforce()
 
 		int armies = 0;
 		int tile = -1;
-		bool owns = false;
+		bool owns;
 		int mapIndex = 0;
 		while (armiesToDistribute > 0)
 		{
 			cout << endl;
 			cin >> tile >> armies;
 			if (!cin.fail() && tile >= 1 && tile < *numberOfCountryOwned && armies > 0 && armies <= armiesToDistribute)
-			{
-				mapIndex = indexOfCountryOwned[tile - 1];
-				gameMap->getCountry(mapIndex)->addArmies(armies);
-				cout << gameMap->getCountry(mapIndex)->getCountryName() << " now has ";
-				cout << gameMap->getCountry(mapIndex)->getNbOfArmies() << " armies" << endl;
-				armiesToDistribute -= armies;
-				if (armiesToDistribute > 0)
 				{
-					cout << "You still have " << armiesToDistribute << " armies to distribute." << endl;
-					cout << "like before enter the country number and armies to distribute: ";
-					cout << endl;
-				}
-				else
-				{
-					cout << "You've finished your reinforcement phase. This is how you countries stand: " << endl;
-					for (int i = 0; i < *numberOfCountryOwned; i++)
+					mapIndex = indexOfCountryOwned[tile - 1];
+					gameMap->getCountry(mapIndex)->addArmies(armies);
+					cout << gameMap->getCountry(mapIndex)->getCountryName() << " now has ";
+					cout << gameMap->getCountry(mapIndex)->getNbOfArmies() << " armies" << endl;
+					armiesToDistribute -= armies;
+					if (armiesToDistribute > 0)
 					{
+						cout << "You still have " << armiesToDistribute << " armies to distribute." << endl;
+						cout << "like before enter the country number and armies to distribute: ";
+						cout << endl;
+					}
+					else
+					{
+						cout << "You've finished your reinforcement phase. This is how you countries stand: " << endl;
+						for (int i = 0; i < *numberOfCountryOwned; i++)
+						{
 
-						index = indexOfCountryOwned[i];
-						cout << gameMap->getCountry(index)->getCountryName();
-						cout << " has " << gameMap->getCountry(i)->getNbOfArmies() << " armies." << endl;
+							index = indexOfCountryOwned[i];
+							cout << gameMap->getCountry(index)->getCountryName();
+							cout << " has " << gameMap->getCountry(i)->getNbOfArmies() << " armies." << endl;
+						}
 					}
 				}
-			}
 			else
 			{
 				cout << "That's an invalid input, try again!" << endl;
@@ -146,9 +145,9 @@ void Player::reinforce()
 	}
 }
 //**************************************************************************************************************************************
-void Player::attack()
+void Player::attack(Map* GameMap)
 {
-	Map *a = GameEngine::getMap();
+	Map* a = GameMap;
 	int state = 0;
 	Country *tempCountry = new Country();	  //Country to attack from
 	Country *tempCountryToAtt = new Country(); //Country that will be attacked
@@ -436,9 +435,9 @@ void Player::attack()
 	}
 }
 
-void Player::foritfy()
+void Player::foritfy(Map* GameMap)
 {
-	Map *a = GameEngine::getMap(); //Fake map
+	Map* a = GameMap;
 	Country *sourceCountry = new Country();
 	Country *targetCountry = new Country();
 	Player *tempPlayer = this; //Get the player who calls this method
@@ -572,33 +571,34 @@ int Player::getNumOwnedCountry()
 {
 	return *numberOfCountryOwned;
 }
+
 //-------------IAN A2P2 
 //THIS FUNCTION WILL PLACE THE PLAYER'S INITITAL ARMY COUNT SPREAD OUT EVENLY THROUGHOUT THEIR COUNTRIES
 //START UP PHASE USAGE ONLY
-void Player::placeArmy()
+void Player::placeArmy(Map* GameMap)
 {
-	Map* gMap = GameEngine::getMap();
+	Map* gMap = GameMap;
 
 	cout << "Here are all the countries you own, now placing initial armies:" << endl;
 
 	int index;
-	for (int i = 0; *armies!=0; i++)
+	for (int i = 0; *armies != 0; i++)
 	{
 		if (i == indexOfCountryOwned.size()) {
 			i = 0;
 		}
-		index = *indexOfCountryOwned[i];
+		index = indexOfCountryOwned[i];
 		//cout <<"index:" << index -1<< endl;
 		//cout << "Armies:" << *armies << endl;
-		cout << gMap->getCountry(index -1)->getCountryName() << "(" << (i + 1) << ") " << endl;
-		gMap->getCountry(index-1)->setArmyNumber((gMap->getCountry(index-1)->getNbOfArmies())+1);
-		cout << "has " << gMap->getCountry(index-1)->getNbOfArmies() << " armies. " << endl
+		cout << gMap->getCountry(index - 1)->getCountryName() << "(" << (i + 1) << ") " << endl;
+		gMap->getCountry(index - 1)->setArmyNumber((gMap->getCountry(index - 1)->getNbOfArmies()) + 1);
+		cout << "has " << gMap->getCountry(index - 1)->getNbOfArmies() << " armies. " << endl
 			<< endl;
 		(*armies)--;
 		//cout << "Decremented armies:" << *armies << endl;
 		//cout << "Size:" << indexOfCountryOwned.size() << endl;
 		//THESE COMMENTS ARE ONLY HERE FOR TRACKING PURPOSE WHEN NEEDED
-		
+
 	}
 
 }
