@@ -17,7 +17,9 @@ private:
 	static Map* gameMap;
 
 public:
+	//CONSTRUCTOR 
 	GameEngine();
+	//DESTRUCTOR
 	~GameEngine();
 	vector<string> getListOfMaps();
 	void startGame();
@@ -26,8 +28,8 @@ public:
 	static Map* getMap();
 	bool testVictoryCondition();
 	int CalculatePlayerOwnership(int playerId);
-	//Ian functions:
-	void map_assign();// call this first
-	void placeArmies(int n);//then this one
+	//A2P2 START UP PHASE USAGE ONLY
+	void map_assign_startUp();// call this first
+	void placeArmies_startUpPhase();//then this one
 	const int number_of_armies_given(int AmtOfPlayers);
 };
