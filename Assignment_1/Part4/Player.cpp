@@ -24,10 +24,18 @@ Player::Player(int id, int armyCount)
 
 Player::~Player()
 {
+	delete playerId;
+	delete armies;
 	delete dice;
 	delete hand;
 	delete numberOfCountryOwned;
-	int temp = indexOfCountryOwned.size();
+	for (int i = 0; i < indexOfCountryOwned.size(); i++)
+		delete indexOfCountryOwned[i];
+	dice = NULL;
+	playerId = NULL;
+	armies = NULL;
+	hand = NULL;
+	numberOfCountryOwned = NULL;
 }
 
 void Player::reinforce()
