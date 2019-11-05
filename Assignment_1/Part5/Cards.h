@@ -9,7 +9,7 @@ class Card {
 
 public:
 	Card(int t); //CARD CLASS ACCEPTING TYPE of card as int AS PARAMETER (0-INFANTRY, 1-ARTILLERY, 2-CAVALRY)
-	~Card();
+	
 	string getType() { return *type; } //ACCESSOR FOR CARD type
 	void setType(string str) { *type = str; } //MUTATOR FOR CARD type
 	Card getCard() { return *this; } //accessor for card object
@@ -33,14 +33,14 @@ public:
 	int countArtillery(); //count artillery cards in deck
 	int countCavalry(); //count cavalry cards in deck
 	int countInfantry(); //count infantry cards in deck
-
+	void initializeDeck(int n); //INITIALIZE DECK 
+	void shuffleDeck(); //SHUFFLE DECK
 
 
 private:
-	//changes made here
 	std::vector<Card* > deck; //DECK INSTANCE VARIABLE
-	void initializeDeck(int n); //INITIALIZE DECK 
-	void shuffleDeck(); //SHUFFLE DECK
+	int* deckSize;
+	
 
 };
 
