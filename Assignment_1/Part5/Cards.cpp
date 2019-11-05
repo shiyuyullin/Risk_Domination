@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+
 using namespace std;
 
 
@@ -30,26 +31,25 @@ Card::Card(int i) {
 
 }
 
-Card::~Card() {
-	delete type;
-	type = NULL;
-}
+
 
 
 /*
 Class Deck Constructor
 */
 Deck::Deck(int n) {
-
+	deckSize = new int(n);
 	initializeDeck(n);
 	shuffleDeck();
 }
 
 Deck::~Deck() {
-	for (int i = 0; i < deck.size(); i++) {
-		delete deck.at(i);
-		deck.at(i) = NULL;
+
+	for (std::vector<Card*>::iterator it = deck.begin(); it != deck.end(); ++it) {
+		delete *it;
+		*it = NULL;
 	}
+	
 }
 /*
 DRAW CARD METHOD FROM DECK CLASS
@@ -81,6 +81,7 @@ void Deck::initializeDeck(int n) {
 		int t = i % 3;
 		deck.push_back(new Card(t));
 	}
+	*deckSize = n;
 
 }
 
@@ -91,7 +92,9 @@ SHOW DECK METHOD (PRINTS CARDS TO SCREEN)
 void Deck::showDeck() {
 	for (int i = 0; i < getDeck().size(); i++) {
 		std::cout << deck[i]->getType() << endl;
+		
 	}
+	
 }
 
 /*
@@ -107,7 +110,8 @@ void Deck::shuffleDeck()
 Size of deck method (number of cards in deck)
 */
 int Deck::sizeOfDeck() {
-	return deck.size();
+	*deckSize = deck.size();
+	return *deckSize;
 }
 
 
@@ -132,6 +136,7 @@ int Deck::countCavalry() {
 	int count = 0;
 	for (int i = 0; i < deck.size(); i++) {
 		if (deck.at(i)->getType() == "cavalry") {
+			count++;
 			count++;
 		}
 	}
@@ -158,13 +163,13 @@ int Deck::countInfantry() {
 COUNT ARTILLERY CARDS IN HAND METHOD
 */
 
-int Hand::getNumberOfCards(){
+int Hand::getNumberOfCards() {
 	return hand.size();
 }
 
 int Hand::countArtillery() {
 	int count = 0;
-	for (int i = 0; i < hand.size(); i++) {
+	for (int i = 0; i < getNumberOfCards(); i++) {
 		if (hand.at(i)->getType() == "artillery")
 			count++;
 	}
@@ -179,7 +184,7 @@ COUNT CAVALRY CARDS  IN HAND METHOD
 */
 int Hand::countCavalry() {
 	int count = 0;
-	for (int i = 0; i < hand.size(); i++) {
+	for (int i = 0; i < getNumberOfCards(); i++) {
 		if (hand.at(i)->getType() == "cavalry")
 			count++;
 	}
@@ -193,7 +198,7 @@ COUNT INFANTRY CARDS IN HAND METHOD
 */
 int Hand::countInfantry() {
 	int count = 0;
-	for (int i = 0; i < hand.size(); i++) {
+	for (int i = 0; i < getNumberOfCards(); i++) {
 		if (hand.at(i)->getType() == "infantry")
 			count++;
 	}
@@ -212,13 +217,12 @@ Hand::Hand() {
 }
 
 Hand::~Hand() {
+
+	
 	delete armies;
 	armies = NULL;
 
-	for (int i = 0; i < hand.size(); i++) {
-		delete hand.at(i);
-		hand.at(i) = NULL;
-	}
+	
 }
 
 
