@@ -29,14 +29,17 @@ GameEngine::GameEngine()
 	if (choice == 1)
 	{//Prompt player to select map and store
 
-		//gameMap = new Map();
+
 		map_select = new string();
-		//while (gameMap->validateMap(0,gameMap->getNumOfCountries()-1)==false) {
 		map_select = selectMap();
 		gameMap = map->loadingMap(*map_select);
-		/*if (gameMap->validateMap(0, gameMap->getNumOfCountries() - 1) == false)
+		while (gameMap->validateMap(0,gameMap->getNumOfCountries()-1)==false) {
+		map_select = selectMap();
+		gameMap = map->loadingMap(*map_select);
+		
+		if (gameMap->validateMap(0, gameMap->getNumOfCountries() - 1) == false)
 			cout << endl<<"Invalid map. Map rejected. Select again.";
-	}*/
+	}
 
 
 	//create deck
