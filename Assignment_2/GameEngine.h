@@ -16,6 +16,7 @@ private:
 	string* map_select;
 	Maploader* map;
 	static Map* gameMap;
+	Deck* deck;
 
 public:
 	//CONSTRUCTOR 
