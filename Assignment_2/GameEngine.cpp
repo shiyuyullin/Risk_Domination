@@ -12,41 +12,6 @@ Map* GameEngine::gameMap;
 //Constructor
 GameEngine::GameEngine()
 {
-	//Initializing all data members 
-	armyCnt = new int;
-	map_select = new string("");
-	numOfPlayers = new int(0);
-	map_select = selectMap();
-	//Creating new playersfor the players vector
-	*numOfPlayers = selectNumPlayers();
-	*armyCnt = number_of_armies_given(*numOfPlayers);
-	gameMap = map->loadingMap(*map_select); //check for excepti
-	for (int i = 1; i <= *numOfPlayers; i++)
-		players.push_back(new Player(i, *armyCnt));
-	// Shuffle Player Vector To Randomly Determine the order of play 
-	// of the players. Uses Fisher–Yates shuffle. A2P2 Ian
-	for (int i = 0; i < players.size() - 1; i++) {
-		int j = i + rand() % (players.size() - i);
-		swap(players[i], players[j]);
-	}
-	//Just to test the turns 
-	for (int i = 0; i < players.size(); i++)
-		cout << "Turn " << (i + 1) << " goes to: " << players[i]->getPlayerID() << endl;
-
-}
-//destructor
-GameEngine::~GameEngine()
-{
-	
-	for (int i = 0; i < *numOfPlayers; i++)
-		delete players[i];
-	delete numOfPlayers;
-	delete map_select;
-}
-
-
-void GameEngine::startGame()
-{
 	int choice = 0;
 
 	//Do you want to start a new game?
@@ -62,22 +27,52 @@ void GameEngine::startGame()
 
 	//if yes then start game
 	if (choice == 1)
-	{
+	{//Prompt player to select map and store
+	map_select = selectMap();
+	//Creating new playersfor the players vector
+	*numOfPlayers = selectNumPlayers();
+	*armyCnt = number_of_armies_given(*numOfPlayers);
+	gameMap = map->loadingMap(*map_select); //check for exceptions
+	for (int i = 1; i <= *numOfPlayers; i++)
+		players.push_back(new Player(i,*armyCnt));
+	// Shuffle Player Vector To Randomly Determine the order of play
+	for (int i = 0; i < players.size() - 1; i++) {
+		int j = i + rand() % (players.size() - i);
+		swap(players[i], players[j]);
+	}
+	//Just to test the turns 
+	for (int i = 0; i < players.size(); i++)
+		cout << "Turn " << (i + 1) << " goes to player: " << players[i]->getPlayerId() << endl;
+	}
+	else {
+		cout << "Exiting game, goodbye" << endl;
+		exit(0);
+	}
+	
+}
+//destructor
+GameEngine::~GameEngine()
+{
+	
+	for (int i = 0; i < *numOfPlayers; i++)
+		delete players[i];
+	delete numOfPlayers;
+	delete map_select;
+}
 
-		bool gameIsFinished = false;
 
-		while (!gameIsFinished)
-		{
-
+void GameEngine::startGame()
+{
+	
 			for (int i = 0; i < *numOfPlayers; i++)
 			{
 
-				int playerTurn = players[i]->getPlayerID();
+				int playerTurn = players[i]->getPlayerId();
 				cout << "It is player " << playerTurn << "'s turn." << endl;
 
 				// REINFORCE PHASE
 				cout << "Would you like to Reinforce your board this turn, Yes(1) or No(2) ?: ";
-				choice = 0;
+				int choice = 0;
 				while (choice < 1 || choice > 2)
 				{
 					cin >> choice;
@@ -141,10 +136,6 @@ void GameEngine::startGame()
 				}
 			}
 		}
-	}
-
-	else
-		exit(0);
 }
 
 string* GameEngine::selectMap() {
