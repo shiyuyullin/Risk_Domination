@@ -5,9 +5,7 @@
 #include <algorithm> 
 #include <random>
 #include <chrono>
-#include <stdlib.h>
 #include <time.h>
-
 
 using namespace std;
 
@@ -20,6 +18,7 @@ if i=0 then card is infantry, if i=1 then card is artillery, if i=2 then card is
 */
 Card::Card(int i) {
 	type = new string;
+	
 	switch (i) {
 	case 0: setType("infantry");
 		break;
@@ -31,6 +30,9 @@ Card::Card(int i) {
 
 }
 
+Card::Card(Card& other) {
+	type = new string(other.getType());
+}
 
 
 
@@ -38,7 +40,7 @@ Card::Card(int i) {
 Class Deck Constructor
 */
 Deck::Deck(int n) {
-	deckSize = new int(n);
+
 	initializeDeck(n);
 	shuffleDeck();
 }
@@ -48,8 +50,6 @@ Deck::~Deck() {
 	for (std::vector<Card*>::iterator it = deck.begin(); it != deck.end(); ++it) {
 		delete *it;
 		*it = NULL;
-	}
-	
 }
 /*
 DRAW CARD METHOD FROM DECK CLASS
@@ -81,7 +81,6 @@ void Deck::initializeDeck(int n) {
 		int t = i % 3;
 		deck.push_back(new Card(t));
 	}
-	*deckSize = n;
 
 }
 
@@ -91,10 +90,8 @@ SHOW DECK METHOD (PRINTS CARDS TO SCREEN)
 */
 void Deck::showDeck() {
 	for (int i = 0; i < getDeck().size(); i++) {
-		std::cout << deck[i]->getType() << endl;
-		
+		cout << deck[i]->getType() << endl;
 	}
-	
 }
 
 /*
@@ -102,16 +99,15 @@ SHUFFLE DECK METHOD
 */
 void Deck::shuffleDeck()
 {
-	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count(); // initialize seed
-	std::shuffle(deck.begin(), deck.end(), std::default_random_engine(seed)); //randomize vector
+	unsigned seed = chrono::system_clock::now().time_since_epoch().count(); // initialize seed
+	shuffle(deck.begin(), deck.end(), default_random_engine(seed)); //randomize vector
 }
 
 /*
 Size of deck method (number of cards in deck)
 */
 int Deck::sizeOfDeck() {
-	*deckSize = deck.size();
-	return *deckSize;
+	return deck.size();
 }
 
 
@@ -136,7 +132,6 @@ int Deck::countCavalry() {
 	int count = 0;
 	for (int i = 0; i < deck.size(); i++) {
 		if (deck.at(i)->getType() == "cavalry") {
-			count++;
 			count++;
 		}
 	}
@@ -169,7 +164,7 @@ int Hand::getNumberOfCards() {
 
 int Hand::countArtillery() {
 	int count = 0;
-	for (int i = 0; i < getNumberOfCards(); i++) {
+	for (int i = 0; i < hand.size(); i++) {
 		if (hand.at(i)->getType() == "artillery")
 			count++;
 	}
@@ -184,7 +179,7 @@ COUNT CAVALRY CARDS  IN HAND METHOD
 */
 int Hand::countCavalry() {
 	int count = 0;
-	for (int i = 0; i < getNumberOfCards(); i++) {
+	for (int i = 0; i < hand.size(); i++) {
 		if (hand.at(i)->getType() == "cavalry")
 			count++;
 	}
@@ -198,7 +193,7 @@ COUNT INFANTRY CARDS IN HAND METHOD
 */
 int Hand::countInfantry() {
 	int count = 0;
-	for (int i = 0; i < getNumberOfCards(); i++) {
+	for (int i = 0; i < hand.size(); i++) {
 		if (hand.at(i)->getType() == "infantry")
 			count++;
 	}
@@ -212,8 +207,7 @@ Class Hand Constructors
 */
 Hand::Hand() {
 
-	armies = new int;
-	*armies = 0;
+	armies = new int(2);
 }
 
 Hand::~Hand() {
@@ -221,14 +215,10 @@ Hand::~Hand() {
 	
 	delete armies;
 	armies = NULL;
-
+}
 	
-}
 
 
-void Hand::setHand(Hand temp) {
-	hand = temp.getHand();
-}
 /*
 REMOVE NULL CARDS METHOD (FOR EXCHANGE METHOD)
 */
@@ -236,7 +226,7 @@ static Hand removeNull(vector <Card*>hand) {
 	Hand temp;
 	for (int i = 0; i < hand.size(); i++) {
 		if (hand.at(i)->getType() != "null") {
-			temp.addToHand(hand.at(i)->getCard());
+			temp.addToHand(&hand.at(i)->getCard());
 		}
 	}
 	return temp;
@@ -250,28 +240,23 @@ int Hand::exchange() {
 	//set count and hand size
 	int count = 0;
 	int handsize = hand.size();
-
 	//rule 1 - exchange if three infantry cards exist
 	if (countInfantry() >= 3) {
 
-		for (int i = 0; (i < handsize); i++) {
+		for (int i = 0; i < hand.size(); i++) {
 			if (hand.at(i)->getType() == "infantry") {
-				hand.at(i)->setType("null");
+				delete hand.at(i);
+				hand.erase(hand.begin()+i);
 				count++;
-				handsize = hand.size();
 
 				if (count == 3)
 					break;
 
 			}
 		}
-		Hand temp = removeNull(hand);
-
-		setHand(temp);
-
 
 		setArmies();
-		std::cout << "Here are " << getArmies() << " armies!" << endl;
+		cout << "Here are " << getArmies() << " armies!" << endl;
 		return getArmies();
 	}
 
@@ -280,22 +265,17 @@ int Hand::exchange() {
 
 		for (int i = 0; i < hand.size(); i++) {
 			if (hand.at(i)->getType() == "artillery") {
-				hand.at(i)->setType("null");
+				delete hand.at(i);
+				hand.erase(hand.begin() + i);
 				count++;
-				handsize = hand.size();
 
 				if (count == 3)
 					break;
 			}
 		}
 
-		Hand temp = removeNull(hand);
-
-		setHand(temp);
-
-
 		setArmies();
-		std::cout << "Here are " << getArmies() << " armies!" << endl;
+		cout << "Here are " << getArmies() << " armies!" << endl;
 		return getArmies();
 
 	}
@@ -303,24 +283,22 @@ int Hand::exchange() {
 	//rule 3 - exchange if 3 cavalry cards exist
 	if (countCavalry() >= 3) {
 
-		for (int i = 0; (i < handsize); i++) {
+		for (int i = 0; (i < hand.size()); i++) {
 			if (hand.at(i)->getType() == "cavalry") {
-				hand.at(i)->setType("null");
+				delete hand.at(i);
+				hand.erase(hand.begin() + i);
 				count++;
-				handsize = hand.size();
 
 				if (count == 3)
 					break;
 			}
 		}
 
-		Hand temp = removeNull(hand);
 
-		setHand(temp);
 
 
 		setArmies();
-		std::cout << "Here are " << getArmies() << " armies!" << endl;
+		cout << "Here are " << getArmies() << " armies!" << endl;
 		return getArmies();
 	}
 
@@ -350,12 +328,12 @@ int Hand::exchange() {
 		}
 
 		setArmies();
-		std::cout << "Here are " << getArmies() << " armies!" << endl;
+		cout << "Here are " << getArmies() << " armies!" << endl;
 		return getArmies();
 	}
 
 	//Default message if rules are not met
-	std::cout << "You cannot make any exchanges yet. Insufficient/Invalid Cards.";
+	cout << "You cannot make any exchanges yet. Insufficient/Invalid Cards.";
 	return 0;
 }
 
@@ -364,9 +342,10 @@ int Hand::exchange() {
 addtoHand method to add a card drawn fro deck to Hand
 */
 
-void Hand::addToHand(Card card) {
+void Hand::addToHand(Card *card) {	
 
-	hand.push_back(new Card(card));
+
+	hand.push_back(new Card(*card));
 }
 
 /*
@@ -375,7 +354,7 @@ Print all cards in hand to the screen
 void Hand::showHand() {
 	int count = 0;
 	for (int i = 0; i < hand.size(); i++) {
-		std::cout << hand[i]->getType() << endl;
+		cout << hand[i]->getType() << endl;
 		count++;
 	}
 }

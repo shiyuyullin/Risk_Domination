@@ -37,7 +37,7 @@ Country::Country(string n)
 }
 
 //Copy Constructor
-Country::Country(const Country &obj)
+Country::Country(const Country& obj)
 {
 	countryName = new string;
 	*countryName = *obj.countryName;
@@ -107,11 +107,11 @@ int Country::getNumOfBorders()
 {
 	return *numberOfBorders;
 }
-int *Country::getBorders()
+int* Country::getBorders()
 {
 	return borders;
 }
-Player *Country::getOwner()
+Player* Country::getOwner()
 {
 	return owner;
 }
@@ -151,7 +151,7 @@ void Country::setNumOfBorders(int t)
 	*numberOfBorders = t;
 }
 
-void Country::setOwner(Player *p)
+void Country::setOwner(Player* p)
 {
 	owner = p;
 }
@@ -163,10 +163,10 @@ Continent::Continent()
 	serialNumber = new int(-1);
 	name = new string("none");
 	rewards = new int(0);
-	numOfCountries = 0;
+	numOfCountries = new int(0);
 }
 //Copy constructor
-Continent::Continent(Continent &temp)
+Continent::Continent(Continent& temp)
 {
 	serialNumber = new int(temp.getSerialNum());
 	name = new string(temp.getName());
@@ -232,7 +232,7 @@ Map::Map(int nbOfCountries)
 	numberOfCountries = new int;
 	*numberOfCountries = nbOfCountries;
 	// int** arr = new int*[nbOfCountries];
-	mapOfCountries = new int *[nbOfCountries];
+	mapOfCountries = new int* [nbOfCountries];
 	for (int i = 0; i < nbOfCountries; i++)
 		mapOfCountries[i] = new int[nbOfCountries];
 
@@ -245,12 +245,12 @@ Map::Map(int nbOfCountries)
 	}
 }
 
-Map::Map(int **adjacencyMatrix, Country *Countries, int nbOfCountries)
+Map::Map(int** adjacencyMatrix, Country* Countries, int nbOfCountries)
 {
 	mapOfCountries = adjacencyMatrix;
 	numberOfCountries = new int;
 	*numberOfCountries = nbOfCountries;
-	mapOfCountries = new int *[nbOfCountries];
+	mapOfCountries = new int* [nbOfCountries];
 	for (int i = 0; i < nbOfCountries; i++)
 		mapOfCountries[i] = new int[nbOfCountries];
 
@@ -282,12 +282,12 @@ Map::~Map()
 };
 
 //Setters
-void Map::setContinent(Continent *tempContinent)
+void Map::setContinent(Continent* tempContinent)
 {
 	arrOfContinents.push_back(tempContinent);
 }
 
-void Map::setCountry(Country *tempCountry)
+void Map::setCountry(Country* tempCountry)
 {
 	arrOfCountries.push_back(tempCountry);
 }
@@ -299,6 +299,7 @@ void Map::setborder(int indexCountry, int indexBorders, int num)
 void Map::setNumberOfCountries(int num)
 {
 	*numberOfCountries = num;
+	createAdjacencyMatrix();
 }
 void Map::setNumberOfContinents(int num)
 {
@@ -311,10 +312,12 @@ void Map::setContinentSizesAndMembers()
 	//Sets the size of the continents
 	int continentCounter;
 	int continentId;
+
 	for (int i = 0; i < *numberOfContinents; i++)
 	{
 		continentCounter = 0;
 		continentId = i + 1;
+		
 		for (int j = 0; j < *numberOfCountries; j++)
 		{
 			if (continentId == arrOfCountries[j]->getContinent())
@@ -330,11 +333,28 @@ void Map::setContinentSizesAndMembers()
 //WILL GIVE YOU THE NUMBER OF PATHS BETWEEN TO VERTICES
 //IF N = THE SIZE OF ADJ, THEN IF THERE ISN'T A ROW OR COLUMN
 //THAT IS COMPLETY FULL THEN THE GRAPH IS INVALID.
+
+void Map::createAdjacencyMatrix()
+{
+	const int nbOfCountries = *numberOfCountries;
+	mapOfCountries = new int* [nbOfCountries];
+	for (int i = 0; i < *numberOfCountries; i++)
+		mapOfCountries[i] = new int[nbOfCountries];
+
+	for (int i = 0; i < *numberOfCountries; i++)
+	{
+
+		for (int j = 0; j < *numberOfCountries; j++)
+		{
+			mapOfCountries[i][j] = 0;
+		}
+	}
+}
+
 bool Map::validateMap(int continentStart, int continentEnd)
 {
-
 	int size = continentEnd - continentStart + 1;
-	int **result = new int *[size];
+	int** result = new int* [size];
 	for (int i = 0; i < size; i++)
 		result[i] = new int[size];
 
@@ -346,11 +366,6 @@ bool Map::validateMap(int continentStart, int continentEnd)
 		}
 	}
 
-	//ADD IDENTITY MATRIX TO THE ADJACENCY MATRIX
-	for (int x = 0; x < *numberOfCountries; x++)
-	{
-		mapOfCountries[x][x] = 1;
-	}
 
 	for (int t = 0; t < size; t++)
 	{
@@ -366,39 +381,50 @@ bool Map::validateMap(int continentStart, int continentEnd)
 		}
 	}
 
-	//JUST FOR TESTING
-	for (int i = continentStart; i <= continentEnd; i++)
-	{
-		cout << "\n";
-		for (int j = continentStart; j <= continentEnd; j++)
-		{
-			cout << result[i][j] << " ";
-		}
-	}
 
-	bool connected;
+	bool connected1;
+	bool connected2 = true;
+	bool connected3 = true;
+
 	for (int j = continentStart; j <= continentEnd; j++)
 	{
-		connected = true;
+		connected1 = true;
 		for (int k = continentStart; k <= continentEnd; k++)
 		{
 			if (result[j][k] == 0)
 			{
-				connected = false;
+				connected1 = false;
 			}
 		}
-		if (connected)
-		{
-			return true;
-		}
 	}
+	for (int j = continentStart; j <= continentEnd - 1; j++)
+		{
+			if (result[j+ 1][j] == 0)
+			{
+				connected2 = false;
+			}
+		}
 
+
+		
+		for (int j = continentStart; j <= continentEnd; j++)
+		{
+				if (result[j][j+1] == 0)
+				{
+					connected3 = false;
+				}
+		}
+		return true;
+	
 	for (int i = 0; i < size; i++)
 		delete[] result[i];
 	delete[] result;
 
-	return false;
+	return connected1 || connected2 || connected3;
 }
+
+
+
 
 void Map::printMap()
 {
@@ -416,7 +442,7 @@ void Map::printMap()
 	cout << "\n--------------------------------\n";
 }
 //Getters
-int **Map::getMapOfCountries()
+int** Map::getMapOfCountries()
 {
 	return mapOfCountries;
 }
@@ -428,25 +454,17 @@ int Map::getNumOfContinents()
 {
 	return *numberOfContinents;
 }
-Country *Map::getCountry(int index)
+Country* Map::getCountry(int index)
 {
 	return arrOfCountries[index];
 }
-Continent *Map::getContinent(int index)
+Continent* Map::getContinent(int index)
 {
 	return arrOfContinents[index];
 }
 //----
-bool Map::addEdge(int start, int destination)
+void Map::addEdge(int start, int destination)
 {
-
-	if (start < 0 || start > *numberOfCountries ||
-		destination < 0 || destination > *numberOfCountries)
-	{
-		return false;
-	}
-
 	mapOfCountries[start][destination] = 1;
 	mapOfCountries[destination][start] = 1;
-	return true;
 }

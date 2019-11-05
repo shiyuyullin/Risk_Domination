@@ -3,7 +3,7 @@
 #include <ctime>
 #include "Dice.h"
 using namespace std;
- //initialize variables for the class
+//initialize variables for the class
 
 
 Dice::Dice()
@@ -24,13 +24,13 @@ Dice::~Dice()
 
 //define roll method 
 void Dice::Roll(int n) {
-	 //generating random number from 0-5 and then add 1
+	//generating random number from 0-5 and then add 1
 	for (int i = 0; i < n; i++) {
-	(*TotalRollsptr)++;
-	//generate random number from 1-6
+		(*TotalRollsptr)++;
+		//generate random number from 1-6
 		*valueptr = (rand() % 6) + 1;
 		DiceValues[i] = *valueptr;
-		cout << "Value for die " << (i+1)<<": "<< *valueptr << endl;
+		cout << "Value for die " << (i + 1) << ": " << *valueptr << endl;
 		//store the dice values that have been rolled in an array for percentage
 		percentage[(*valueptr - 1)]++;//increments the value of the die array (percentage)
 	}
@@ -40,11 +40,11 @@ void Dice::Roll(int n) {
 void Dice::Display(int rolls) {
 	for (int i = 0; i < rolls; i++)
 		cout << "Container value " << (i + 1) << ": " << DiceValues[i] << endl;
-		//cout << "Container value " << (i + 1) << ": " << DiceValues[i] << endl;
-	
+	//cout << "Container value " << (i + 1) << ": " << DiceValues[i] << endl;
+
 	for (int i = 0; i < 6; i++)
 		cout << "Overall for Roll value " << (i + 1) << ": " << percentage[i] << endl;
-		//cout << "Overall for Roll value " << (i + 1) << ": " << percentage[i] << endl;
+	//cout << "Overall for Roll value " << (i + 1) << ": " << percentage[i] << endl;
 
 }
 
@@ -57,7 +57,7 @@ void Dice::Reset() {
 void Dice::percentages()
 {
 	for (int i = 0; i < 6; i++)
-		cout<<"Percentage for Dice Value "<< (i+1)<<": "<<(percentage[i] / *TotalRollsptr)<<endl;
+		cout << "Percentage for Dice Value " << (i + 1) << ": " << (percentage[i] / *TotalRollsptr) << endl;
 }
 
 const int Dice::get_value_at(int n)

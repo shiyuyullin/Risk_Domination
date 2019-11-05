@@ -1,14 +1,16 @@
 #include <iostream>
+#include "MapLoader.h"
 #include <fstream>
 #include <string>
 #include <sstream>
 #include "MapLoader.h"
+#include "Map.h"
 using namespace std;
 
 //Implementation of loading function
 Map* Maploader::loadingMap(string fileName) {
 	ifstream inputFileStream;
-	inputFileStream.open("./Maps/"+fileName + ".maps");   //modify path of maps folder
+	inputFileStream.open(fileName);
 	if (!inputFileStream.fail()) {
 		Map* resultMap = new Map();//The map that will be returned once the function resolves
 		string temp = "";
@@ -38,7 +40,7 @@ Map* Maploader::loadingMap(string fileName) {
 					i++;
 				}
 			}
-			
+
 			string serialNumS = "";
 			if (temp == "[countries]") {
 				int continentBelong = 0;
@@ -63,6 +65,7 @@ Map* Maploader::loadingMap(string fileName) {
 					inputFileStream >> ignore;//The coordinate of a country is ignored
 					inputFileStream >> ignore;//coordinate ex. 300 400
 				}
+				resultMap->setNumberOfCountries(numberOfCountries);
 			}
 			int count = -1;
 			if (serialNumS == "[borders]") {
@@ -74,6 +77,8 @@ Map* Maploader::loadingMap(string fileName) {
 					int i = 0;
 					while (row >> border) {
 						resultMap->setborder(count, i, border);
+						resultMap->addEdge(count, border - 1);
+						
 						i++;//Changing index for array of borders in country object
 					}
 					count++;//Changing index for array of countries
@@ -87,7 +92,6 @@ Map* Maploader::loadingMap(string fileName) {
 			cout << endl;
 			return empty;
 		}
-		resultMap->setNumberOfCountries(numberOfCountries);
 		resultMap->setNumberOfContinents(numberOfContinents);
 		std::cout << "The map " << fileName << " has been successfully loaded, enjoy your game!" << std::endl;
 		cout << endl;
@@ -95,7 +99,7 @@ Map* Maploader::loadingMap(string fileName) {
 		return(resultMap);
 	}
 	else {
-		std::cout << "Invalid file name. Game exit...." << endl;
+		cout << "Invalid file name, please program exit" << endl;
 		exit(0);
 	}
 }

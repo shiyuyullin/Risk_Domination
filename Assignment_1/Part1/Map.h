@@ -2,7 +2,8 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "D:\Visual Studio\WorkSpace\Player\Player.h"
+#include "Player.h"
+
 using namespace std;
 
 class Country
@@ -87,7 +88,9 @@ public:
 	int getNumOfContinents();
 	Country* getCountry(int index);
 	Continent* getContinent(int index);
-	bool addEdge(int start, int destination);
+	void addEdge(int start, int destination);
 	void setContinentSizesAndMembers();
-	
+	void createAdjacencyMatrix();
+
 };
+
