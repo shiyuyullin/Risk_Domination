@@ -3,16 +3,10 @@
 int main() {
   //The creation of the game engine obj
 	GameEngine* eng = new GameEngine();
-  //1.) Johanson's part here:
-  
-  
-  //2.) Ian's part here:
-	eng->map_assign_startUp();// call this first
-	eng->placeArmies_startUpPhase();//then this one
-  
-  
-  //etc modify as you please
-  // Part 3 & 4 Test
+	eng->startGame(); //Start up phase is all here, in the contructor of game engin "eng"
+	
+	
+	
   eng->testPart3AND4();
 
 	delete eng;
