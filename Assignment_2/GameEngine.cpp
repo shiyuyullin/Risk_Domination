@@ -29,7 +29,7 @@ GameEngine::GameEngine()
 	if (choice == 1)
 	{//Prompt player to select map and store
 
-
+		//gameMap = new Map();
 		map_select = new string();
 		//while (gameMap->validateMap(0,gameMap->getNumOfCountries()-1)==false) {
 		map_select = selectMap();
