@@ -17,7 +17,7 @@ GameEngine::GameEngine()
 	//Do you want to start a new game?
 	cout << "(1) START NEW GAME" << endl;
 	cout << "(2) EXIT" << endl;
-
+	cout << "--> ";
 	while (choice < 1 || choice > 2)
 	{
 		cin >> choice;
@@ -28,115 +28,140 @@ GameEngine::GameEngine()
 	//if yes then start game
 	if (choice == 1)
 	{//Prompt player to select map and store
-	map_select = selectMap();
-	//Creating new playersfor the players vector
-	*numOfPlayers = selectNumPlayers();
-	*armyCnt = number_of_armies_given(*numOfPlayers);
-	gameMap = map->loadingMap(*map_select); //check for exceptions
-	for (int i = 1; i <= *numOfPlayers; i++)
-		players.push_back(new Player(i,*armyCnt));
-	// Shuffle Player Vector To Randomly Determine the order of play
-	for (int i = 0; i < players.size() - 1; i++) {
-		int j = i + rand() % (players.size() - i);
-		swap(players[i], players[j]);
-	}
-	//Just to test the turns 
-	for (int i = 0; i < players.size(); i++)
-		cout << "Turn " << (i + 1) << " goes to player: " << players[i]->getPlayerId() << endl;
+
+
+		map_select = new string();
+		//while (gameMap->validateMap(0,gameMap->getNumOfCountries()-1)==false) {
+		map_select = selectMap();
+		gameMap = map->loadingMap(*map_select);
+		/*if (gameMap->validateMap(0, gameMap->getNumOfCountries() - 1) == false)
+			cout << endl<<"Invalid map. Map rejected. Select again.";
+	}*/
+
+
+	//create deck
+		deck = new Deck(gameMap->getNumOfCountries());
+		cout << endl << "Number of cards in deck: ";
+		cout << deck->sizeOfDeck() << endl;
+
+		//Creating new playersfor the players vector
+		numOfPlayers = new int();
+		*numOfPlayers = selectNumPlayers();
+		armyCnt = new int();
+		*armyCnt = number_of_armies_given(*numOfPlayers);
+
+
+		for (int i = 1; i <= *numOfPlayers; i++)
+			players.push_back(new Player(i, *armyCnt));
+		// Shuffle Player Vector To Randomly Determine the order of play
+		for (int i = 0; i < players.size() - 1; i++) {
+			int j = i + rand() % (players.size() - i);
+			swap(players[i], players[j]);
+		}
+		//Just to test the turns 
+		for (int i = 0; i < players.size(); i++)
+			std::cout << "Turn " << (i + 1) << " goes to player: " << players[i]->getPlayerId() << endl;
 	}
 	else {
-		cout << "Exiting game, goodbye" << endl;
+		std::cout << "Exiting game, goodbye" << endl;
 		exit(0);
 	}
-	
+
+
+
 }
 //destructor
 GameEngine::~GameEngine()
 {
-	
+
 	for (int i = 0; i < *numOfPlayers; i++)
 		delete players[i];
 	delete numOfPlayers;
+	delete armyCnt;
 	delete map_select;
+	delete map;
+	delete gameMap;
+	delete deck;
 }
 
 
 void GameEngine::startGame()
 {
-	
-			for (int i = 0; i < *numOfPlayers; i++)
-			{
 
-				int playerTurn = players[i]->getPlayerId();
-				cout << "It is player " << playerTurn << "'s turn." << endl;
+	bool gameIsFinished = false;
+	for (int i = 0; (i < *numOfPlayers); i++)   //loop needs to be adjusted
+	{
 
-				// REINFORCE PHASE
-				cout << "Would you like to Reinforce your board this turn, Yes(1) or No(2) ?: ";
-				int choice = 0;
-				while (choice < 1 || choice > 2)
-				{
-					cin >> choice;
-					if (choice < 1 || choice > 2)
-						cout << "Invalid Choice. Try again" << endl;
-				}
+		int playerTurn = players[i]->getPlayerId();
+		std::cout << "It is player " << playerTurn << "'s turn." << endl;
 
-				if (choice == 1)
-				{
-
-					players[i]->reinforce();
-				}
-				else
-				{
-					cout << "On to the next step. " << endl;
-				}
-
-				// ATTACK PHASE
-				choice = 0;
-
-				cout << "Would you like to Attack this turn, Yes(1) or No(2) ?: ";
-				while (choice < 1 || choice > 2)
-				{
-					cin >> choice;
-					if (choice < 1 || choice > 2)
-						cout << "Invalid Choice. Try again" << endl;
-				}
-
-				if (choice == 1)
-				{
-					players[i]->attack();
-				}
-				else
-				{
-					cout << "On to the next step. " << endl;
-				}
-
-				// FORTIFICATION PHASE
-				choice = 0;
-
-				cout << "Would you like to fortify your board this turn, Yes(1) or No(2) ?: ";
-				while (choice < 1 || choice > 2)
-				{
-					cin >> choice;
-					if (choice < 1 || choice > 2)
-						cout << "Invalid Choice. Try again" << endl;
-				}
-
-				if (choice == 1)
-				{
-					players[i]->foritfy();
-				}
-				else
-				{
-					cout << "Your turn is coming to an end. " << endl;
-				}
-				if (testVictoryCondition())
-				{
-					cout << "The Game is Over, Player " << playerTurn << " wins!" << endl;
-					gameIsFinished = true;
-				}
-			}
+		// REINFORCE PHASE
+		std::cout << "Would you like to Reinforce your board this turn, Yes(1) or No(2) ?: ";
+		int choice = 0;
+		while (choice < 1 || choice > 2)
+		{
+			cin >> choice;
+			if (choice < 1 || choice > 2)
+				std::cout << "Invalid Choice. Try again" << endl;
 		}
+
+		if (choice == 1)
+		{
+
+			players[i]->reinforce();
+		}
+		else
+		{
+			std::cout << "On to the next step. " << endl;
+		}
+
+		// ATTACK PHASE
+		choice = 0;
+
+		std::cout << "Would you like to Attack this turn, Yes(1) or No(2) ?: ";
+		while (choice < 1 || choice > 2)
+		{
+			cin >> choice;
+			if (choice < 1 || choice > 2)
+				std::cout << "Invalid Choice. Try again" << endl;
+		}
+
+		if (choice == 1)
+		{
+			players[i]->attack();
+		}
+		else
+		{
+			std::cout << "On to the next step. " << endl;
+		}
+
+		// FORTIFICATION PHASE
+		choice = 0;
+
+		cout << "Would you like to fortify your board this turn, Yes(1) or No(2) ?: ";
+		while (choice < 1 || choice > 2)
+		{
+			cin >> choice;
+			if (choice < 1 || choice > 2)
+				cout << "Invalid Choice. Try again" << endl;
+		}
+
+		if (choice == 1)
+		{
+			players[i]->foritfy();
+		}
+		else
+		{
+			cout << "Your turn is coming to an end. " << endl;
+		}
+		if (testVictoryCondition())
+		{
+			cout << "The Game is Over, Player " << playerTurn << " wins!" << endl;
+			gameIsFinished = true;
+		}
+	}
 }
+
 
 string* GameEngine::selectMap() {
 
@@ -146,15 +171,15 @@ string* GameEngine::selectMap() {
 	int i = 1;
 	for (auto str : list)
 		std::cout << "(" << i++ << ") " << str << std::endl;
-	while (choice <1 || choice >= i) {
+
+	while (choice < 1 || choice >= i) {
 		cout << endl << "Enter Map choice: ";
-		cin >> choice;choice = choice;
+		cin >> choice;
 		if (choice < 1 || choice >= i)
 			cout << "Invalid Option. Try again." << endl;
 	}
 
-	*map_select = list[choice-1];
-	cout << "Heree: " + *map_select<<endl;
+	*map_select = list[choice - 1];
 
 	return map_select;
 }
@@ -245,7 +270,7 @@ const int GameEngine::number_of_armies_given(int AmtOfPlayers)//A2P2 IAN
 
 void GameEngine::map_assign_startUp()//A2P2 IAN
 {
-	cout << "Assinging the start up countries of the game!"<<endl;
+	cout << "Assinging the start up countries of the game!" << endl;
 	int player_tracker = 0;
 	for (int i = 0; i < getMap()->getNumOfCountries(); i++) {
 		getMap()->getCountry(i)->setOwner(players[player_tracker]);
@@ -261,7 +286,7 @@ void GameEngine::placeArmies_startUpPhase()//A2P2 IAN
 {
 	cout << "Each player must place their army (" << *armyCnt << ") in all of their coutries!" << endl;
 	for (int i = 0; i < players.size(); i++) {
-		cout << "Player " << players[i]->getPlayerID() << "!" << endl;
+		cout << "Player " << players[i]->getPlayerId() << "!" << endl;
 		players[i]->placeArmy();
 		cout << "\n\n";
 	}
@@ -287,104 +312,108 @@ bool GameEngine::testVictoryCondition()
 	return true;
 }
 
+
+
+
 Map* GameEngine::getMap() {
 	return gameMap;
 }
 
-void GameEngine::testPart3AND4(){
-	  //Part3 And 4
-  // 	//FOR TESTING PURPOSES----------------------------------------------------------------
-  Map *testMap = new Map();
-  Player *testPlayer = new Player();
-  testPlayer->setPlayerID(1);
 
-  Country *tempCountry1 = new Country();
-  tempCountry1->setCountryName("Canada");
-  tempCountry1->setCountryNumber(1);
-  tempCountry1->setOwner(testPlayer);
-  testMap->setCountry(tempCountry1);
+void GameEngine::testPart3AND4() {
+	//Part3 And 4
+// 	//FOR TESTING PURPOSES----------------------------------------------------------------
+	Map* testMap = new Map();
+	Player* testPlayer = new Player();
+	testPlayer->setPlayerId(1);
 
-  Country *tempCountry2 = new Country();
-  tempCountry2->setCountryName("USA");
-  tempCountry2->setCountryNumber(2);
-  tempCountry2->setOwner(testPlayer);
-  testMap->setCountry(tempCountry2);
+	Country* tempCountry1 = new Country();
+	tempCountry1->setCountryName("Canada");
+	tempCountry1->setCountryNumber(1);
+	tempCountry1->setOwner(testPlayer);
+	testMap->setCountry(tempCountry1);
 
-  Country *tempCountry3 = new Country();
-  tempCountry3->setCountryName("Mexico");
-  tempCountry3->setCountryNumber(2);
-  tempCountry3->setOwner(testPlayer);
-  testMap->setCountry(tempCountry3);
+	Country* tempCountry2 = new Country();
+	tempCountry2->setCountryName("USA");
+	tempCountry2->setCountryNumber(2);
+	tempCountry2->setOwner(testPlayer);
+	testMap->setCountry(tempCountry2);
 
-  Country *tempCountry4 = new Country();
-  tempCountry4->setCountryName("France");
-  tempCountry4->setCountryNumber(3);
-  tempCountry4->setOwner(testPlayer);
-  testMap->setCountry(tempCountry4);
+	Country* tempCountry3 = new Country();
+	tempCountry3->setCountryName("Mexico");
+	tempCountry3->setCountryNumber(2);
+	tempCountry3->setOwner(testPlayer);
+	testMap->setCountry(tempCountry3);
 
-  Country *tempCountry5 = new Country();
-  tempCountry5->setCountryName("England");
-  tempCountry5->setCountryNumber(4);
-  tempCountry5->setOwner(testPlayer);
-  testMap->setCountry(tempCountry5);
+	Country* tempCountry4 = new Country();
+	tempCountry4->setCountryName("France");
+	tempCountry4->setCountryNumber(3);
+	tempCountry4->setOwner(testPlayer);
+	testMap->setCountry(tempCountry4);
 
-  Country *tempCountry6 = new Country();
-  tempCountry6->setCountryName("Spain");
-  tempCountry6->setCountryNumber(5);
-  tempCountry6->setOwner(testPlayer);
-  testMap->setCountry(tempCountry6);
+	Country* tempCountry5 = new Country();
+	tempCountry5->setCountryName("England");
+	tempCountry5->setCountryNumber(4);
+	tempCountry5->setOwner(testPlayer);
+	testMap->setCountry(tempCountry5);
 
-  int numberOfCountries = testMap->getNumOfCountries();
-  Player *owner = testMap->getCountry(0)->getOwner();
-  bool finsihed = true;
+	Country* tempCountry6 = new Country();
+	tempCountry6->setCountryName("Spain");
+	tempCountry6->setCountryNumber(5);
+	tempCountry6->setOwner(testPlayer);
+	testMap->setCountry(tempCountry6);
 
-  for (int i = 1; i < numberOfCountries; i++)
-  {
+	int numberOfCountries = testMap->getNumOfCountries();
+	Player* owner = testMap->getCountry(0)->getOwner();
+	bool finsihed = true;
 
-    Player *tempOwner = testMap->getCountry(i)->getOwner();
-    if (owner != tempOwner)
-    {
-      finsihed = false;
-      break;
-    }
-  }
+	for (int i = 1; i < numberOfCountries; i++)
+	{
 
-  cout << finsihed << endl;
+		Player* tempOwner = testMap->getCountry(i)->getOwner();
+		if (owner != tempOwner)
+		{
+			finsihed = false;
+			break;
+		}
+	}
 
-  //FOR TESTING PURPOSES----------------------------------------------------------------
+	cout << finsihed << endl;
 
-  Card *card1 = new Card(1);
-  Card *card2 = new Card(1);
-  Card *card3 = new Card(1);
-  Card *card4 = new Card(1);
-  Card *card5 = new Card(1);
-  Card *card6 = new Card(2);
-  Card *card7 = new Card(2);
-  Card *card8 = new Card(2);
-  Card *card9 = new Card(2);
-  Card *card10 = new Card(3);
-  Card *card11 = new Card(3);
-  Card *card12 = new Card(3);
-  Card *card13 = new Card(3);
-  Card *card14 = new Card(3);
-  Card *card15 = new Card(3);
+	//FOR TESTING PURPOSES----------------------------------------------------------------
 
-  testPlayer->getHand()->addToHand(card1);
-  testPlayer->getHand()->addToHand(card2);
-  testPlayer->getHand()->addToHand(card3);
-  testPlayer->getHand()->addToHand(card4);
-  testPlayer->getHand()->addToHand(card5);
-  testPlayer->getHand()->addToHand(card6);
-  testPlayer->getHand()->addToHand(card7);
-  testPlayer->getHand()->addToHand(card8);
-  testPlayer->getHand()->addToHand(card9);
-  testPlayer->getHand()->addToHand(card10);
-  testPlayer->getHand()->addToHand(card11);
-  testPlayer->getHand()->addToHand(card12);
-  testPlayer->getHand()->addToHand(card13);
-  testPlayer->getHand()->addToHand(card14);
-  testPlayer->getHand()->addToHand(card15);
+	Card* card1 = new Card(1);
+	Card* card2 = new Card(1);
+	Card* card3 = new Card(1);
+	Card* card4 = new Card(1);
+	Card* card5 = new Card(1);
+	Card* card6 = new Card(2);
+	Card* card7 = new Card(2);
+	Card* card8 = new Card(2);
+	Card* card9 = new Card(2);
+	Card* card10 = new Card(3);
+	Card* card11 = new Card(3);
+	Card* card12 = new Card(3);
+	Card* card13 = new Card(3);
+	Card* card14 = new Card(3);
+	Card* card15 = new Card(3);
+	
+	testPlayer->getHand()->addToHand(*card1);
+	testPlayer->getHand()->addToHand(*card2);
+	testPlayer->getHand()->addToHand(*card3);
+	testPlayer->getHand()->addToHand(*card4);
+	testPlayer->getHand()->addToHand(*card5);
+	testPlayer->getHand()->addToHand(*card6);
+	testPlayer->getHand()->addToHand(*card7);
+	testPlayer->getHand()->addToHand(*card8);
+	testPlayer->getHand()->addToHand(*card9);
+	testPlayer->getHand()->addToHand(*card10);
+	testPlayer->getHand()->addToHand(*card11);
+	testPlayer->getHand()->addToHand(*card12);
+	testPlayer->getHand()->addToHand(*card13);
+	testPlayer->getHand()->addToHand(*card14);
+	testPlayer->getHand()->addToHand(*card15);
 
-  testPlayer->reinforce();
+	testPlayer->reinforce();
 }
 
