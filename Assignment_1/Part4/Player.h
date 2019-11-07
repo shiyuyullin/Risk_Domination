@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include "Dice.h"//Path on my computer change it if needed
-#include "Cards.h"//Path on my computer change it if needed
+#include "D:\Visual Studio\WorkSpace\Dice\Dice.h"
+#include "D:\Visual Studio\WorkSpace\Deck\Cards.h"
 #include <ostream>
 #include <vector>
 #include <algorithm>
@@ -28,11 +28,11 @@ public:
 	//Getters
 	int getNumOwnedCountry();
 	int findIndex(int serialNum);//Finding the index of a country's serial number in the "indexOfCountryOwned"
-	int getPlayerID();
+	int getPlayerId();
 	int getArmies();
 	int getSerialAt(int index);
 	//Setters
-	void setPlayerID(int id);
+	void setPlayerId(int id);
 	void reinforce();
 	void attack();
 	void foritfy();

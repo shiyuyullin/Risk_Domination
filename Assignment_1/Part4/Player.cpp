@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <iostream>
-#include "Map.h"				  //Path on my computer change it if needed
-#include "GameEngine.h" //Path on my computer change it if needed
+#include "D:\Visual Studio\WorkSpace\Map\Map.h"
+#include "D:\Visual Studio\WorkSpace\GameEngine\GameEngine.h" 
 
 using namespace std;
 Player::Player()
@@ -54,7 +54,7 @@ void Player::reinforce()
 		for (int j = 0; j < numberOfCountries; j++)
 		{
 
-			if (*playerId != gameMap->getCountry(countryCounter)->getOwner()->getPlayerID())
+			if (*playerId != gameMap->getCountry(countryCounter)->getOwner()->getPlayerId())
 			{
 				ownsAll = false;
 			}
@@ -105,7 +105,7 @@ void Player::reinforce()
 		int index = 1;
 		for (int i = 0; i < gameMap->getNumOfCountries(); i++)
 		{
-			if (gameMap->getCountry(i)->getOwner()->getPlayerID() == *playerId) {
+			if (gameMap->getCountry(i)->getOwner()->getPlayerId() == *playerId) {
 				cout << gameMap->getCountry(i)->getCountryName() << "(" << index << ") ";
 				cout << "has " << gameMap->getCountry(i)->getNbOfArmies() << " armies. " << endl
 					<< endl;
@@ -145,7 +145,7 @@ void Player::reinforce()
 					index = 1;
 					for (int i = 0; i < gameMap->getNumOfCountries(); i++)
 					{
-						if (gameMap->getCountry(i)->getOwner()->getPlayerID() == *playerId) {
+						if (gameMap->getCountry(i)->getOwner()->getPlayerId() == *playerId) {
 							cout << gameMap->getCountry(i)->getCountryName() << "(" << index << ") ";
 							cout << "has " << gameMap->getCountry(i)->getNbOfArmies() << " armies. " << endl
 								<< endl;
@@ -435,6 +435,7 @@ void Player::attack()
 				//statechange on attacker
 				tempCountryToAtt->setOwner(Attacker);
 				Attacker->setIndexOfCountry(tempCountryToAtt->getCountryNumber());
+				Attacker->incrementNumOfCountry();
 
 				while (true)
 				{
@@ -595,7 +596,7 @@ void Player::DisplayRollInfo(int n) //Displays: Roll values stored in the array 
 	dice->Display(n);
 	dice->percentages();
 }
-void Player::setPlayerID(int id)
+void Player::setPlayerId(int id)
 {
 	*playerId = id;
 }
@@ -614,9 +615,8 @@ void Player::setIndexOfCountry(int serialNum)
 {
 	int* temp = new int(serialNum);
 	indexOfCountryOwned.push_back(temp);
-	*numberOfCountryOwned = (*numberOfCountryOwned + 1);
 }
-int Player::getPlayerID()
+int Player::getPlayerId()
 {
 	return *playerId;
 }
