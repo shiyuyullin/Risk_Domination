@@ -90,7 +90,8 @@ GameEngine::~GameEngine()
 
 void GameEngine::startGame()
 {
-
+	map_assign_startUp();
+	placeArmies_startUpPhase();
 	bool gameIsFinished = false;
 	for (int i = 0; (i < *numOfPlayers); i++)   //loop needs to be adjusted
 	{
