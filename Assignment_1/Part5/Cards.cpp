@@ -50,7 +50,9 @@ Deck::~Deck() {
 	for (std::vector<Card*>::iterator it = deck.begin(); it != deck.end(); ++it) {
 		delete *it;
 		*it = NULL;
+	}
 }
+	
 /*
 DRAW CARD METHOD FROM DECK CLASS
 */
