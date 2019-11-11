@@ -8,3 +8,13 @@ class Maploader {
 public:
 	static Map* loadingMap(string fileName);
 };
+
+class DominationMaploader {
+public:
+	static Map* loadingMap(string fileName);
+};
+
+class MaploaderAdapter {
+public:
+	static Map* loadingMap(string fileName);
+};

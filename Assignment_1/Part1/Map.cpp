@@ -317,7 +317,7 @@ void Map::setContinentSizesAndMembers()
 	{
 		continentCounter = 0;
 		continentId = i + 1;
-		
+
 		for (int j = 0; j < *numberOfCountries; j++)
 		{
 			if (continentId == arrOfCountries[j]->getContinent())
@@ -398,24 +398,24 @@ bool Map::validateMap(int continentStart, int continentEnd)
 		}
 	}
 	for (int j = continentStart; j <= continentEnd - 1; j++)
+	{
+		if (result[j + 1][j] == 0)
 		{
-			if (result[j+ 1][j] == 0)
-			{
-				connected2 = false;
-			}
+			connected2 = false;
 		}
+	}
 
 
-		
-		for (int j = continentStart; j <= continentEnd; j++)
+
+	for (int j = continentStart; j <= continentEnd; j++)
+	{
+		if (result[j][j + 1] == 0)
 		{
-				if (result[j][j+1] == 0)
-				{
-					connected3 = false;
-				}
+			connected3 = false;
 		}
-		return true;
-	
+	}
+	return true;
+
 	for (int i = 0; i < size; i++)
 		delete[] result[i];
 	delete[] result;
@@ -467,4 +467,14 @@ void Map::addEdge(int start, int destination)
 {
 	mapOfCountries[start][destination] = 1;
 	mapOfCountries[destination][start] = 1;
+}
+
+int Map::findIndex(string name) {
+
+	for (int i = 0; i < *numberOfContinents; i++) {
+		if (arrOfCountries[i]->getCountryName() == name) {
+			return i;
+		}
+	}
+	return 0;
 }

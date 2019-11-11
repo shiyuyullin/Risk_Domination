@@ -78,7 +78,7 @@ Map* Maploader::loadingMap(string fileName) {
 					while (row >> border) {
 						resultMap->setborder(count, i, border);
 						resultMap->addEdge(count, border - 1);
-						
+
 						i++;//Changing index for array of borders in country object
 					}
 					count++;//Changing index for array of countries
@@ -97,6 +97,133 @@ Map* Maploader::loadingMap(string fileName) {
 		cout << endl;
 		inputFileStream.close();
 		return(resultMap);
+	}
+	else {
+		cout << "Invalid file name, please program exit" << endl;
+		exit(0);
+	}
+}
+
+
+Map* DominationMaploader::loadingMap(string fileName) {
+
+	ifstream inputFileStream;
+	inputFileStream.open(fileName);
+	
+
+	if (!inputFileStream.fail()) {
+		Map* resultMap = new Map();//The map that will be returned once the function resolves
+		string temp = "";
+		vector <string> tokens;
+		int numberOfCountries = 0;//keeping number of countries
+		int numberOfContinents = 0;//keeping number of continents
+		int SerialNumber = 0; //continent Serial number
+		Map* empty = new Map();//an empty map to return if the file is invalid
+		bool state = false;//Using for validating format of a map file
+		vector<vector<string> > borders;
+		string line;
+
+		while (getline(inputFileStream, line)) {
+			
+			if (line == "[Continents]") {
+				while (getline(inputFileStream, line)) {
+					
+					if (line == "[Territories]")
+						break;
+
+					Continent* tempContinent = new Continent();
+					stringstream check1(line);
+					string intermediate;
+					while (getline(check1, intermediate, '='))
+					{
+						tokens.push_back(intermediate);
+					}
+
+					tempContinent->setName(tokens[0]); //sets Continent Name
+					int rewards = stoi(tokens[1]);
+					tempContinent->setRewards(rewards);
+					tempContinent->setserialNumber(SerialNumber + 1);
+					inputFileStream >> temp;//reading the color, will be ignored
+					resultMap->setContinent(tempContinent);//Using setters for map 
+					numberOfContinents++;
+					SerialNumber++;
+					tokens.clear();
+
+				}
+			}
+			int serialNum = 0;
+			int continentBelong = 0;
+			tokens.clear();
+			while (getline(inputFileStream, line)) {
+				
+				if (line == "") {//if there is an empty line it means that we changed continent
+					continentBelong++;
+				}
+				else {
+
+					borders.push_back( vector<string>());
+					stringstream check1(line);
+					string intermediate;
+					while (getline(check1, intermediate, ','))
+					{
+						tokens.push_back(intermediate);
+					}
+					Country* tempCountry = new Country();
+					borders[continentBelong].push_back(tokens[0]);
+					tempCountry->setCountryName(tokens[0]);
+					tempCountry->setContinent(continentBelong);
+					tempCountry->setCountryNumber(serialNum);
+
+					resultMap->setCountry(tempCountry);
+					serialNum++;
+					tokens.clear();
+				}
+			}
+			resultMap->setNumberOfCountries(serialNum + 1);
+			inputFileStream.close();
+			break;
+		}
+
+		for (int x = 0; x < borders.size() ; x++){
+			for (int y = 0; y < borders[x].size(); y++){
+			
+				int destination = resultMap->findIndex(borders[x][y]);
+				resultMap->setborder(x, y, destination);
+				resultMap->addEdge(x, destination);
+			}
+		}
+
+	}
+	else {
+		cout << "Invalid file name, please program exit" << endl;
+		exit(0);
+	}
+}
+
+Map* MaploaderAdapter::loadingMap(string fileName) {
+
+	ifstream inputFileStream;
+	inputFileStream.open(fileName);
+	bool riskFile = true;
+	string line;
+
+	if (!inputFileStream.fail()) {
+
+		while (getline(inputFileStream, line)) {
+
+			size_t found = line.find("[Territories]");
+			if (found != string::npos) {
+				riskFile = false;
+			}
+
+		}
+		inputFileStream.close();
+		if (riskFile) {
+			return Maploader().loadingMap(fileName);
+		}
+		else {
+			return DominationMaploader().loadingMap(fileName);
+		}
 	}
 	else {
 		cout << "Invalid file name, please program exit" << endl;

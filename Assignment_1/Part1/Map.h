@@ -91,6 +91,6 @@ public:
 	void addEdge(int start, int destination);
 	void setContinentSizesAndMembers();
 	void createAdjacencyMatrix();
-
+	int findIndex(string countryName);
 };
 
