@@ -34,8 +34,8 @@ public:
 	//Setters
 	void setPlayerId(int id);
 	void reinforce();
-	void attack();
-	void foritfy();
+	void attack(Map* gameMap);
+	void foritfy(Map* gameMap);
 	void RollDice(int n); //Test the dice obj for player
 	void DisplayRollInfo(int n); // These two here are to be generally put together
 	void incrementNumOfCountry();

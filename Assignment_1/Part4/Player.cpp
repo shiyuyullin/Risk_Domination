@@ -167,10 +167,10 @@ void Player::reinforce()
 	}
 }
 //**************************************************************************************************************************************
-void Player::attack()
+void Player::attack(Map* gameMap)
 {
-	Map* a = GameEngine::getMap();
-	//Map* a = gamemap;
+	//Map* a = GameEngine::getMap();
+	Map* a = gameMap;
 	int state = 0;
 	Country* tempCountry = new Country();//Country to attack from
 	Country* tempCountryToAtt = new Country(); //Country that will be attacked
@@ -472,10 +472,10 @@ void Player::attack()
 	}
 }
 
-void Player::foritfy()
+void Player::foritfy(Map* gameMap)
 {
-	Map* a = GameEngine::getMap();
-	//Map* a = gamemap;
+	//Map* a = GameEngine::getMap();
+	Map* a = gameMap;
 	Country* sourceCountry;
 	Country* targetCountry;
 	Player* tempPlayer = this; //Get the player who calls this method
