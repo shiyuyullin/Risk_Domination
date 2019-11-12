@@ -143,7 +143,6 @@ Map* DominationMaploader::loadingMap(string fileName) {
 					int rewards = stoi(tokens[1]);
 					tempContinent->setRewards(rewards);
 					tempContinent->setserialNumber(SerialNumber + 1);
-					inputFileStream >> temp;//reading the color, will be ignored
 					resultMap->setContinent(tempContinent);//Using setters for map 
 					numberOfContinents++;
 					SerialNumber++;
@@ -170,6 +169,10 @@ Map* DominationMaploader::loadingMap(string fileName) {
 					}
 					Country* tempCountry = new Country();
 					borders[continentBelong].push_back(tokens[0]);
+
+					for(int i = 3; i < tokens.size(); i++){
+						tokens[continentBelong].push_back(tokens[i]);
+					}
 					tempCountry->setCountryName(tokens[0]);
 					tempCountry->setContinent(continentBelong);
 					tempCountry->setCountryNumber(serialNum);
