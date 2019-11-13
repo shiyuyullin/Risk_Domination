@@ -16,9 +16,9 @@ public:
 	static Map* loadingMap(string fileName);
 };
 
-class MaploaderAdapter : public Maploader{
+class MaploaderAdapter : public Maploader {
 public:
 
-	DominationMaploader* mapLoaderAdaptee();
+	static DominationMaploader* mapLoaderAdaptee;
 	static Map* loadingMap(string fileName);
 };

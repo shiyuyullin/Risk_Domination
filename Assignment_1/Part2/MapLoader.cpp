@@ -107,11 +107,12 @@ Map* Maploader::loadingMap(string fileName) {
 
 //Class that  reads from Conquest files to create a map.
 //This class will be the Adaptee of the Adapter
+
 Map* DominationMaploader::loadingMap(string fileName) {
 
 	ifstream inputFileStream;
 	inputFileStream.open(fileName);
-	
+
 
 	if (!inputFileStream.fail()) {
 		Map* resultMap = new Map();//The map that will be returned once the function resolves
@@ -126,10 +127,10 @@ Map* DominationMaploader::loadingMap(string fileName) {
 		string line;
 
 		while (getline(inputFileStream, line)) {
-			
+
 			if (line == "[Continents]") {
 				while (getline(inputFileStream, line)) {
-					
+
 					if (line == "[Territories]")
 						break;
 
@@ -156,13 +157,13 @@ Map* DominationMaploader::loadingMap(string fileName) {
 			int continentBelong = 0;
 			tokens.clear();
 			while (getline(inputFileStream, line)) {
-				
+
 				if (line == "") {//if there is an empty line it means that we changed continent
 					continentBelong++;
 				}
 				else {
 
-					borders.push_back( vector<string>());
+					borders.push_back(vector<string>());
 					stringstream check1(line);
 					string intermediate;
 					while (getline(check1, intermediate, ','))
@@ -172,8 +173,8 @@ Map* DominationMaploader::loadingMap(string fileName) {
 					Country* tempCountry = new Country();
 					borders[continentBelong].push_back(tokens[0]);
 
-					for(int i = 3; i < tokens.size(); i++){
-						tokens[continentBelong].push_back(tokens[i]);
+					for (int i = 3; i < tokens.size(); i++) {
+						borders[continentBelong].push_back(tokens[i]);
 					}
 					tempCountry->setCountryName(tokens[0]);
 					tempCountry->setContinent(continentBelong);
@@ -189,9 +190,9 @@ Map* DominationMaploader::loadingMap(string fileName) {
 			break;
 		}
 
-		for (int x = 0; x < borders.size() ; x++){
-			for (int y = 0; y < borders[x].size(); y++){
-			
+		for (int x = 0; x < borders.size(); x++) {
+			for (int y = 0; y < borders[x].size(); y++) {
+
 				int destination = resultMap->findIndex(borders[x][y]);
 				resultMap->setborder(x, y, destination);
 				resultMap->addEdge(x, destination);
