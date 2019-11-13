@@ -8,6 +8,7 @@
 using namespace std;
 
 //Implementation of loading function
+//Target of the Adapter pattern.
 Map* Maploader::loadingMap(string fileName) {
 	ifstream inputFileStream;
 	inputFileStream.open(fileName);
@@ -104,7 +105,8 @@ Map* Maploader::loadingMap(string fileName) {
 	}
 }
 
-
+//Class that  reads from Conquest files to create a map.
+//This class will be the Adaptee of the Adapter
 Map* DominationMaploader::loadingMap(string fileName) {
 
 	ifstream inputFileStream;
@@ -203,33 +205,40 @@ Map* DominationMaploader::loadingMap(string fileName) {
 	}
 }
 
+//Subclass of the Target, includes an Adaptee as a data member
+//overrides the method that is used to read Domination files
+
 Map* MaploaderAdapter::loadingMap(string fileName) {
 
-	ifstream inputFileStream;
-	inputFileStream.open(fileName);
-	bool riskFile = true;
-	string line;
+	return mapLoaderAdaptee->loadingMap(fileName);
+	// ifstream inputFileStream;
+	// inputFileStream.open(fileName);
+	// bool riskFile = true;
+	// string line;
 
-	if (!inputFileStream.fail()) {
+	// if (!inputFileStream.fail()) {
 
-		while (getline(inputFileStream, line)) {
+	// 	while (getline(inputFileStream, line)) {
 
-			size_t found = line.find("[Territories]");
-			if (found != string::npos) {
-				riskFile = false;
-			}
+	// 		size_t found = line.find("[Territories]");
+	// 		if (found != string::npos) {
+	// 			riskFile = false;
+	// 		}
 
-		}
-		inputFileStream.close();
-		if (riskFile) {
-			return Maploader().loadingMap(fileName);
-		}
-		else {
-			return DominationMaploader().loadingMap(fileName);
-		}
-	}
-	else {
-		cout << "Invalid file name, please program exit" << endl;
-		exit(0);
-	}
+	// 	}
+	// 	inputFileStream.close();
+	// 	if (riskFile) {
+	// 		return Maploader().loadingMap(fileName);
+	// 	}
+	// 	else {
+	// 		return DominationMaploader().loadingMap(fileName);
+	// 	}
+	// }
+	// else {
+	// 	cout << "Invalid file name, please program exit" << endl;
+	// 	exit(0);
+	// }
 }
+
+
+
