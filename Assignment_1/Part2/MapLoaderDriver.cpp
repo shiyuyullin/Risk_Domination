@@ -10,13 +10,6 @@ int main() {
 	Map* loadedMap;
 
 	loadedMap = Maploader::loadingMap("ameroki");
-
-
-
-
-
-
-	
 	return 0;
 
 }

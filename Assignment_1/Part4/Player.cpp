@@ -124,7 +124,7 @@ void Player::reinforce()
 		{
 			cout << endl;
 			cin >> tile >> armies;
-			if (tile >= 1 && tile < *numberOfCountryOwned && armies > 0 && armies <= armiesToDistribute)
+			if (tile >= 1 && tile <= *numberOfCountryOwned && armies > 0 && armies <= armiesToDistribute)
 			{
 
 				mapIndex = *indexOfCountryOwned[tile - 1] - 1;
