@@ -17,7 +17,7 @@ private:
 	int* numberOfCountryOwned;
 	int* playerId;
 	int* armies;
-
+	int* actionDoneHere;
 
 public:
 	//Constructor
@@ -31,20 +31,28 @@ public:
 	int getPlayerId();
 	int getArmies();
 	int getSerialAt(int index);
+	Hand* getHand();
+	int getActionDoneHere();
+	
 	//Setters
 	void setPlayerId(int id);
+	void setIndexOfCountry(int serialNum);//just pass in the countries serial number
+	
+	//player actions
 	void reinforce();
-	void attack(Map* gameMap);
-	void foritfy(Map* gameMap);
+	void attack();
+	void foritfy();
+	
+	//dice actions
 	void RollDice(int n); //Test the dice obj for player
 	void DisplayRollInfo(int n); // These two here are to be generally put together
+	
 	void incrementNumOfCountry();
 	void decrementNumOfCountry();
-	void setIndexOfCountry(int serialNum);//just pass in the countries serial number
+	
 	void removeIndex(int index);
 	//A2P2 Ian start up phase function
 	void placeArmy();
-	Hand* getHand();
-
+	
 };
 
