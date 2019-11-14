@@ -6,9 +6,11 @@
 #include "D:\Visual Studio\WorkSpace\a1_MapLoader\MapLoader.h"
 #include "D:\Visual Studio\WorkSpace\Player\Player.h"
 #include "D:\Visual Studio\WorkSpace\Map\Map.h"
+#include "GameObservers.h"
+
 using namespace std;
 
-class GameEngine {
+class GameEngine  : public Subject{
 private:
 	std::vector<Player*> players;//an array of player objects that will play per game
 	int* numOfPlayers;
