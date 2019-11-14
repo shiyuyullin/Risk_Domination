@@ -37,8 +37,7 @@ Player::~Player()
 
 void Player::reinforce()
 {
-
-	Map* gameMap = GameEngine::getMap();
+Map* gameMap = GameEngine::getMap();
 	int controlledCountries = *numberOfCountryOwned / 3;
 	int choice = 0;
 	int exchangeBonus = 0;
@@ -86,19 +85,19 @@ void Player::reinforce()
 			}
 		}
 	}
-	
+
 	int armiesToDistribute = controlledCountries + continentBonus + exchangeBonus;
 	cout << "This turn you shall receive an additional " << armiesToDistribute << " armies" << endl;
 	cout << controlledCountries << " from your occupied countries" << endl;
 	cout << exchangeBonus << " from exchanging cards" << endl;
 	cout << continentBonus << " from continent bonuses" << endl;
 
-	cout << "You have: " << hand->getNumberOfCards() << " cards and " <<  getArmies() << " armies." << endl << endl;
+	cout << "You have: " << hand->getNumberOfCards() << " cards and " << *armies << " armies." << endl << endl;
 
 
 	if (armiesToDistribute > 0)
 	{
-
+		*actionDoneHere = 0;
 
 		cout << "Here are all the countries you control:" << endl << endl;
 
@@ -124,7 +123,7 @@ void Player::reinforce()
 		{
 			cout << endl;
 			cin >> tile >> armies;
-			if (tile >= 1 && tile <= *numberOfCountryOwned && armies > 0 && armies <= armiesToDistribute)
+			if (tile >= 1 && tile < *numberOfCountryOwned && armies > 0 && armies <= armiesToDistribute)
 			{
 
 				mapIndex = *indexOfCountryOwned[tile - 1] - 1;
@@ -132,6 +131,7 @@ void Player::reinforce()
 				cout << endl;
 				cout << gameMap->getCountry(mapIndex)->getCountryName() << " now has ";
 				cout << gameMap->getCountry(mapIndex)->getNbOfArmies() << " armies" << endl << endl;
+				(*actionDoneHere)++;
 				armiesToDistribute -= armies;
 				if (armiesToDistribute > 0)
 				{
@@ -157,7 +157,7 @@ void Player::reinforce()
 			else
 			{
 				cout << "That's an invalid input, try again!" << endl;
-				
+
 			}
 		}
 	}
@@ -167,10 +167,10 @@ void Player::reinforce()
 	}
 }
 //**************************************************************************************************************************************
-void Player::attack(Map* gameMap)
+void Player::attack()
 {
-	//Map* a = GameEngine::getMap();
-	Map* a = gameMap;
+	*actionDoneHere = 0;
+	Map* a = GameEngine::getMap();
 	int state = 0;
 	Country* tempCountry = new Country();//Country to attack from
 	Country* tempCountryToAtt = new Country(); //Country that will be attacked
@@ -423,6 +423,7 @@ void Player::attack(Map* gameMap)
 				int moveArmies = 0;								//keep number of arm the player want to move
 				int totalArmies = tempCountry->getNbOfArmies(); //Keep total number of arm in the attacking country
 				cout << "Congratulation! Your attack is successful, now you own the attacked country." << endl;
+				(*actionDoneHere)++;
 				//Changing owner of the attacked country, changing player's state
 				//state change on defender
 				Defender->decrementNumOfCountry();
@@ -472,10 +473,10 @@ void Player::attack(Map* gameMap)
 	}
 }
 
-void Player::foritfy(Map* gameMap)
+void Player::foritfy()
 {
-	//Map* a = GameEngine::getMap();
-	Map* a = gameMap;
+	*actionDoneHere = 0;
+	Map* a = GameEngine::getMap();
 	Country* sourceCountry;
 	Country* targetCountry;
 	Player* tempPlayer = this; //Get the player who calls this method
@@ -517,7 +518,7 @@ void Player::foritfy(Map* gameMap)
 				originalArmOnSource = sourceCountry->getNbOfArmies();		 //Getting original armies on source country
 				if (originalArmOnSource <= 1)
 				{
-					cout << "Sorry, you cannot select this country as source country because its armies are smaller that or equal to 1." << endl;
+					cout << "Sorry, you cannot select this country as source country because its armies are smaller than or equal to 1." << endl;
 					cout << "Please try again" << endl;
 					continue;
 				}
@@ -575,6 +576,7 @@ void Player::foritfy(Map* gameMap)
 					state2 = false;
 					sourceCountry->setArmyNumber(originalArmOnSource - numOfArmiesMove);
 					targetCountry->setArmyNumber(originArmOnTarget + numOfArmiesMove);
+					(*actionDoneHere)++;
 				}
 			}
 		}
@@ -628,6 +630,9 @@ int Player::getSerialAt(int index) {
 	return *indexOfCountryOwned[index];
 }
 
+int Player::getActionDoneHere() {
+	return *actionDoneHere;
+}
 //-------------IAN A2P2 
 //THIS FUNCTION WILL PLACE THE PLAYER'S INITITAL ARMY COUNT SPREAD OUT EVENLY THROUGHOUT THEIR COUNTRIES
 //START UP PHASE USAGE ONLY
