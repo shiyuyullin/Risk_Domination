@@ -18,6 +18,7 @@
         "vector": "cpp",
         "xstring": "cpp",
         "algorithm": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "ostream": "cpp"
     }
 }
