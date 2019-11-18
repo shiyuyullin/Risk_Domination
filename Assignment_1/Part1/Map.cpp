@@ -317,7 +317,7 @@ void Map::setContinentSizesAndMembers()
 	{
 		continentCounter = 0;
 		continentId = i + 1;
-
+		
 		for (int j = 0; j < *numberOfCountries; j++)
 		{
 			if (continentId == arrOfCountries[j]->getContinent())
@@ -351,8 +351,10 @@ void Map::createAdjacencyMatrix()
 	}
 }
 
-bool Map::validateMap(int continentStart, int continentEnd)
-{
+bool Map::validateMap(){
+
+	int continentStart = 0;
+	int continentEnd = *numberOfCountries - 1;
 	int size = continentEnd - continentStart + 1;
 	int** result = new int* [size];
 	for (int i = 0; i < size; i++)
@@ -398,24 +400,24 @@ bool Map::validateMap(int continentStart, int continentEnd)
 		}
 	}
 	for (int j = continentStart; j <= continentEnd - 1; j++)
-	{
-		if (result[j + 1][j] == 0)
 		{
-			connected2 = false;
+			if (result[j+ 1][j] == 0)
+			{
+				connected2 = false;
+			}
 		}
-	}
 
 
-
-	for (int j = continentStart; j <= continentEnd; j++)
-	{
-		if (result[j][j + 1] == 0)
+		
+		for (int j = continentStart; j <= continentEnd; j++)
 		{
-			connected3 = false;
+				if (result[j][j+1] == 0)
+				{
+					connected3 = false;
+				}
 		}
-	}
-	return true;
-
+		return true;
+	
 	for (int i = 0; i < size; i++)
 		delete[] result[i];
 	delete[] result;
@@ -441,6 +443,7 @@ void Map::printMap()
 
 	cout << "\n--------------------------------\n";
 }
+
 //Getters
 int** Map::getMapOfCountries()
 {
@@ -469,10 +472,12 @@ void Map::addEdge(int start, int destination)
 	mapOfCountries[destination][start] = 1;
 }
 
+
 int Map::findIndex(string name) {
 
-	for (int i = 0; i < *numberOfContinents; i++) {
+	for (int i = 0; i < *numberOfCountries; i++) {
 		if (arrOfCountries[i]->getCountryName() == name) {
+			cout << "---------------------------------";
 			return i;
 		}
 	}

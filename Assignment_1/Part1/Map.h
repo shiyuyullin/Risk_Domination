@@ -81,7 +81,7 @@ public:
 	void setborder(int index, int indexBorders, int num);//setter for country's borders
 	void setNumberOfCountries(int numberOfCountries);//setter to set number of countries
 	void setNumberOfContinents(int numberOfContinents);//setter to set number of continents
-	bool validateMap(int continentStart, int continentEnd);
+	bool validateMap();
 	void printMap();
 	int** getMapOfCountries();
 	int getNumOfCountries();
