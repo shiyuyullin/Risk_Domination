@@ -19,7 +19,7 @@ private:
 	int* playerId;
 	int* armies;
 	Strategy* playerStrategy;
-
+	int* actionsDoneinStrat;
 
 public:
 	//Constructor
@@ -33,6 +33,7 @@ public:
 	int getPlayerId();
 	int getArmies();
 	int getSerialAt(int index);
+	const int getActionsInStrat();
 	//Setters
 	void setPlayerId(int id);
 	void reinforce();
