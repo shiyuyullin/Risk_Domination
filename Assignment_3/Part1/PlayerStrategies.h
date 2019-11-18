@@ -9,6 +9,8 @@ class Dice;
 class Hand;
 
 class Strategy {
+//actionsdonehere is an integer that increments eveytime a player has modified their country count by either
+//attacking, fortifying, or reinforcing
 protected:
 int* actionsdonehere = new int(0);
 public:
