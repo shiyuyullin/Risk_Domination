@@ -93,6 +93,7 @@ void GameEngine::startGame()
 		string msg = "Initializing the game's startup phase...\n";
 		Notify(-1, 0, msg);
 		map_assign_startUp(); //Assign random countries to the players, start up phase setting
+		Notify();
 		placeArmies_startUpPhase(); //Place all of the player's army count around their countries
 		bool gameIsFinished = false;
 
@@ -105,6 +106,7 @@ void GameEngine::startGame()
 				int playerTurn = players[i]->getPlayerId();
 				msg = "";
 				Notify(playerTurn, 1, msg);
+				Notify();
 
 				// REINFORCE PHASE
 				cout << "Would you like to Reinforce your board this turn, Yes(1) or No(2) ?: ";
@@ -123,6 +125,7 @@ void GameEngine::startGame()
 						to_string(players[i]->getNumOwnedCountry())
 						+" countries to reinforce for this phase and will now reinforce\n";
 					Notify(playerTurn, 1, msg);
+					Notify();
 					players[i]->reinforce();
 
 					//The player has done this this and this
@@ -132,6 +135,7 @@ void GameEngine::startGame()
 						+ " countries and reinforced " + to_string(players[i]->getActionsInStrat())
 						+ " countries for this phase" ;
 					Notify(playerTurn, 1, msg);
+					Notify();
 
 				}
 				else
@@ -142,6 +146,7 @@ void GameEngine::startGame()
 				//OBSERVER CALL
 				msg = "";
 				Notify(playerTurn, 2, msg);
+				Notify();
 				// ATTACK PHASE
 				choice = 0;
 
@@ -157,12 +162,14 @@ void GameEngine::startGame()
 				{//OBSERVER CALL
 					msg = "Player " + to_string(playerTurn) + " will  now attack for this phase\n";
 					Notify(playerTurn, 2, msg);
+					Notify();
 					players[i]->attack();
 					//OBSERVER CALL
 					msg = "Player " + to_string(playerTurn) + " succesfully attacked "
 						+ to_string(players[i]->getActionsInStrat()) +" countries and now owns: "
 						+ to_string(players[i]->getNumOwnedCountry()) + " countries";
 					Notify(playerTurn, 1, msg);
+					Notify();
 				}
 
 				else
@@ -173,6 +180,7 @@ void GameEngine::startGame()
 				//OBSERVER CALL
 				msg = "";
 				Notify(playerTurn, 3, msg);
+				Notify();
 
 				// FORTIFICATION PHASE
 				choice = 0;
@@ -190,6 +198,7 @@ void GameEngine::startGame()
 					//OBSERVER CALL
 					msg = "Player " + to_string(playerTurn) + " will now fortify for this phase\n";
 					Notify(playerTurn, 3, msg);
+					Notify();
 
 					players[i]->foritfy();
 
@@ -197,17 +206,20 @@ void GameEngine::startGame()
 					msg = "Player " + to_string(playerTurn) + " has now  finished their forticfication phase and has fortified "
 						+ to_string(players[i]->getActionsInStrat()) + " countries.";
 					Notify(playerTurn, 3, msg);
+					Notify();
 				}
 				else
 				{
 					cout << "Your turn is coming to an end. " << endl;
 					msg = "Player " + to_string(playerTurn) + " has now  finished their turn for this phase...Moving on...";
 					Notify(playerTurn, -1, msg);
+					Notify();
 				}
 				if (testVictoryCondition())
 				{
 					cout << "The Game is Over, Player " << playerTurn << " wins!" << endl;
 					gameIsFinished = true;
+					
 				}
 			}
 		}
