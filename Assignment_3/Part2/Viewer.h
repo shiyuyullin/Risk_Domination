@@ -22,3 +22,18 @@ public:
 	void displayAttackInfo(int a2,string msg);//2
 	void displayFortifyInfo(int a3,string msg);//3
 };
+
+class GameStatisticsObserver : public Observer{
+
+private: 
+	GameEngine *engine;
+
+public:
+	GameStatisticsObserver();
+	GameStatisticsObserver(GameEngine *en);
+	~GameStatisticsObserver();
+	void Update();
+	void display();
+	void displayDomination();
+	void displayCelebratoryMessage(int iD);
+};
