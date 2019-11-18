@@ -70,7 +70,7 @@ void humanPlayer::Reinforce(Player* p) {
 
 	if (armiesToDistribute > 0)
 	{
-
+		(*actionsdonehere) = 0;
 
 		cout << "Here are all the countries you control:" << endl << endl;
 
@@ -103,6 +103,7 @@ void humanPlayer::Reinforce(Player* p) {
 				cout << endl;
 				cout << gameMap->getCountry(mapIndex)->getCountryName() << " now has ";
 				cout << gameMap->getCountry(mapIndex)->getNbOfArmies() << " armies" << endl << endl;
+				(*actionsdonehere)++;
 				armiesToDistribute -= armies;
 				if (armiesToDistribute > 0)
 				{
@@ -140,6 +141,7 @@ void humanPlayer::Reinforce(Player* p) {
 
 //Attack():
 void humanPlayer::Attack(Player* p) {
+	*actionsdonehere = 0;
 	Map* a = GameEngine::getMap();
 	//Map* a = gameMap;
 	int state = 0;
@@ -166,7 +168,7 @@ void humanPlayer::Attack(Player* p) {
 			{
 				cout << "Please choose one of the following country to attack from(The integer value before the country name):" << endl;
 				for (int i = 0; i < (p->getNumOwnedCountry()); ++i)
-				{	
+				{
 					tempCountry = a->getCountry((p->getSerialAt(i) - 1));
 					cout << "You own: " << endl;
 					cout << tempCountry->getCountryNumber() << ". " << tempCountry->getCountryName() << ", number of armies: " << tempCountry->getNbOfArmies() << endl;
@@ -397,6 +399,7 @@ void humanPlayer::Attack(Player* p) {
 				int moveArmies = 0;								//keep number of arm the player want to move
 				int totalArmies = tempCountry->getNbOfArmies(); //Keep total number of arm in the attacking country
 				cout << "Congratulation! Your attack is successful, now you own the attacked country." << endl;
+				(*actionsdonehere)++;
 				//Changing owner of the attacked country, changing player's state
 				//state change on defender
 				Defender->decrementNumOfCountry();
@@ -447,6 +450,7 @@ void humanPlayer::Attack(Player* p) {
 }
 
 void humanPlayer::Fortify(Player* p) {
+	*actionsdonehere = 0;
 	Map* a = GameEngine::getMap();
 	//Map* a = gameMap;
 	Country* sourceCountry;
@@ -548,6 +552,7 @@ void humanPlayer::Fortify(Player* p) {
 					state2 = false;
 					sourceCountry->setArmyNumber(originalArmOnSource - numOfArmiesMove);
 					targetCountry->setArmyNumber(originArmOnTarget + numOfArmiesMove);
+					(*actionsdonehere)++;
 				}
 			}
 		}
@@ -639,7 +644,7 @@ void aggressivePlayer::Attack(Player* p) {
 	if (tempCountry->getNbOfArmies() >= 2) {//Keep attacking until the country has less than 2 armies
 		//Validating borders
 		while (bordersTemp[counter] != -1)
-		{	
+		{
 			cout << bordersTemp[counter] << endl;//-------------------------------
 			//Validating each border
 			//Once a validate country is found, attack it immediately
@@ -653,7 +658,7 @@ void aggressivePlayer::Attack(Player* p) {
 				{
 					if (Attacker != Defender)
 					{
-						
+
 						//Start attacking
 						//Attack between two players
 						//Attack phase ends when one of the countries has zero armies on it
@@ -926,7 +931,7 @@ void beneloventPlayer::Fortify(Player* p) {
 	int originArmiesOnSource = 0;
 	int originArmiesOnTarget = 0;
 	int* tempBorders;
-	
+
 	//Selecting source country
 	for (int i = 0; i < tempPlayer->getNumOwnedCountry(); i++) {
 		sourceCountry = a->getCountry((tempPlayer->getSerialAt(i) - 1));
