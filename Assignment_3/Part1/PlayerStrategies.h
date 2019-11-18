@@ -9,10 +9,13 @@ class Dice;
 class Hand;
 
 class Strategy {
+protected:
+int* actionsdonehere = new int(0);
 public:
 	virtual void Reinforce(Player* p) = 0;
 	virtual void Attack(Player* p) = 0;
 	virtual void Fortify(Player* p) = 0;
+	const inline int getAction() { return *actionsdonehere; };
 };
 
 class humanPlayer : public Strategy {
