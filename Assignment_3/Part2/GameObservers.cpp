@@ -37,3 +37,11 @@ void Subject::Notify(int player_num,int action,string msg) {
 	for (; i != _observers->end(); ++i)
 		(*i)->Update(player_num,action,msg);
 };
+
+void Subject::Notify() { 
+	list<Observer*>::iterator i = _observers->begin();
+
+	
+	for (; i != _observers->end(); ++i)
+		(*i)->Update(); 
+};
