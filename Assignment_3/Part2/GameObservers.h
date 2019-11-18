@@ -24,6 +24,8 @@ public:
 	Ian Lopez
 	*/
 	virtual void Update(int player_num, int action, string msg) = 0;
+	
+	virtual void Update() = 0;  //Abstract method to be defined in GameStatisticsObserver
 protected:
 	Observer();
 };
