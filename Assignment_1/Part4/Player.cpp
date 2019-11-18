@@ -6,7 +6,9 @@
 using namespace std;
 Player::Player()
 {
+	//Actions done in the strategy object for every time a player does some action (like attack,reinforce, or fortify a country)
 	actionsDoneinStrat = new int(0);
+	
 	dice = new Dice();
 	hand = new Hand();
 	numberOfCountryOwned = new int(0);
