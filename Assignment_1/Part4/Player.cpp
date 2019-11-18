@@ -6,6 +6,7 @@
 using namespace std;
 Player::Player()
 {
+	actionsDoneinStrat = new int(0);
 	dice = new Dice();
 	hand = new Hand();
 	numberOfCountryOwned = new int(0);
@@ -15,6 +16,7 @@ Player::Player()
 
 Player::Player(int id, int armyCount)
 {
+	actionsDoneinStrat = new int(0);
 	dice = new Dice();
 	hand = new Hand();
 	playerId = new int(id);
@@ -24,6 +26,7 @@ Player::Player(int id, int armyCount)
 
 Player::~Player()
 {
+	delete actionsDoneInStrat;
 	delete dice;
 	delete hand;
 	delete numberOfCountryOwned;
@@ -97,6 +100,10 @@ int Player::getNumOwnedCountry()
 }
 int Player::getSerialAt(int index) {
 	return *indexOfCountryOwned[index];
+}
+const int Player::getActionsInStrat()
+{
+	return playerStrategy->getAction();
 }
 int Player::getArmies() {
 
