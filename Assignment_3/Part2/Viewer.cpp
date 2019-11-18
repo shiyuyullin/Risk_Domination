@@ -1,4 +1,5 @@
 #include "Viewer.h"
+#include "iomanip>
 
 PhaseObserver::PhaseObserver()
 {
@@ -82,4 +83,91 @@ void PhaseObserver::displayFortifyInfo(int a3,string msg)
 {
 	cout << "==========================\n\tPHASE OBSERVER\n==========================\n";
 	cout << "Fortifying phase:\n" << msg << endl;
+}
+
+
+
+
+GameStatisticsObserver::GameStatisticsObserver(){}  //Default Constructor
+
+GameStatisticsObserver::~GameStatisticsObserver(){}  //Destructor
+
+//Parameterzed Constructor - Game engine pointer as parameter
+GameStatisticsObserver::GameStatisticsObserver(GameEngine *en) {
+
+	engine = en;
+	engine->Attach(this);
+}
+
+//Inherited from Observer class. Calls display method as defined in GameStatisticsObserver class
+void GameStatisticsObserver::Update() {
+	
+	display();
+	
+}
+
+/*Implements the view of the GamesStatisticsObserver class. Displays congratulatory message if winner is found. Displays world domina
+if all countries haven't been dominated by one player yet.
+*/
+void GameStatisticsObserver::display() {
+	std::cout << "\n \n \n";
+	
+	double playerNumOfCountries; // number of countries dominated by one player
+	bool winner = false;	 //boolean check for winner
+	int players = engine->getNumOfPlayers(); // number of players in game
+	double gameNumOfCountries = engine->getMap()->getNumOfCountries(); //number of countries on map in play
+
+	/*Traversing players vector - checking for winner. If winner is found then winner is set to TRUE and congratulatory message is 
+	displayed else player domination stats is displayed */
+	for (int i = 0; i < players; i++) {
+		playerNumOfCountries = engine->getPlayers().at(i)->getNumOwnedCountry();
+		if (playerNumOfCountries == gameNumOfCountries) {
+			displayCelebratoryMessage(engine->getPlayers().at(i)->getPlayerId());
+			winner = true;
+			break;
+		}
+	}
+
+	if (!winner) 
+		displayDomination();
+	
+	
+}
+
+/*Celebratory message if a player wins game */
+void GameStatisticsObserver::displayCelebratoryMessage(int iD) {
+	cout << "==================================================" << endl;
+	cout << "		     WINNER!!!" << endl;
+	cout << "==================================================" << endl<<endl;
+	cout << "		    *PLAYER "<<iD<<"*" << endl;
+	cout << "	 ~				~" << endl << endl;
+	cout << " You are a CHAMPION! You are awesome at your game!" << endl;
+	cout << "  You have conquered all nations in this world..." << endl;
+	cout << "--------------------------------------------------" << endl;
+	cout << "--------------------------------------------------" << endl<<endl;
+
+}
+
+/*Game Stats Display View */
+void GameStatisticsObserver::displayDomination() {
+	int num = engine->getNumOfPlayers();
+	double gameNumOfCountries = engine->getMap()->getNumOfCountries();
+	std::cout << "===========================" << endl;
+	std::cout << " PLAYER | WORLD DOMINATION" << endl;
+	std::cout << "===========================" << endl;
+	for (int i = 0; i < num; i++) {
+
+		double playerNumOfCountries = engine->getPlayers().at(i)->getNumOwnedCountry();
+
+		if (playerNumOfCountries > 0) {
+
+			double percent = (playerNumOfCountries / gameNumOfCountries) * 100;
+			std::cout << "  P" << engine->getPlayers().at(i)->getPlayerId() << "      ";
+			std::cout << fixed;
+			std::cout << setprecision(2);
+			std::cout << percent
+				<< "%" << endl;
+		}
+	}
+	std::cout << "===========================" << endl << endl;
 }
