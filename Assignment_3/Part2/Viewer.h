@@ -22,7 +22,11 @@ public:
 	void displayAttackInfo(int a2,string msg);//2
 	void displayFortifyInfo(int a3,string msg);//3
 };
+/*
+GameStatisticsObserver, an observer of this program. A class that implements a view that displays some useful statistics about the game
+as the “players world domination view” that shows what percentage of the world is currently being controlled by each player.
 
+*/
 class GameStatisticsObserver : public Observer{
 
 private: 
@@ -34,6 +38,6 @@ public:
 	~GameStatisticsObserver();
 	void Update();
 	void display();
-	void displayDomination();
+	void displayDomination();  
 	void displayCelebratoryMessage(int iD);
 };
