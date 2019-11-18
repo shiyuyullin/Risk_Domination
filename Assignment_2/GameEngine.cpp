@@ -52,10 +52,10 @@ GameEngine::GameEngine()
 		*numOfPlayers = selectNumPlayers();
 		armyCnt = new int();
 		*armyCnt = number_of_armies_given(*numOfPlayers);
-
-
-		for (int i = 1; i <= *numOfPlayers; i++)
-			players.push_back(new Player(i, *armyCnt));
+		for (int i = 1; i <= *numOfPlayers; i++) {
+		players.push_back(new Player(i, *armyCnt));
+		players[(i-1)]->setStrategy(new humanPlayer);
+		}
 		// Shuffle Player Vector To Randomly Determine the order of play
 		for (int i = 0; i < players.size() - 1; i++) {
 			int j = i + rand() % (players.size() - i);
@@ -124,11 +124,12 @@ void GameEngine::startGame()
 						+" countries to reinforce for this phase and will now reinforce\n";
 					Notify(playerTurn, 1, msg);
 					players[i]->reinforce();
-					
+
+					//The player has done this this and this
 					//OBSERVER CALL
 					msg = "Player " + to_string(playerTurn) + " has " +
 						to_string(players[i]->getNumOwnedCountry())
-						+ " countries and reinforced " + to_string(players[i]->getActionDoneHere())
+						+ " countries and reinforced " + to_string(players[i]->getActionsInStrat())
 						+ " countries for this phase" ;
 					Notify(playerTurn, 1, msg);
 
@@ -156,11 +157,10 @@ void GameEngine::startGame()
 				{//OBSERVER CALL
 					msg = "Player " + to_string(playerTurn) + " will  now attack for this phase\n";
 					Notify(playerTurn, 2, msg);
-
 					players[i]->attack();
 					//OBSERVER CALL
 					msg = "Player " + to_string(playerTurn) + " succesfully attacked "
-						+ to_string(players[i]->getActionDoneHere()) +" countries and now owns: "
+						+ to_string(players[i]->getActionsInStrat()) +" countries and now owns: "
 						+ to_string(players[i]->getNumOwnedCountry()) + " countries";
 					Notify(playerTurn, 1, msg);
 				}
@@ -195,7 +195,7 @@ void GameEngine::startGame()
 
 					//Observer call
 					msg = "Player " + to_string(playerTurn) + " has now  finished their forticfication phase and has fortified "
-						+ to_string(players[i]->getActionDoneHere()) + " countries.";
+						+ to_string(players[i]->getActionsInStrat()) + " countries.";
 					Notify(playerTurn, 3, msg);
 				}
 				else
