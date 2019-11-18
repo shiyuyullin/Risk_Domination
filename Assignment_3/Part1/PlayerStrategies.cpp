@@ -624,7 +624,6 @@ void aggressivePlayer::Attack(Player* p) {
 	Dice* attackerDice = Attacker->getDice();//Dice for attacker
 	Player* Defender = new Player();
 	Dice* defenderDice = Defender->getDice();
-
 	//Find the strongest country
 	int maxCountrySerial = p->getSerialAt(0);//Serial number of the strongest country, initially the serial number at index 0
 	tempCountry = a->getCountry(maxCountrySerial - 1);//the strongest country for attacker
@@ -645,7 +644,6 @@ void aggressivePlayer::Attack(Player* p) {
 		//Validating borders
 		while (bordersTemp[counter] != -1)
 		{
-			cout << bordersTemp[counter] << endl;//-------------------------------
 			//Validating each border
 			//Once a validate country is found, attack it immediately
 			tempCountryToAtt = a->getCountry(bordersTemp[counter] - 1);//Getting the defending country
@@ -697,9 +695,7 @@ void aggressivePlayer::Attack(Player* p) {
 							for (int i = 0; i < 3; ++i)
 							{
 								tempValForAtt[i] = attackerDice->get_value_at(i);
-								cout << "Dice " << i << " : " << tempValForAtt[i] << endl;
 								tempValForDef[i] = defenderDice->get_value_at(i);
-								cout << "Dice " << i << " : " << tempValForDef[i] << endl;
 							}
 							//Sorting values from highest to lowest for both array
 							int tempForSorting = 0;
@@ -846,9 +842,11 @@ void aggressivePlayer::Fortify(Player* p) {
 						{
 							targetCountry = a->getCountry(tempBorders[counter] - 1);
 							originArmOnTarget = targetCountry->getNbOfArmies();
-							targetCountry->setArmyNumber(originArmOnTarget + (originalArmOnSource - 1));
-							sourceCountry->setArmyNumber(originalArmOnSource - (originalArmOnSource - 1));
-							return;
+							if (originalArmOnSource <= originArmOnTarget) {
+								targetCountry->setArmyNumber(originArmOnTarget + (originalArmOnSource - 1));
+								sourceCountry->setArmyNumber(originalArmOnSource - (originalArmOnSource - 1));
+								return;
+							}
 						}
 					}
 				}
