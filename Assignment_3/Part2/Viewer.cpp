@@ -1,5 +1,5 @@
 #include "Viewer.h"
-#include "iomanip>
+#include <iomanip>
 
 PhaseObserver::PhaseObserver()
 {
@@ -64,6 +64,8 @@ void PhaseObserver::display(int player_num, int action, string msg)
 		cout << "==========================\n\tPHASE OBSERVER\n==========================\n";
 		cout << msg << "\n";
 	}
+	
+	gameStatsDisplay();
 }
 	
 
@@ -88,28 +90,11 @@ void PhaseObserver::displayFortifyInfo(int a3,string msg)
 
 
 
-GameStatisticsObserver::GameStatisticsObserver(){}  //Default Constructor
-
-GameStatisticsObserver::~GameStatisticsObserver(){}  //Destructor
-
-//Parameterzed Constructor - Game engine pointer as parameter
-GameStatisticsObserver::GameStatisticsObserver(GameEngine *en) {
-
-	engine = en;
-	engine->Attach(this);
-}
-
-//Inherited from Observer class. Calls display method as defined in GameStatisticsObserver class
-void GameStatisticsObserver::Update() {
-	
-	display();
-	
-}
 
 /*Implements the view of the GamesStatisticsObserver class. Displays congratulatory message if winner is found. Displays world domina
 if all countries haven't been dominated by one player yet.
 */
-void GameStatisticsObserver::display() {
+void PhaseObserver::gameStatsDisplay(){
 	std::cout << "\n \n \n";
 	
 	double playerNumOfCountries; // number of countries dominated by one player
@@ -135,7 +120,7 @@ void GameStatisticsObserver::display() {
 }
 
 /*Celebratory message if a player wins game */
-void GameStatisticsObserver::displayCelebratoryMessage(int iD) {
+void PhaseObserver::displayCelebratoryMessage(int iD) {
 	cout << "==================================================" << endl;
 	cout << "		     WINNER!!!" << endl;
 	cout << "==================================================" << endl<<endl;
@@ -149,7 +134,7 @@ void GameStatisticsObserver::displayCelebratoryMessage(int iD) {
 }
 
 /*Game Stats Display View */
-void GameStatisticsObserver::displayDomination() {
+void PhaseObserver::displayDomination() {
 	int num = engine->getNumOfPlayers();
 	double gameNumOfCountries = engine->getMap()->getNumOfCountries();
 	std::cout << "===========================" << endl;
