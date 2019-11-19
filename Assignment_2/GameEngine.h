@@ -6,7 +6,7 @@
 #include "D:\Visual Studio\WorkSpace\a1_MapLoader\MapLoader.h"
 #include "D:\Visual Studio\WorkSpace\Player\Player.h"
 #include "D:\Visual Studio\WorkSpace\Map\Map.h"
-#include "GameObservers.h"
+#include "D:\Visual Studio\WorkSpace\ObserverForGame\GameObservers.h"
 
 using namespace std;
 
@@ -23,6 +23,7 @@ private:
 public:
 	//CONSTRUCTOR 
 	GameEngine();
+	GameEngine(int i);
 	//DESTRUCTOR
 	~GameEngine();
 	vector<string> getListOfMaps();
@@ -34,7 +35,10 @@ public:
 	//A2P2 START UP PHASE USAGE ONLY
 	void map_assign_startUp();// call this first
 	void placeArmies_startUpPhase();//then this one
+	void setMap(Map* GameMap);//For testing purpose
 	const int number_of_armies_given(int AmtOfPlayers);
 	void testPart3AND4();
+	int getNumOfPlayers() { return *numOfPlayers; }  //Accessor for number of players in game
+	vector<Player*>getPlayers() { return players; }  //Accessor for vector of players in game (used in GameStatisticsObserver)
 };
 

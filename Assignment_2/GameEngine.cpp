@@ -33,11 +33,11 @@ GameEngine::GameEngine()
 		map_select = new string();
 		map_select = selectMap();
 		gameMap = map->loadingMap(*map_select);
-		while (gameMap->validateMap(0,gameMap->getNumOfCountries()-1)==false) {
+		while (gameMap->validateMap()==false) {
 		map_select = selectMap();
 		gameMap = map->loadingMap(*map_select);
 		
-		if (gameMap->validateMap(0, gameMap->getNumOfCountries() - 1) == false)
+		if (gameMap->validateMap() == false)
 			cout << endl<<"Invalid map. Map rejected. Select again.";
 	}
 
@@ -73,6 +73,11 @@ GameEngine::GameEngine()
 
 
 }
+
+GameEngine::GameEngine(int i) {
+	numOfPlayers = new int(i);
+}
+
 //destructor
 GameEngine::~GameEngine()
 {
@@ -364,6 +369,11 @@ void GameEngine::placeArmies_startUpPhase()//A2P2 IAN
 
 }
 
+void GameEngine::setMap(Map* GameMap) {
+	gameMap = GameMap;
+}
+
+
 bool GameEngine::testVictoryCondition()
 {
 
@@ -469,21 +479,21 @@ void GameEngine::testPart3AND4() {
 	Card* card14 = new Card(3);
 	Card* card15 = new Card(3);
 	
-	testPlayer->getHand()->addToHand(*card1);
-	testPlayer->getHand()->addToHand(*card2);
-	testPlayer->getHand()->addToHand(*card3);
-	testPlayer->getHand()->addToHand(*card4);
-	testPlayer->getHand()->addToHand(*card5);
-	testPlayer->getHand()->addToHand(*card6);
-	testPlayer->getHand()->addToHand(*card7);
-	testPlayer->getHand()->addToHand(*card8);
-	testPlayer->getHand()->addToHand(*card9);
-	testPlayer->getHand()->addToHand(*card10);
-	testPlayer->getHand()->addToHand(*card11);
-	testPlayer->getHand()->addToHand(*card12);
-	testPlayer->getHand()->addToHand(*card13);
-	testPlayer->getHand()->addToHand(*card14);
-	testPlayer->getHand()->addToHand(*card15);
+	testPlayer->getHand()->addToHand(card1);
+	testPlayer->getHand()->addToHand(card2);
+	testPlayer->getHand()->addToHand(card3);
+	testPlayer->getHand()->addToHand(card4);
+	testPlayer->getHand()->addToHand(card5);
+	testPlayer->getHand()->addToHand(card6);
+	testPlayer->getHand()->addToHand(card7);
+	testPlayer->getHand()->addToHand(card8);
+	testPlayer->getHand()->addToHand(card9);
+	testPlayer->getHand()->addToHand(card10);
+	testPlayer->getHand()->addToHand(card11);
+	testPlayer->getHand()->addToHand(card12);
+	testPlayer->getHand()->addToHand(card13);
+	testPlayer->getHand()->addToHand(card14);
+	testPlayer->getHand()->addToHand(card15);
 
 	testPlayer->reinforce();
 }
