@@ -25,7 +25,7 @@ public:
 	*/
 	virtual void Update(int player_num, int action, string msg) = 0;
 	
-	virtual void Update() = 0;  //Abstract method to be defined in GameStatisticsObserver
+	
 protected:
 	Observer();
 };
@@ -35,7 +35,6 @@ class Subject {//The object of interest, the observable: the game engine
 public:
 	virtual void Attach(Observer* o);//Register obsever
 	virtual void Detach(Observer* o);//Remove observer
-	virtual void Notify(); //Non-parameterized for GameStatisticsObserver
 	virtual void Notify(int player_num,int action, string msg);//Boradcast that the object of interest has changed
 	Subject();
 	~Subject();
