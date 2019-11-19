@@ -2,11 +2,11 @@
 #include "GameObservers.h"
 #include "GameEngine.h"
 /*
-PhaseObserver, an observer of this program. They 
-are simple classes that display relevant information
+
+PhaseObserver, an observer of this program.  This class displays relevant information
 on what is going in game, mainly after the player has finished their
-attack,fortify, or reinforcement.
-Ian Lopez
+attack,fortify, or reinforcement and imolements a view of the game statistics (player world domination)
+
 */
 class PhaseObserver : public Observer {
 
@@ -21,23 +21,8 @@ public:
 	void displayReinforceInfo(int a1,string msg);//1
 	void displayAttackInfo(int a2,string msg);//2
 	void displayFortifyInfo(int a3,string msg);//3
-};
-/*
-GameStatisticsObserver, an observer of this program. A class that implements a view that displays some useful statistics about the game
-as the “players world domination view” that shows what percentage of the world is currently being controlled by each player.
-
-*/
-class GameStatisticsObserver : public Observer{
-
-private: 
-	GameEngine *engine;
-
-public:
-	GameStatisticsObserver();
-	GameStatisticsObserver(GameEngine *en);
-	~GameStatisticsObserver();
-	void Update();
-	void display();
-	void displayDomination();  
-	void displayCelebratoryMessage(int iD);
+	
+	void gameStatsDisplay();  //Displays Game Stats
+	void displayDomination(); //Displays World Domination
+	void displayCelebratoryMessage(int iD); //Displays Winner Celebratory Message
 };
