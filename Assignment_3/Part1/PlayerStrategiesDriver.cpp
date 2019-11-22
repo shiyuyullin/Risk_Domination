@@ -13,8 +13,9 @@ int main() {
 	Map* gameMap = Maploader::loadingMap("ameroki.txt");
 	p->setMap(gameMap);
 	Player* a = new Player();
-	a->setStrategy(new aggressivePlayer);
+	a->setPlayerId(1);
 	Player* b = new Player();
+	b->setPlayerId(2);
 	Country* temp = new Country();
 
 	for (int i = 0; i < gameMap->getNumOfCountries(); i++) {
@@ -33,17 +34,32 @@ int main() {
 			b->incrementNumOfCountry();
 		}
 	}
+
+	Country* tempC;
+	a->setStrategy(new aggressivePlayer);
 	a->reinforce();
 	a->attack();
 	a->foritfy();
-	Country* tempC;
 	for (int i = 0; i < a->getNumOwnedCountry(); i++) {
 		tempC = gameMap->getCountry(a->getSerialAt(i) - 1);
 		cout << tempC->getCountryNumber() << " " << tempC->getCountryName() << " " << tempC->getNbOfArmies() << endl;
 	}
-	cout << endl;
-	cout << endl;
 
+
+	cout << endl;
+	cout << endl;
+	a->setStrategy(new humanPlayer);
+	a->reinforce();
+	a->attack();
+	a->foritfy();
+	for (int i = 0; i < a->getNumOwnedCountry(); i++) {
+		tempC = gameMap->getCountry(a->getSerialAt(i) - 1);
+		cout << tempC->getCountryNumber() << " " << tempC->getCountryName() << " " << tempC->getNbOfArmies() << endl;
+	}
+	
+
+	cout << endl;
+	cout << endl;
 	a->setStrategy(new beneloventPlayer);
 	a->reinforce();
 	a->attack();
@@ -52,8 +68,7 @@ int main() {
 		tempC = gameMap->getCountry(a->getSerialAt(i) - 1);
 		cout << tempC->getCountryNumber() << " " << tempC->getCountryName() << " " << tempC->getNbOfArmies() << endl;
 	}
-
-
+	
 
 	return 0;
 }

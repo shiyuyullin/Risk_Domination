@@ -6,6 +6,10 @@
 #include "D:\Visual Studio\WorkSpace\Deck\Cards.h"
 #include <iostream>
 
+Strategy::~Strategy() {
+	delete actionsdonehere;
+}
+
 //Implementing Human Player Strategy
 //Reinforce:
 void humanPlayer::Reinforce(Player* p) {
@@ -74,14 +78,11 @@ void humanPlayer::Reinforce(Player* p) {
 
 		cout << "Here are all the countries you control:" << endl << endl;
 
-		int index = 1;
 		for (int i = 0; i < gameMap->getNumOfCountries(); i++)
 		{
+			Country* temp1 = gameMap->getCountry(i);//Using for outputing information purpose
 			if (gameMap->getCountry(i)->getOwner()->getPlayerId() == (p->getPlayerId())) {
-				cout << gameMap->getCountry(i)->getCountryName() << "(" << index << ") ";
-				cout << "has " << gameMap->getCountry(i)->getNbOfArmies() << " armies. " << endl
-					<< endl;
-				index++;
+				cout << temp1->getCountryNumber() << ". " << temp1->getCountryName() << ", number of armies: " << temp1->getNbOfArmies() << endl;
 			}
 		}
 
@@ -91,18 +92,22 @@ void humanPlayer::Reinforce(Player* p) {
 		int armies = 0;
 		int tile = -1;
 		bool owns = false;
-		int mapIndex = 0;
 		while (armiesToDistribute > 0)
 		{
 			cout << endl;
 			cin >> tile >> armies;
-			if (tile >= 1 && tile < (p->getNumOwnedCountry()) && armies > 0 && armies <= armiesToDistribute)
+			int counter = 0;
+			for (int i = 0; i < p->getNumOwnedCountry(); i++) {
+				if (tile == p->getSerialAt(i)) {
+					counter++;
+				}
+			}
+			if (tile >= 1 && counter ==1 && armies > 0 && armies <= armiesToDistribute)
 			{
-				mapIndex = (p->getSerialAt(tile - 1)) - 1;
-				gameMap->getCountry(mapIndex)->addArmies(armies);
+				gameMap->getCountry(tile - 1)->addArmies(armies);
 				cout << endl;
-				cout << gameMap->getCountry(mapIndex)->getCountryName() << " now has ";
-				cout << gameMap->getCountry(mapIndex)->getNbOfArmies() << " armies" << endl << endl;
+				cout << gameMap->getCountry(tile - 1)->getCountryName() << " now has ";
+				cout << gameMap->getCountry(tile - 1)->getNbOfArmies() << " armies" << endl << endl;
 				(*actionsdonehere)++;
 				armiesToDistribute -= armies;
 				if (armiesToDistribute > 0)
@@ -114,14 +119,12 @@ void humanPlayer::Reinforce(Player* p) {
 				else
 				{
 					cout << "You've finished your reinforcement phase. This is how your countries stand: " << endl << endl;
-					index = 1;
+
 					for (int i = 0; i < gameMap->getNumOfCountries(); i++)
 					{
+						Country* temp2 = gameMap->getCountry(i);//Using for outputing information purpose
 						if (gameMap->getCountry(i)->getOwner()->getPlayerId() == (p->getPlayerId())) {
-							cout << gameMap->getCountry(i)->getCountryName() << "(" << index << ") ";
-							cout << "has " << gameMap->getCountry(i)->getNbOfArmies() << " armies. " << endl
-								<< endl;
-							index++;
+							cout << temp2->getCountryNumber() << ". " << temp2->getCountryName() << ", number of armies: " << temp2->getNbOfArmies() << endl;
 						}
 					}
 				}
@@ -139,6 +142,7 @@ void humanPlayer::Reinforce(Player* p) {
 	}
 }
 
+
 //Attack():
 void humanPlayer::Attack(Player* p) {
 	*actionsdonehere = 0;
@@ -153,24 +157,26 @@ void humanPlayer::Attack(Player* p) {
 	Dice* defenderDice = new Dice();
 	while (state != 2)
 	{
+		cout << endl;
 		cout << "Please choose the following options: 1. attack 2. not attack." << endl;
 		cout << "if you want to attack, enter 1, if not enter 2: ";
 		cin >> state;
 		if (state == 1)
 		{ //enter the attack phase loop
-			int tempValue = 0;
 			int numArmAtt = 0;
 			int numArmDef = 0;
-			bool state1 = true;
+			int tempValue = 0;
 			bool state2 = true;
+			cout << endl;
 			cout << "Welcome to the attack phase!" << endl;
 			while (state2)
 			{
+				bool state1 = true;
 				cout << "Please choose one of the following country to attack from(The integer value before the country name):" << endl;
+				cout << "You own: " << endl;
 				for (int i = 0; i < (p->getNumOwnedCountry()); ++i)
 				{
 					tempCountry = a->getCountry((p->getSerialAt(i) - 1));
-					cout << "You own: " << endl;
 					cout << tempCountry->getCountryNumber() << ". " << tempCountry->getCountryName() << ", number of armies: " << tempCountry->getNbOfArmies() << endl;
 				}
 				//Validating the attacking country(it has at least 2 armies)
@@ -234,8 +240,10 @@ void humanPlayer::Attack(Player* p) {
 				}
 				else
 				{
+					cout << endl;
 					cout << "There is no valid country to attack from the selected country." << endl;
 					cout << "Try another country" << endl;
+					cout << endl;
 				}
 			}
 			//Attack between two players
@@ -406,9 +414,6 @@ void humanPlayer::Attack(Player* p) {
 				int tempSer = tempCountryToAtt->getCountryNumber();
 				int indexSerial = Defender->findIndex(tempSer);
 				Defender->removeIndex(indexSerial);
-				for (int i = 0; i < Defender->getNumOwnedCountry(); ++i) {
-					cout << Defender->getSerialAt(i) << endl;
-				}
 				//statechange on attacker
 				tempCountryToAtt->setOwner(Attacker);
 				Attacker->setIndexOfCountry(tempCountryToAtt->getCountryNumber());

@@ -20,6 +20,7 @@ public:
 	virtual void Attack(Player* p) = 0;
 	virtual void Fortify(Player* p) = 0;
 	const inline int getAction() { return *actionsdonehere; };
+	virtual ~Strategy();
 };
 
 //The functions for human players require user interaction to make decisions
