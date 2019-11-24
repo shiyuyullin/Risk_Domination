@@ -11,8 +11,8 @@ Country::Country()
 	countryName = new string("");
 	countryNumber = new int(0);
 	continent = new int(0);
-	borders = new int[10];
-	for (int i = 0; i < 10; ++i)
+	borders = new int[20];
+	for (int i = 0; i < 20; ++i)
 	{
 		borders[i] = -1;
 	}
@@ -29,8 +29,8 @@ Country::Country(string n)
 	nbOfArmies = new int;
 	*nbOfArmies = 0;
 	numberOfBorders = new int(0);
-	borders = new int[10]; //dynamic array with initial size of 10;
-	for (int i = 0; i < 10; ++i)
+	borders = new int[20]; //dynamic array with initial size of 10;
+	for (int i = 0; i < 20; ++i)
 	{
 		borders[i] = -1;
 	}
@@ -48,8 +48,8 @@ Country::Country(const Country& obj)
 	countryNumber = new int;
 	*countryNumber = *obj.countryNumber;
 	*numberOfBorders = *obj.numberOfBorders;
-	borders = new int[10];
-	for (int i = 0; i < 10; ++i)
+	borders = new int[20];
+	for (int i = 0; i < 20; ++i)
 	{ //Copying all values in obj.borders in to the new country
 		borders[i] = obj.borders[i];
 	}
@@ -66,8 +66,8 @@ Country::Country(string n, int countNb, int cont, int own)
 	nbOfArmies = new int;
 	*nbOfArmies = 0;
 	numberOfBorders = new int(0);
-	borders = new int[10];
-	for (int i = 0; i < 10; ++i)
+	borders = new int[20];
+	for (int i = 0; i < 20; ++i)
 	{
 		borders[i] = -1;
 	}
