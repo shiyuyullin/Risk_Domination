@@ -5,6 +5,10 @@
 #include "D:\Visual Studio\WorkSpace\Dice\Dice.h"
 #include "D:\Visual Studio\WorkSpace\Deck\Cards.h"
 #include <iostream>
+#include <ctime>
+#include <random>
+using namespace std;
+
 
 Strategy::~Strategy() {
 	delete actionsdonehere;
@@ -982,3 +986,441 @@ void beneloventPlayer::Fortify(Player* p) {
 		}
 	}
 }
+
+//---------------------------------------------------------------------------------------------------------------
+//Implementation for cheater player
+//The reinforce function for cheater will double the armies on all its countries
+void cheaterPlayer::Reinforce(Player* p) {
+	Map* gameMap = GameEngine::getMap();
+	Country* tempCountry;
+	Player* tempPlayer = p;
+	for (int i = 0; i < tempPlayer->getNumOwnedCountry(); i++) {//Doubling number of armies on all cheater's countries
+		int countrySerial = tempPlayer->getSerialAt(i);//Getting the serial number of the country
+		tempCountry = gameMap->getCountry(countrySerial - 1);//Getting a pointer to the actual country object
+		int originalArmies = tempCountry->getNbOfArmies();//Getting the original number of armies
+		tempCountry->setArmyNumber(originalArmies * 2);//Double the number of armies on that country
+	}
+}
+
+//The attack function for cheater will automatically conquer all the neighbors of all its countries
+void cheaterPlayer::Attack(Player* p) {
+	Map* gameMap = GameEngine::getMap();
+	Country* tempCountry;//The country to attack from
+	Country* defCountry;//The country which is attacked
+	Player* cheater = p;
+	for (int i = 0; i < cheater->getNumOwnedCountry(); i++) {
+		int countrySerial = p->getSerialAt(i);
+		tempCountry = gameMap->getCountry(countrySerial - 1);
+		int* tempBorders = tempCountry->getBorders();
+		int counter = 0;
+		while (tempBorders[counter] != -1) {
+			defCountry = gameMap->getCountry(tempBorders[counter] - 1);
+			if (tempCountry->getOwner() != defCountry->getOwner()) {
+				defCountry->setOwner(cheater);
+				cheater->setIndexOfCountry(defCountry->getCountryNumber());
+				cheater->incrementNumOfCountry();
+			}
+			counter++;
+		}
+	}
+}
+
+void cheaterPlayer::Fortify(Player* p) {
+	Map* gameMap = GameEngine::getMap();
+	Country* tempCountry;
+	Player* cheater = p;
+	Country* otherCountry;//Another pointer to country, for checking purpose
+	for (int i = 0; i < cheater->getNumOwnedCountry(); i++) {
+		int countrySerial = p->getSerialAt(i);
+		tempCountry = gameMap->getCountry(countrySerial - 1);
+		int* tempBorders = tempCountry->getBorders();
+		int counter = 0;
+		int neighborsDif = 0;
+		while (tempBorders[counter] != -1) {
+			otherCountry = gameMap->getCountry(tempBorders[counter] - 1);
+			if (otherCountry->getOwner() != cheater) {
+				neighborsDif++;
+			}
+			counter++;
+		}
+		if (neighborsDif > 0) {
+			int originArmies = tempCountry->getNbOfArmies();
+			tempCountry->setArmyNumber(originArmies * 2);
+		}
+	}
+}
+
+//----------------------------------------------------------------------------------------------
+//Random player
+
+void randomPlayer::Reinforce(Player* p) {
+	Map* gameMap = GameEngine::getMap();
+	int tempUsing = p->getNumOwnedCountry();
+	int controlledCountries = tempUsing / 3;
+	int choice = 0;
+	int exchangeBonus = 0;
+	Hand* hand = p->getHand();
+	//Creating a random generator
+	std::mt19937 generator;
+	generator.seed(std::time(0));
+	//Calculate Player Continent Bonus
+	int continentBonus = 0;
+	int numberOfCountries;
+	int countryCounter = 0;
+	for (int i = 0; i < gameMap->getNumOfContinents(); i++)
+	{
+		numberOfCountries = gameMap->getContinent(i)->getNumOfCountries();
+		bool ownsAll = true;
+		for (int j = 0; j < numberOfCountries; j++)
+		{
+			tempUsing = p->getPlayerId();
+			if (tempUsing != gameMap->getCountry(countryCounter)->getOwner()->getPlayerId())
+			{
+				ownsAll = false;
+			}
+			countryCounter++;
+		}
+		if (ownsAll)
+		{
+			continentBonus += gameMap->getContinent(i)->getReward();
+		}
+	}
+
+	if (hand->getNumberOfCards() > 5) {
+		exchangeBonus = hand->exchange();
+	}
+	else {
+		if (hand->getNumberOfCards() > 0) {
+			std::uniform_int_distribution<int> one_or_two(1, 2);
+			choice = one_or_two(generator);
+			if (choice == 1) {
+				exchangeBonus = hand->exchange();
+			}
+		}
+	}
+	//Total number of armies to be distributed from continent bonus and card exchange bonus and contry control
+	int armiesToDistribute = controlledCountries + continentBonus + exchangeBonus;
+	
+	if (armiesToDistribute > 0)
+	{
+		(*actionsdonehere) = 0;
+
+		int armies = 0;
+		int tile = -1;
+		bool owns = false;
+		std::uniform_int_distribution<int> GenerCountrySerial(0, (p->getNumOwnedCountry() - 1));
+		while (armiesToDistribute > 0)
+		{
+			std::uniform_int_distribution<int> GenerArmy(1, armiesToDistribute);
+			//Generating a random contry serial number
+			int randomCountryIndex = GenerCountrySerial(generator);
+			tile = p->getSerialAt(randomCountryIndex);//tile contains the random generated country serial number
+			//Generating random number of armies to distribute
+			int randomArmyNumber = GenerArmy(generator);
+			armies = randomArmyNumber;
+			if (tile >= 1 && armies > 0 && armies <= armiesToDistribute)
+			{
+				gameMap->getCountry(tile - 1)->addArmies(armies);
+				(*actionsdonehere)++;
+				armiesToDistribute -= armies;
+			}
+		}
+	}
+}
+
+void randomPlayer::Attack(Player* p) {
+	*actionsdonehere = 0;
+	Map* a = GameEngine::getMap();
+	//Map* a = gameMap;
+	int state = 0;
+	Country* tempCountry = new Country();//Country to attack from
+	Country* tempCountryToAtt = new Country(); //Country that will be attacked
+	Player* Attacker = p;//The player who is attacking
+	Dice* attackerDice = p->getDice();
+	Player* Defender = new Player();//The player who is attacked
+	Dice* defenderDice = new Dice();
+	//Creating random number generator
+	std::mt19937 generator;
+	generator.seed(std::time(0));
+
+	while (state != 2)
+	{
+		std::uniform_int_distribution<int> att_natt(1, 2);
+		state = att_natt(generator);
+		if (state == 1)
+		{ //enter the attack phase loop
+			int numArmAtt = 0;
+			int numArmDef = 0;
+			int tempValue = 0;
+			bool state2 = true;
+			while (state2)
+			{
+				bool state1 = true;
+				//Validating the attacking country(it has at least 2 armies)
+				while (state1)
+				{
+					std::uniform_int_distribution<int> randomIndex(0, (Attacker->getNumOwnedCountry() - 1));
+					int CountryIndex = randomIndex(generator);//Generating a random index
+					tempValue = Attacker->getSerialAt(CountryIndex);//Getting the serial number for the country to attack from
+					tempCountry = a->getCountry(tempValue - 1); //get the country to attack from
+					int tempComparing = tempCountry->getNbOfArmies();
+					if (tempComparing < 2)
+					{
+						continue;
+					}
+					else
+					{
+						state1 = false;
+					}
+					
+				}
+				numArmAtt = tempCountry->getNbOfArmies(); //Getting number of armies on attacking country
+				//Validating the attacking path
+				//first, get the borders of the selected country
+				int* bordersTemp = tempCountry->getBorders();
+				int counter = 0;
+				int validAttackCountry = 0;
+				int serialOfChosenCountry;
+				while (bordersTemp[counter] != -1)
+				{ //Validating each border
+					tempCountryToAtt = a->getCountry(bordersTemp[counter] - 1);
+					Defender = tempCountryToAtt->getOwner();
+					if (tempCountry != tempCountryToAtt)
+					{
+						if (Attacker != Defender)
+						{
+							serialOfChosenCountry = tempCountryToAtt->getCountryNumber();
+							validAttackCountry++;
+						}
+					}
+					counter++;
+				}
+				if (validAttackCountry != 0)
+				{
+					tempCountryToAtt = a->getCountry(serialOfChosenCountry - 1); //Getting the country which will be attacked
+					Defender = tempCountryToAtt->getOwner();					 //Getting the defender
+					defenderDice = Defender->getDice();							 //Getting the dice for defender
+					numArmDef = tempCountryToAtt->getNbOfArmies();				 //Getting number of armies on the country which will be attacked
+					state2 = false;
+				}
+			}
+			//Attack between two players
+			//Attack phase ends when one of the countries has zero armies on it
+			int numberOfDicesAtt = 0;
+			//Choosing number of dices for attacker
+			if (tempCountry->getNbOfArmies() == 2)
+			{
+				numberOfDicesAtt = 1;
+			}
+			else if (tempCountry->getNbOfArmies() == 3)
+			{
+				std::uniform_int_distribution<int> one_or_two_dice(1, 2);
+				numberOfDicesAtt = one_or_two_dice(generator);
+			}
+			else
+			{
+				std::uniform_int_distribution<int> one_two_three_dice(1, 3);
+				numberOfDicesAtt = one_two_three_dice(generator);
+			}
+			//Choosing number of dices for defender
+			int numberOfDiceDef = 0;
+			if (tempCountryToAtt->getNbOfArmies() == 1)
+			{
+				numberOfDiceDef = 1;
+			}
+			if (tempCountryToAtt->getNbOfArmies() >= 2)
+			{
+				std::uniform_int_distribution<int> one_two_dice_Def(1, 2);
+				numberOfDiceDef = one_two_dice_Def(generator);
+			}
+			//Starting the actual attack
+			while (tempCountry->getNbOfArmies() != 0 && tempCountryToAtt->getNbOfArmies() != 0)
+			{
+				Attacker->RollDice(numberOfDicesAtt);
+				Defender->RollDice(numberOfDiceDef);
+				int tempValForAtt[3];
+				int tempValForDef[3];
+				//getting all values rolled
+				for (int i = 0; i < 3; ++i)
+				{
+					tempValForAtt[i] = attackerDice->get_value_at(i);
+					tempValForDef[i] = defenderDice->get_value_at(i);
+				}
+				//Sorting values from highest to lowest for both array
+				int tempForSorting = 0;
+				for (int i = 0; i < 3; ++i)
+				{
+					for (int j = i + 1; j < 3; ++j)
+					{
+						if (tempValForAtt[i] < tempValForAtt[j])
+						{
+							tempForSorting = tempValForAtt[i];
+							tempValForAtt[i] = tempValForAtt[j];
+							tempValForAtt[j] = tempForSorting;
+						}
+					}
+				}
+				for (int i = 0; i < 3; ++i)
+				{
+					for (int j = i + 1; j < 3; ++j)
+					{
+						if (tempValForDef[i] < tempValForDef[j])
+						{
+							tempForSorting = tempValForDef[i];
+							tempValForDef[i] = tempValForDef[j];
+							tempValForDef[j] = tempForSorting;
+						}
+					}
+				}
+				//Comparing and changing number of armies based on rolled values
+				if (numberOfDicesAtt == numberOfDiceDef)
+				{
+					for (int i = 0; i < numberOfDicesAtt; ++i)
+					{
+						if (tempValForAtt[i] > tempValForDef[i])
+						{
+							--numArmDef;
+							tempCountryToAtt->setArmyNumber(numArmDef);
+						}
+						if (tempValForAtt[i] <= tempValForDef[i])
+						{
+							--numArmAtt;
+							tempCountry->setArmyNumber(numArmAtt);
+						}
+					}
+				}
+				if (numberOfDicesAtt < numberOfDiceDef)
+				{
+					if (tempValForAtt[0] > tempValForDef[0])
+					{
+						--numArmDef;
+						tempCountryToAtt->setArmyNumber(numArmDef);
+					}
+					if (tempValForAtt[0] <= tempValForDef[0])
+					{
+						--numArmAtt;
+						tempCountry->setArmyNumber(numArmAtt);
+					}
+				}
+				if (numberOfDicesAtt > numberOfDiceDef)
+				{
+					for (int i = 0; i < numberOfDiceDef; ++i)
+					{
+						if (tempValForAtt[i] > tempValForDef[i])
+						{
+							--numArmDef;
+							tempCountryToAtt->setArmyNumber(numArmDef);
+						}
+						if (tempValForAtt[i] <= tempValForDef[i])
+						{
+							--numArmAtt;
+							tempCountry->setArmyNumber(numArmAtt);
+						}
+					}
+				}
+			}
+			//After one of the country run out of armies, find out which play win tha round
+			//modifying all corresponding attributes
+			int indextoSet = 0;
+			if (numArmAtt == 0)//unseccessful attack
+			{
+				cout << endl;
+			}
+			else if (numArmDef == 0)//successful attack
+			{
+				int moveArmies = 0;								//keep number of arm the player want to move
+				int totalArmies = tempCountry->getNbOfArmies(); //Keep total number of arm in the attacking country
+				(*actionsdonehere)++;
+				//Changing owner of the attacked country, changing player's state
+				//state change on defender
+				Defender->decrementNumOfCountry();
+				int tempSer = tempCountryToAtt->getCountryNumber();
+				int indexSerial = Defender->findIndex(tempSer);
+				Defender->removeIndex(indexSerial);
+				//statechange on attacker
+				tempCountryToAtt->setOwner(Attacker);
+				Attacker->setIndexOfCountry(tempCountryToAtt->getCountryNumber());
+				Attacker->incrementNumOfCountry();
+				//Moving random number of armies to the new country
+				while (true)
+				{
+					//If there is only one arm left on the attacking country, do nothing
+					if (tempCountry->getNbOfArmies() == 1)
+					{
+						break;
+					}
+					//If there are more than one armies on the attacking country, move 1 to (army-1) number of armies to the newly owned country
+					std::uniform_int_distribution<int> random_move_army(1, (tempCountry->getNbOfArmies() - 1));
+					moveArmies = random_move_army(generator);
+					tempCountryToAtt->setArmyNumber(moveArmies);
+					tempCountry->setArmyNumber(totalArmies - moveArmies);
+					break;
+					
+				}
+			}
+		}
+		else if (state == 2)
+		{ //return from method attack
+			return;
+		}
+	}
+}
+
+void randomPlayer::Fortify(Player* p) {
+	*actionsdonehere = 0;
+	Map* a = GameEngine::getMap();
+	//Map* a = gameMap;
+	Country* sourceCountry;
+	Country* targetCountry;
+	Player* tempPlayer = p; //Get the player who calls this method
+	int serialNumOfSourceCountry = -1;
+	int originalArmOnSource = 0;
+	int originArmOnTarget = 0;
+	bool state1 = true;
+	//Creating random number generator
+	std::mt19937 generator;
+	generator.seed(std::time(0));
+
+	while (state1)
+	{
+		while (true)
+		{
+			//Generating a random country serial number
+			std::uniform_int_distribution<int> random_index(0, (tempPlayer->getNumOwnedCountry() - 1));
+			serialNumOfSourceCountry = tempPlayer->getSerialAt(random_index(generator));
+			sourceCountry = a->getCountry(serialNumOfSourceCountry - 1); //Getting the source country
+			originalArmOnSource = sourceCountry->getNbOfArmies();		 //Getting original armies on source country
+			if (originalArmOnSource <= 1)//The source country has at least two armies on it
+			{
+				continue;
+			}
+			break;
+		}
+		//Getting the borders of the source country and find whether it is adjacent to source country
+		int* tempBorders = sourceCountry->getBorders();
+		//Checking which country can be reached from the source country(could be none)
+		int counter = 0;
+		while (tempBorders[counter] != -1)
+		{ //Getting one of its borders
+			for (int j = 0; j < tempPlayer->getNumOwnedCountry(); ++j)
+			{ //loop through all countries that own by the player
+				//if the players owns that country and the country is not itself
+				if (tempBorders[counter] == (p->getSerialAt(j)))
+				{
+					if (tempBorders[counter] != sourceCountry->getCountryNumber())
+					{
+						targetCountry = a->getCountry(tempBorders[counter] - 1);
+						originArmOnTarget = targetCountry->getNbOfArmies();
+						std::uniform_int_distribution<int> moving_armies(1, (originalArmOnSource - 1));
+						int armyMoved = moving_armies(generator);
+						sourceCountry->setArmyNumber(originalArmOnSource - armyMoved);
+						targetCountry->setArmyNumber(originArmOnTarget + armyMoved);
+						return;
+					}
+				}
+			}
+			counter++;
+		}
+	}
+}
+

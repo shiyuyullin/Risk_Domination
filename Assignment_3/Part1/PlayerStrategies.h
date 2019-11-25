@@ -50,4 +50,16 @@ class beneloventPlayer : public Strategy {
 	void Fortify(Player* p);
 };
 
+class cheaterPlayer : public Strategy {
+	void Reinforce(Player* p);
+	void Attack(Player* p);
+	void Fortify(Player* p);
+};
+
+class randomPlayer : public Strategy {
+	void Reinforce(Player* p);
+	void Attack(Player* p);
+	void Fortify(Player* p);
+};
+
 

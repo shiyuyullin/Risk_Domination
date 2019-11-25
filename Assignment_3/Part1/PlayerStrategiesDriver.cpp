@@ -10,7 +10,7 @@
 
 int main() {
 	GameEngine* p = new GameEngine(2);
-	Map* gameMap = Maploader::loadingMap("ameroki.txt");
+	Map* gameMap = Maploader::loadingMap("eurasien.txt");
 	p->setMap(gameMap);
 	Player* a = new Player();
 	a->setPlayerId(1);
@@ -36,7 +36,7 @@ int main() {
 	}
 
 	Country* tempC;
-	a->setStrategy(new aggressivePlayer);
+	a->setStrategy(new randomPlayer);
 	a->reinforce();
 	a->attack();
 	a->foritfy();
@@ -71,4 +71,5 @@ int main() {
 	
 
 	return 0;
+
 }
