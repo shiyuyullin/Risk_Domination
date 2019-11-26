@@ -19,7 +19,7 @@ private:
 	int* playerId;
 	int* armies;
 	Strategy* playerStrategy;
-	int* actionsDoneinStrat;
+	int* actionsDoneInStrat;
 
 public:
 	//Constructor
