@@ -1,13 +1,13 @@
 #include "Player.h"
 #include <iostream>
-#include "D:\Visual Studio\WorkSpace\Map\Map.h"
-#include "D:\Visual Studio\WorkSpace\GameEngine\GameEngine.h" 
+#include "Map.h"
+#include "GameEngine.h" 
 
 using namespace std;
 Player::Player()
 {
 	//Actions done in the strategy object for every time a player does some action (like attack,reinforce, or fortify a country)
-	actionsDoneinStrat = new int(0);
+	actionsDoneInStrat = new int(0);
 	
 	dice = new Dice();
 	hand = new Hand();
@@ -18,7 +18,7 @@ Player::Player()
 
 Player::Player(int id, int armyCount)
 {
-	actionsDoneinStrat = new int(0);
+	actionsDoneInStrat = new int(0);
 	dice = new Dice();
 	hand = new Hand();
 	playerId = new int(id);
