@@ -7,18 +7,22 @@ using namespace std;
 //Target of the Adapter pattern.
 class Maploader {
 public:
-	static Map* loadingMap(string fileName);
+	Map* loadingMap(string fileName);
+	bool validateMap(vector<vector <int>>& edges);
+	void traverse(int u, bool visited[], int numberOfCountries, vector<vector <int>>& edges);
 };
 
 //Class that  reads from Conquest files to create a map.
 class DominationMaploader {
 public:
-	static Map* loadingMap(string fileName);
+	Map* loadingMap(string fileName);
+	bool validateMap(vector<vector <int>>& edges);
+	void traverse(int u, bool visited[], int numberOfCountries, vector<vector <int>>& edges);
 };
 
 class MaploaderAdapter : public Maploader {
 public:
 
-	static DominationMaploader* mapLoaderAdaptee;
-	static Map* loadingMap(string fileName);
+	DominationMaploader* mapLoaderAdaptee;
+	Map* loadingMap(string fileName);
 };

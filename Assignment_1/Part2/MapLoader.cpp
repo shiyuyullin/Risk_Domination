@@ -3,6 +3,9 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <queue>
+#include <algorithm>
+#include <unordered_set>
 #include "MapLoader.h"
 #include "Map.h"
 using namespace std;
@@ -114,7 +117,7 @@ Map* Maploader::loadingMap(string fileName)
 	}
 	else
 	{
-		cout << "Invalid file name, please program exit" << endl;
+		cout << "Invalid file name, the program will now exit" << endl;
 		exit(0);
 	}
 }
@@ -141,9 +144,12 @@ Map* DominationMaploader::loadingMap(string fileName)
 		Map* empty = new Map();  //an empty map to return if the file is invalid
 		bool state = false;		 //Using for validating format of a map file
 		vector<vector<string>> borders;
+		vector<string> continentNames;
+		vector<string> continentAttach;
 		string line;
 		int rewards = 0;
 		int i = 0;
+		int continentNumber = 0;
 
 		while (getline(inputFileStream, line))
 		{
@@ -170,6 +176,7 @@ Map* DominationMaploader::loadingMap(string fileName)
 
 					// cout << tokens[0] << " " << tokens[1] << endl;
 					tempContinent->setName(tokens[0]); //sets Continent Name
+					continentNames.push_back(tokens[0]);
 					rewards = stoi(tokens[1]);
 
 					tempContinent->setRewards(rewards);
@@ -181,22 +188,19 @@ Map* DominationMaploader::loadingMap(string fileName)
 
 			if (line == "[Territories]")
 			{
+				for(int i = 0; i < continentNames.size(); i++){
+					cout << continentNames[i] << endl;
+				}
 				while (getline(inputFileStream, line))
 				{
 					tokens.clear();
 
 					if (line == "")
 					{ //if there is an empty line it means that we changed continent
-						continentBelong++;
 					}
 					else
 					{
 						borders.push_back(vector<string>());
-						// cout << "here " << line << endl;
-						if (line == "")
-						{ //if there is an empty line it means that we changed continent
-							continentBelong++;
-						}
 						stringstream check1(line);
 						string intermediate;
 						while (getline(check1, intermediate, ','))
@@ -214,8 +218,10 @@ Map* DominationMaploader::loadingMap(string fileName)
 
 						Country* tempCountry = new Country();
 						tempCountry->setCountryName(tokens[0]);
+						
 						// cout << tempCountry->getCountryName() << " ";
-						tempCountry->setContinent(continentBelong);
+						tempCountry->setContinent(0);
+						continentAttach.push_back(tokens[3]);
 						// cout << continentBelong << " ";
 						tempCountry->setCountryNumber(1 + SerialNumber++);
 						// cout << tempCountry->getCountryNumber() << endl;
@@ -223,61 +229,109 @@ Map* DominationMaploader::loadingMap(string fileName)
 					}
 				}
 			}
+		}
 			resultMap->setNumberOfCountries(SerialNumber);
 			resultMap->setNumberOfContinents(numberOfContinents);
-		}
+			int continentIndex;
+			for(int i = 0; i < continentAttach.size(); i++){
+				string countriesContinent = continentAttach[i];
 
-		// for (int i = 0; i < borders.size(); i++)
-		// {
-		// 	for (int j = 0; j < borders[i].size(); j++)
-		// 	{
-		// 		cout << borders[i][j] << " ";
-		// 	}
-		// 	cout << endl;
-		// }
+				for(int j = 0; j < continentNames.size(); j++){
+					if(countriesContinent == continentNames[j]){
+						continentIndex = j;
+					}
+				}
+				resultMap->getCountry(i)->setContinentNumber(continentIndex+1);
+			}
 
+
+		vector<vector<int>> edges;
 		for (int x = 0; x < borders.size(); x++)
 		{
+			edges.push_back(vector<int>());
 			for (int y = 0; y < borders[x].size(); y++)
 			{
 
 				// cout << borders[x][y];
 				int destination = resultMap->findIndex(borders[x][y]);
+				edges[x].push_back(y);
 				// cout << destination << endl;
 				resultMap->setborder(x, y, destination);
 				resultMap->addEdge(x, destination);
 			}
 		}
+
+		for(int i = 0; i < continentNames.size(); i++){
+			
+			bool contains = false;
+			for(int j = 0; j < continentAttach.size(); j++){
+					if(continentNames[i] == continentAttach[j]){
+						contains = true;
+					}
+			}
+			if(contains == false){
+				cout << "The format of the file " << fileName << " is invalid, loading unsuccessful." << endl;
+				cout << "program is terminating" << endl;
+				exit(0);
+			}
+		}
+		//Sorts AND REMOVES DUPLICATES OF THE Attacjed Continent Names
+		sort(continentAttach.begin(), continentAttach.end());
+ 		continentAttach.erase(std::unique(continentAttach.begin(), continentAttach.end()), continentAttach.end());
+
+		if(continentAttach.size() != continentNames.size()){
+			std::cout << "The format of the file " << fileName << " is invalid, loading unsuccessful." << endl;
+				cout << "program is terminating" << endl;
+			exit(0);
+		}
 		std::cout << "The map " << fileName << " has been successfully loaded, enjoy your game!" << std::endl;
-
-		// cout << "------------------------------------------" << endl
-		// 	 << "------------------------------------------" << endl
-		// 	 << "------------------------------------------" << endl
-		// 	 << "------------------------------------------" << endl
-		// 	 << "------------------------------------------" << endl
-		// 	 << "------------------------------------------" << endl
-		// 	 << "------------------------------------------" << endl
-		// 	 << "------------------------------------------" << endl
-		// 	 << "------------------------------------------" << endl
-		// 	 << "------------------------------------------" << endl;
-
-		// for (int i = 0; i < resultMap->getNumOfCountries(); i++)
-		// {
-		// 	cout << "Country: " << resultMap->getCountry(i)->getCountryName();
-		// 	cout << " | Continent: " << resultMap->getCountry(i)->getContinent() << endl;
-		// }
-
-		// cout << "Number Of Countries: " << resultMap->getNumOfCountries()
-		// 	 << " | Number of Continents: " << resultMap->getNumOfContinents() << endl;
-		//resultMap->printMap();
-		return (resultMap);
+		if(validateMap(edges)){
+			return (resultMap);
+		}else{
+			cout << "The format of the file " << fileName << " is invalid, loading unsuccessful." << endl;
+				cout << "program is terminating" << endl;
+				exit(0);
+		}
+		
 	}
 	else
 	{
-		cout << "Invalid file name, please program exit" << endl;
+		cout << "The format of the file " << fileName << " is invalid, loading unsuccessful." << endl;
+		cout << "program is terminating" << endl;
 		exit(0);
 	}
 }
+
+
+//https://www.geeksforgeeks.org/implementation-of-bfs-using-adjacency-matrix/
+bool DominationMaploader::validateMap(vector<vector <int>>& edges) {     
+
+	int numberOfCountries = edges.size();
+	bool *vis = new bool[numberOfCountries];
+   	//for all vertex u as start point, check whether all nodes are visible or not
+   	for(int u; u < numberOfCountries; u++) {
+   	   for(int i = 0; i<numberOfCountries; i++)
+   	      vis[i] = false; //initialize as no node is visited
+   	      traverse(u, vis, numberOfCountries, edges);
+   	   for(int i = 0; i<numberOfCountries; i++) {
+   	      if(!vis[i]) //if there is a node, not visited by traversal, graph is not connected
+   	         return false;
+   	   }
+   	}
+   	return true;
+}
+
+void DominationMaploader::traverse(int u, bool visited[], int numberOfCountries, vector<vector <int>>& edges) {
+   visited[u] = true; //mark v as visited
+   for(int v = 0; v<numberOfCountries; v++) {
+      if(edges[u][v]) {
+         if(!visited[v])
+            traverse(v, visited, numberOfCountries, edges);
+      }
+   }
+}
+
+
 
 //Subclass of the Target, includes an Adaptee as a data member
 //overrides the method that is used to read Domination files
