@@ -52,8 +52,7 @@ public:
 	Hand* getHand();
 	Dice* getDice();
 	
-	int getNumOfPlayers() { return *numOfPlayers; }  //Accessor for number of players in game
-	vector<Player*>getPlayers() { return players; }  //Accessor for vector of players in game (used in GameStatisticsObserver)
+	
 
 };
 
