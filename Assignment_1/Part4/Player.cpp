@@ -91,6 +91,26 @@ void Player::setStrategy(Strategy* newStrategy) {
 	this->playerStrategy = newStrategy;
 }
 
+void Player::setRandomStrategy()
+{
+	//Creating a random generator
+	std::mt19937 generator;
+	generator.seed(std::time(0));
+	std::uniform_int_distribution<int> number(1, 4);
+	int strat = number(generator);
+	if (strat == 1) {
+		this->playerStrategy = new aggressivePlayer();
+	}
+	if (strat == 2) {
+		this->playerStrategy = new beneloventPlayer();
+	}
+	if (strat == 3) {
+		this->playerStrategy = new cheaterPlayer();
+	}
+	if (strat == 4) {
+		this->playerStrategy = new randomPlayer();
+	}
+}
 
 int Player::getPlayerId()
 {
