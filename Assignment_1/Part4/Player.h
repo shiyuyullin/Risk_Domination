@@ -36,6 +36,7 @@ public:
 	const int getActionsInStrat();
 	//Setters
 	void setPlayerId(int id);
+	void setRandomStrategy()
 	void reinforce();
 	void attack();
 	void foritfy();
