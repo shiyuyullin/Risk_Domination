@@ -314,16 +314,38 @@ void humanPlayer::Attack(Player* p) {
 			//Starting the actual attack
 			while (tempCountry->getNbOfArmies() != 0 && tempCountryToAtt->getNbOfArmies() != 0)
 			{
-				Attacker->RollDice(numberOfDicesAtt);
-				Defender->RollDice(numberOfDiceDef);
+				if (numberOfDicesAtt == 3 && numberOfDiceDef == 2) {
+					Attacker->RollDice(3);
+					Defender->RollDice(2);
+				}
+				else if (numberOfDicesAtt == 3 && numberOfDiceDef == 1) {
+					Attacker->RollDice(3);
+					Defender->RollDice(1);
+				}
+				else if (numberOfDicesAtt == 2 && numberOfDiceDef == 2) {
+					Attacker->RollDice(2);
+					Defender->RollDice(2);
+				}
+				else if (numberOfDicesAtt == 2 && numberOfDiceDef == 1) {
+					Attacker->RollDice(2);
+					Defender->RollDice(1);
+				}
+				else if (numberOfDicesAtt == 1 && numberOfDiceDef == 2) {
+					Attacker->RollDice(1);
+					Defender->RollDice(2);
+				}
+				else if (numberOfDicesAtt == 1 && numberOfDiceDef == 1) {
+					Attacker->RollDice(1);
+					Defender->RollDice(1);
+				}
 				int tempValForAtt[3];
 				int tempValForDef[3];
 				//getting all values rolled
 				for (int i = 0; i < 3; ++i)
 				{
-					tempValForAtt[i] = attackerDice->get_value_at(i);
+					tempValForAtt[i] = Attacker->getDice()->get_value_at(i);
 					cout << "Dice " << i << " : " << tempValForAtt[i] << endl;
-					tempValForDef[i] = defenderDice->get_value_at(i);
+					tempValForDef[i] = Defender->getDice()->get_value_at(i);
 					cout << "Dice " << i << " : " << tempValForDef[i] << endl;
 				}
 				//Sorting values from highest to lowest for both array
@@ -357,12 +379,12 @@ void humanPlayer::Attack(Player* p) {
 				{
 					for (int i = 0; i < numberOfDicesAtt; ++i)
 					{
-						if (tempValForAtt[i] > tempValForDef[i])
+						if (tempValForAtt[i] > tempValForDef[i] && tempValForAtt[i] != 0 && tempValForDef[i] != 0)
 						{
 							--numArmDef;
 							tempCountryToAtt->setArmyNumber(numArmDef);
 						}
-						if (tempValForAtt[i] <= tempValForDef[i])
+						if (tempValForAtt[i] <= tempValForDef[i] && tempValForAtt[i] != 0 && tempValForDef[i] != 0)
 						{
 							--numArmAtt;
 							tempCountry->setArmyNumber(numArmAtt);
@@ -371,12 +393,12 @@ void humanPlayer::Attack(Player* p) {
 				}
 				if (numberOfDicesAtt < numberOfDiceDef)
 				{
-					if (tempValForAtt[0] > tempValForDef[0])
+					if (tempValForAtt[0] > tempValForDef[0] && tempValForAtt[0] != 0 && tempValForDef[0] != 0)
 					{
 						--numArmDef;
 						tempCountryToAtt->setArmyNumber(numArmDef);
 					}
-					if (tempValForAtt[0] <= tempValForDef[0])
+					if (tempValForAtt[0] <= tempValForDef[0] && tempValForAtt[0] != 0 && tempValForDef[0] != 0)
 					{
 						--numArmAtt;
 						tempCountry->setArmyNumber(numArmAtt);
@@ -386,12 +408,12 @@ void humanPlayer::Attack(Player* p) {
 				{
 					for (int i = 0; i < numberOfDiceDef; ++i)
 					{
-						if (tempValForAtt[i] > tempValForDef[i])
+						if (tempValForAtt[i] > tempValForDef[i] && tempValForAtt[i] != 0 && tempValForDef[i] != 0)
 						{
 							--numArmDef;
 							tempCountryToAtt->setArmyNumber(numArmDef);
 						}
-						if (tempValForAtt[i] <= tempValForDef[i])
+						if (tempValForAtt[i] <= tempValForDef[i] && tempValForAtt[i] != 0 && tempValForDef[i] != 0)
 						{
 							--numArmAtt;
 							tempCountry->setArmyNumber(numArmAtt);
@@ -630,9 +652,9 @@ void aggressivePlayer::Attack(Player* p) {
 	Country* tempCountry = new Country();
 	Country* tempCountryToAtt = new Country();
 	Player* Attacker = p;//Attacker
-	Dice* attackerDice = Attacker->getDice();//Dice for attacker
+	Dice* attackerDice = new Dice();//Dice for attacker
 	Player* Defender = new Player();
-	Dice* defenderDice = Defender->getDice();
+	Dice* defenderDice = new Dice();
 	//Find the strongest country
 	int maxCountrySerial = p->getSerialAt(0);//Serial number of the strongest country, initially the serial number at index 0
 	tempCountry = a->getCountry(maxCountrySerial - 1);//the strongest country for attacker
@@ -665,7 +687,6 @@ void aggressivePlayer::Attack(Player* p) {
 				{
 					if (Attacker != Defender)
 					{
-
 						//Start attacking
 						//Attack between two players
 						//Attack phase ends when one of the countries has zero armies on it
@@ -696,8 +717,9 @@ void aggressivePlayer::Attack(Player* p) {
 						//Starting the actual attack
 						while (tempCountry->getNbOfArmies() != 0 && tempCountryToAtt->getNbOfArmies() != 0)
 						{
-							Attacker->RollDice(numberOfDicesAtt);
-							Defender->RollDice(numberOfDiceDef);
+							attackerDice->Roll(numberOfDicesAtt);
+							defenderDice->Roll(numberOfDiceDef);
+							
 							int tempValForAtt[3];
 							int tempValForDef[3];
 							//getting all values rolled
@@ -1136,7 +1158,7 @@ void randomPlayer::Attack(Player* p) {
 	Country* tempCountry = new Country();//Country to attack from
 	Country* tempCountryToAtt = new Country(); //Country that will be attacked
 	Player* Attacker = p;//The player who is attacking
-	Dice* attackerDice = p->getDice();
+	Dice* attackerDice = new Dice();
 	Player* Defender = new Player();//The player who is attacked
 	Dice* defenderDice = new Dice();
 	//Creating random number generator
@@ -1236,8 +1258,9 @@ void randomPlayer::Attack(Player* p) {
 			//Starting the actual attack
 			while (tempCountry->getNbOfArmies() != 0 && tempCountryToAtt->getNbOfArmies() != 0)
 			{
-				Attacker->RollDice(numberOfDicesAtt);
-				Defender->RollDice(numberOfDiceDef);
+				attackerDice->Roll(numberOfDicesAtt);
+				defenderDice->Roll(numberOfDiceDef);
+				
 				int tempValForAtt[3];
 				int tempValForDef[3];
 				//getting all values rolled

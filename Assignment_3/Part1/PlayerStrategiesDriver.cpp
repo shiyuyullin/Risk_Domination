@@ -34,8 +34,9 @@ int main() {
 			b->incrementNumOfCountry();
 		}
 	}
-
+	
 	Country* tempC;
+	
 	a->setStrategy(new randomPlayer);
 	a->reinforce();
 	a->attack();
@@ -44,8 +45,8 @@ int main() {
 		tempC = gameMap->getCountry(a->getSerialAt(i) - 1);
 		cout << tempC->getCountryNumber() << " " << tempC->getCountryName() << " " << tempC->getNbOfArmies() << endl;
 	}
-
-
+	
+	
 	cout << endl;
 	cout << endl;
 	a->setStrategy(new humanPlayer);
@@ -56,7 +57,17 @@ int main() {
 		tempC = gameMap->getCountry(a->getSerialAt(i) - 1);
 		cout << tempC->getCountryNumber() << " " << tempC->getCountryName() << " " << tempC->getNbOfArmies() << endl;
 	}
-	
+	/*
+	cout << endl;
+	cout << endl;
+	a->setStrategy(new aggressivePlayer);
+	a->reinforce();
+	a->attack();
+	a->foritfy();
+	for (int i = 0; i < a->getNumOwnedCountry(); i++) {
+		tempC = gameMap->getCountry(a->getSerialAt(i) - 1);
+		cout << tempC->getCountryNumber() << " " << tempC->getCountryName() << " " << tempC->getNbOfArmies() << endl;
+	}
 
 	cout << endl;
 	cout << endl;
@@ -68,8 +79,19 @@ int main() {
 		tempC = gameMap->getCountry(a->getSerialAt(i) - 1);
 		cout << tempC->getCountryNumber() << " " << tempC->getCountryName() << " " << tempC->getNbOfArmies() << endl;
 	}
+
+	cout << endl;
+	cout << endl;
+	a->setStrategy(new cheaterPlayer);
+	a->reinforce();
+	a->attack();
+	a->foritfy();
+	for (int i = 0; i < a->getNumOwnedCountry(); i++) {
+		tempC = gameMap->getCountry(a->getSerialAt(i) - 1);
+		cout << tempC->getCountryNumber() << " " << tempC->getCountryName() << " " << tempC->getNbOfArmies() << endl;
+	}
 	
 
 	return 0;
-
+	*/
 }
