@@ -57,7 +57,8 @@ int main() {
 		tempC = gameMap->getCountry(a->getSerialAt(i) - 1);
 		cout << tempC->getCountryNumber() << " " << tempC->getCountryName() << " " << tempC->getNbOfArmies() << endl;
 	}
-	/*
+	
+	
 	cout << endl;
 	cout << endl;
 	a->setStrategy(new aggressivePlayer);
@@ -68,7 +69,7 @@ int main() {
 		tempC = gameMap->getCountry(a->getSerialAt(i) - 1);
 		cout << tempC->getCountryNumber() << " " << tempC->getCountryName() << " " << tempC->getNbOfArmies() << endl;
 	}
-
+	
 	cout << endl;
 	cout << endl;
 	a->setStrategy(new beneloventPlayer);
@@ -93,5 +94,5 @@ int main() {
 	
 
 	return 0;
-	*/
+	
 }

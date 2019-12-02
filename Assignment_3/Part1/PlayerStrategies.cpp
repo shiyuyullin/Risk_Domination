@@ -156,9 +156,7 @@ void humanPlayer::Attack(Player* p) {
 	Country* tempCountry = new Country();//Country to attack from
 	Country* tempCountryToAtt = new Country(); //Country that will be attacked
 	Player* Attacker = p;//The player who is attacking
-	Dice* attackerDice = p->getDice();
 	Player* Defender = new Player();//The player who is attacked
-	Dice* defenderDice = new Dice();
 	while (state != 2)
 	{
 		cout << endl;
@@ -237,7 +235,6 @@ void humanPlayer::Attack(Player* p) {
 					cin >> serialOfChosenCountry;
 					tempCountryToAtt = a->getCountry(serialOfChosenCountry - 1); //Getting the country which will be attacked
 					Defender = tempCountryToAtt->getOwner();					 //Getting the defender
-					defenderDice = Defender->getDice();							 //Getting the dice for defender
 					numArmDef = tempCountryToAtt->getNbOfArmies();				 //Getting number of armies on the country which will be attacked
 					cout << endl;
 					state2 = false;
@@ -314,38 +311,18 @@ void humanPlayer::Attack(Player* p) {
 			//Starting the actual attack
 			while (tempCountry->getNbOfArmies() != 0 && tempCountryToAtt->getNbOfArmies() != 0)
 			{
-				if (numberOfDicesAtt == 3 && numberOfDiceDef == 2) {
-					Attacker->RollDice(3);
-					Defender->RollDice(2);
-				}
-				else if (numberOfDicesAtt == 3 && numberOfDiceDef == 1) {
-					Attacker->RollDice(3);
-					Defender->RollDice(1);
-				}
-				else if (numberOfDicesAtt == 2 && numberOfDiceDef == 2) {
-					Attacker->RollDice(2);
-					Defender->RollDice(2);
-				}
-				else if (numberOfDicesAtt == 2 && numberOfDiceDef == 1) {
-					Attacker->RollDice(2);
-					Defender->RollDice(1);
-				}
-				else if (numberOfDicesAtt == 1 && numberOfDiceDef == 2) {
-					Attacker->RollDice(1);
-					Defender->RollDice(2);
-				}
-				else if (numberOfDicesAtt == 1 && numberOfDiceDef == 1) {
-					Attacker->RollDice(1);
-					Defender->RollDice(1);
-				}
+				Dice* attackerDice = new Dice();
+				Dice* defenderDice = new Dice();
+				attackerDice->Roll(numberOfDicesAtt);
+				defenderDice->Roll(numberOfDiceDef);
 				int tempValForAtt[3];
 				int tempValForDef[3];
 				//getting all values rolled
 				for (int i = 0; i < 3; ++i)
 				{
-					tempValForAtt[i] = Attacker->getDice()->get_value_at(i);
+					tempValForAtt[i] = attackerDice->get_value_at(i);
 					cout << "Dice " << i << " : " << tempValForAtt[i] << endl;
-					tempValForDef[i] = Defender->getDice()->get_value_at(i);
+					tempValForDef[i] = defenderDice->get_value_at(i);
 					cout << "Dice " << i << " : " << tempValForDef[i] << endl;
 				}
 				//Sorting values from highest to lowest for both array
@@ -420,6 +397,8 @@ void humanPlayer::Attack(Player* p) {
 						}
 					}
 				}
+				delete attackerDice;
+				delete defenderDice;
 			}
 			//After one of the country run out of armies, find out which play win tha round
 			//modifying all corresponding attributes
@@ -649,12 +628,10 @@ void aggressivePlayer::Reinforce(Player* p) {
 void aggressivePlayer::Attack(Player* p) {
 	Map* a = GameEngine::getMap();
 	//Map* a = gameMap;
-	Country* tempCountry = new Country();
-	Country* tempCountryToAtt = new Country();
+	Country* tempCountry;
+	Country* tempCountryToAtt;
 	Player* Attacker = p;//Attacker
-	Dice* attackerDice = new Dice();//Dice for attacker
-	Player* Defender = new Player();
-	Dice* defenderDice = new Dice();
+	Player* Defender;//Defender
 	//Find the strongest country
 	int maxCountrySerial = p->getSerialAt(0);//Serial number of the strongest country, initially the serial number at index 0
 	tempCountry = a->getCountry(maxCountrySerial - 1);//the strongest country for attacker
@@ -679,7 +656,6 @@ void aggressivePlayer::Attack(Player* p) {
 			//Once a validate country is found, attack it immediately
 			tempCountryToAtt = a->getCountry(bordersTemp[counter] - 1);//Getting the defending country
 			Defender = tempCountryToAtt->getOwner();//Getting the defender
-			defenderDice = Defender->getDice();//Getting the dice for defender
 			int numArmDef = tempCountryToAtt->getNbOfArmies();
 			if (tempCountry->getNbOfArmies() >= 2)
 			{
@@ -717,9 +693,10 @@ void aggressivePlayer::Attack(Player* p) {
 						//Starting the actual attack
 						while (tempCountry->getNbOfArmies() != 0 && tempCountryToAtt->getNbOfArmies() != 0)
 						{
+							Dice* attackerDice = new Dice();
+							Dice* defenderDice = new Dice();
 							attackerDice->Roll(numberOfDicesAtt);
 							defenderDice->Roll(numberOfDiceDef);
-							
 							int tempValForAtt[3];
 							int tempValForDef[3];
 							//getting all values rolled
@@ -800,6 +777,8 @@ void aggressivePlayer::Attack(Player* p) {
 									}
 								}
 							}
+							delete attackerDice;
+							delete defenderDice;
 						}
 						//After one of the country run out of armies, find out which player wins the round
 						//modifying all corresponding attributes
@@ -1158,9 +1137,7 @@ void randomPlayer::Attack(Player* p) {
 	Country* tempCountry = new Country();//Country to attack from
 	Country* tempCountryToAtt = new Country(); //Country that will be attacked
 	Player* Attacker = p;//The player who is attacking
-	Dice* attackerDice = new Dice();
 	Player* Defender = new Player();//The player who is attacked
-	Dice* defenderDice = new Dice();
 	//Creating random number generator
 	std::mt19937 generator;
 	generator.seed(std::time(0));
@@ -1219,10 +1196,9 @@ void randomPlayer::Attack(Player* p) {
 				}
 				if (validAttackCountry != 0)
 				{
-					tempCountryToAtt = a->getCountry(serialOfChosenCountry - 1); //Getting the country which will be attacked
-					Defender = tempCountryToAtt->getOwner();					 //Getting the defender
-					defenderDice = Defender->getDice();							 //Getting the dice for defender
-					numArmDef = tempCountryToAtt->getNbOfArmies();				 //Getting number of armies on the country which will be attacked
+					tempCountryToAtt = a->getCountry(serialOfChosenCountry - 1);//Getting the country which will be attacked
+					Defender = tempCountryToAtt->getOwner();//Getting the defender
+					numArmDef = tempCountryToAtt->getNbOfArmies();//Getting number of armies on the country which will be attacked
 					state2 = false;
 				}
 			}
@@ -1258,9 +1234,10 @@ void randomPlayer::Attack(Player* p) {
 			//Starting the actual attack
 			while (tempCountry->getNbOfArmies() != 0 && tempCountryToAtt->getNbOfArmies() != 0)
 			{
+				Dice* attackerDice = new Dice();
+				Dice* defenderDice = new Dice();
 				attackerDice->Roll(numberOfDicesAtt);
 				defenderDice->Roll(numberOfDiceDef);
-				
 				int tempValForAtt[3];
 				int tempValForDef[3];
 				//getting all values rolled
@@ -1341,6 +1318,8 @@ void randomPlayer::Attack(Player* p) {
 						}
 					}
 				}
+				delete attackerDice;
+				delete defenderDice;
 			}
 			//After one of the country run out of armies, find out which play win tha round
 			//modifying all corresponding attributes
