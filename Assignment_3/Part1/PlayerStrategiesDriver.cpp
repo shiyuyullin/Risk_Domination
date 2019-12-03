@@ -10,7 +10,7 @@
 
 int main() {
 	GameEngine* p = new GameEngine(2);
-	Map* gameMap = Maploader::loadingMap("eurasien.txt");
+	Map* gameMap = Maploader::loadingMap("luca");
 	p->setMap(gameMap);
 	Player* a = new Player();
 	a->setPlayerId(1);

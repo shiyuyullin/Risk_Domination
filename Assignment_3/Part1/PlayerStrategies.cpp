@@ -4,6 +4,7 @@
 #include "D:\Visual Studio\WorkSpace\GameEngine\GameEngine.h" 
 #include "D:\Visual Studio\WorkSpace\Dice\Dice.h"
 #include "D:\Visual Studio\WorkSpace\Deck\Cards.h"
+
 #include <iostream>
 #include <ctime>
 #include <random>
@@ -311,6 +312,9 @@ void humanPlayer::Attack(Player* p) {
 			//Starting the actual attack
 			while (tempCountry->getNbOfArmies() != 0 && tempCountryToAtt->getNbOfArmies() != 0)
 			{
+				if (tempCountry->getNbOfArmies() == 0 || tempCountryToAtt->getNbOfArmies() == 0) {
+					break;
+				}
 				Dice* attackerDice = new Dice();
 				Dice* defenderDice = new Dice();
 				attackerDice->Roll(numberOfDicesAtt);
@@ -356,42 +360,60 @@ void humanPlayer::Attack(Player* p) {
 				{
 					for (int i = 0; i < numberOfDicesAtt; ++i)
 					{
-						if (tempValForAtt[i] > tempValForDef[i] && tempValForAtt[i] != 0 && tempValForDef[i] != 0)
+						if (tempValForAtt[i] > tempValForDef[i])
 						{
+							if (numArmDef == 0) {
+								break;
+							}
 							--numArmDef;
 							tempCountryToAtt->setArmyNumber(numArmDef);
 						}
-						if (tempValForAtt[i] <= tempValForDef[i] && tempValForAtt[i] != 0 && tempValForDef[i] != 0)
+						if (tempValForAtt[i] <= tempValForDef[i])
 						{
+							if (numArmAtt == 0) {
+								break;
+							}
 							--numArmAtt;
 							tempCountry->setArmyNumber(numArmAtt);
 						}
 					}
 				}
-				if (numberOfDicesAtt < numberOfDiceDef)
+				else if (numberOfDicesAtt < numberOfDiceDef)
 				{
-					if (tempValForAtt[0] > tempValForDef[0] && tempValForAtt[0] != 0 && tempValForDef[0] != 0)
+					if (tempValForAtt[0] > tempValForDef[0])
 					{
+						if (numArmDef == 0) {
+							break;
+						}
 						--numArmDef;
 						tempCountryToAtt->setArmyNumber(numArmDef);
 					}
-					if (tempValForAtt[0] <= tempValForDef[0] && tempValForAtt[0] != 0 && tempValForDef[0] != 0)
+					if (tempValForAtt[0] <= tempValForDef[0])
 					{
+						if (numArmAtt == 0) {
+							break;
+						}
 						--numArmAtt;
 						tempCountry->setArmyNumber(numArmAtt);
 					}
 				}
-				if (numberOfDicesAtt > numberOfDiceDef)
+				else if (numberOfDicesAtt > numberOfDiceDef)
 				{
 					for (int i = 0; i < numberOfDiceDef; ++i)
 					{
-						if (tempValForAtt[i] > tempValForDef[i] && tempValForAtt[i] != 0 && tempValForDef[i] != 0)
+						if (tempValForAtt[i] > tempValForDef[i])
 						{
+							if (numArmDef == 0) {
+								break;
+							}
 							--numArmDef;
 							tempCountryToAtt->setArmyNumber(numArmDef);
 						}
-						if (tempValForAtt[i] <= tempValForDef[i] && tempValForAtt[i] != 0 && tempValForDef[i] != 0)
+						if (tempValForAtt[i] <= tempValForDef[i])
 						{
+							if (numArmAtt == 0) {
+								break;
+							}
 							--numArmAtt;
 							tempCountry->setArmyNumber(numArmAtt);
 						}
@@ -691,8 +713,11 @@ void aggressivePlayer::Attack(Player* p) {
 							numberOfDiceDef = 2;
 						}
 						//Starting the actual attack
-						while (tempCountry->getNbOfArmies() != 0 && tempCountryToAtt->getNbOfArmies() != 0)
+						while (true)
 						{
+							if (tempCountry->getNbOfArmies() == 0 || tempCountryToAtt->getNbOfArmies() == 0) {
+								break;
+							}
 							Dice* attackerDice = new Dice();
 							Dice* defenderDice = new Dice();
 							attackerDice->Roll(numberOfDicesAtt);
@@ -738,40 +763,58 @@ void aggressivePlayer::Attack(Player* p) {
 								{
 									if (tempValForAtt[i] > tempValForDef[i])
 									{
+										if (numArmDef == 0) {
+											break;
+										}
 										--numArmDef;
 										tempCountryToAtt->setArmyNumber(numArmDef);
 									}
 									if (tempValForAtt[i] <= tempValForDef[i])
 									{
+										if (numArmAtt == 0) {
+											break;
+										}
 										--numArmAtt;
 										tempCountry->setArmyNumber(numArmAtt);
 									}
 								}
 							}
-							if (numberOfDicesAtt < numberOfDiceDef)
+							else if (numberOfDicesAtt < numberOfDiceDef)
 							{
 								if (tempValForAtt[0] > tempValForDef[0])
 								{
+									if (numArmDef == 0) {
+										break;
+									}
 									--numArmDef;
 									tempCountryToAtt->setArmyNumber(numArmDef);
 								}
 								if (tempValForAtt[0] <= tempValForDef[0])
 								{
+									if (numArmAtt == 0) {
+										break;
+									}
 									--numArmAtt;
 									tempCountry->setArmyNumber(numArmAtt);
 								}
 							}
-							if (numberOfDicesAtt > numberOfDiceDef)
+							else if (numberOfDicesAtt > numberOfDiceDef)
 							{
 								for (int i = 0; i < numberOfDiceDef; ++i)
 								{
 									if (tempValForAtt[i] > tempValForDef[i])
 									{
+										if (numArmDef == 0) {
+											break;
+										}
 										--numArmDef;
 										tempCountryToAtt->setArmyNumber(numArmDef);
 									}
 									if (tempValForAtt[i] <= tempValForDef[i])
 									{
+										if (numArmAtt == 0) {
+											break;
+										}
 										--numArmAtt;
 										tempCountry->setArmyNumber(numArmAtt);
 									}
@@ -1232,8 +1275,11 @@ void randomPlayer::Attack(Player* p) {
 				numberOfDiceDef = one_two_dice_Def(generator);
 			}
 			//Starting the actual attack
-			while (tempCountry->getNbOfArmies() != 0 && tempCountryToAtt->getNbOfArmies() != 0)
+			while (true)
 			{
+				if (tempCountry->getNbOfArmies() == 0 || tempCountryToAtt->getNbOfArmies() == 0) {
+					break;
+				}
 				Dice* attackerDice = new Dice();
 				Dice* defenderDice = new Dice();
 				attackerDice->Roll(numberOfDicesAtt);
@@ -1279,40 +1325,58 @@ void randomPlayer::Attack(Player* p) {
 					{
 						if (tempValForAtt[i] > tempValForDef[i])
 						{
+							if (numArmDef == 0) {
+								break;
+							}
 							--numArmDef;
 							tempCountryToAtt->setArmyNumber(numArmDef);
 						}
 						if (tempValForAtt[i] <= tempValForDef[i])
 						{
+							if (numArmAtt == 0) {
+								break;
+							}
 							--numArmAtt;
 							tempCountry->setArmyNumber(numArmAtt);
 						}
 					}
 				}
-				if (numberOfDicesAtt < numberOfDiceDef)
+				else if (numberOfDicesAtt < numberOfDiceDef)
 				{
 					if (tempValForAtt[0] > tempValForDef[0])
 					{
+						if (numArmDef == 0) {
+							break;
+						}
 						--numArmDef;
 						tempCountryToAtt->setArmyNumber(numArmDef);
 					}
 					if (tempValForAtt[0] <= tempValForDef[0])
 					{
+						if (numArmAtt == 0) {
+							break;
+						}
 						--numArmAtt;
 						tempCountry->setArmyNumber(numArmAtt);
 					}
 				}
-				if (numberOfDicesAtt > numberOfDiceDef)
+				else if (numberOfDicesAtt > numberOfDiceDef)
 				{
 					for (int i = 0; i < numberOfDiceDef; ++i)
 					{
 						if (tempValForAtt[i] > tempValForDef[i])
 						{
+							if (numArmDef == 0) {
+								break;
+							}
 							--numArmDef;
 							tempCountryToAtt->setArmyNumber(numArmDef);
 						}
 						if (tempValForAtt[i] <= tempValForDef[i])
 						{
+							if (numArmAtt == 0) {
+								break;
+							}
 							--numArmAtt;
 							tempCountry->setArmyNumber(numArmAtt);
 						}
