@@ -27,54 +27,56 @@ GameEngine::GameEngine()
 
 	//if yes then start game
 	if (choice == 1)
-	{//Prompt player to select map and store
-
+	{ //Prompt player to select map and store
 
 		map_select = new string();
 		map_select = selectMap();
 		gameMap = map->loadingMap(*map_select);
-		while (gameMap->validateMap()==false) {
-		map_select = selectMap();
-		gameMap = map->loadingMap(*map_select);
-		
-		if (gameMap->validateMap() == false)
-			cout << endl<<"Invalid map. Map rejected. Select again.";
-	}
+		while (gameMap->validateMap() == false)
+		{
+			map_select = selectMap();
+			gameMap = map->loadingMap(*map_select);
 
+			if (gameMap->validateMap() == false)
+				cout << endl
+				<< "Invalid map. Map rejected. Select again.";
+		}
 
-	//create deck
+		//create deck
 		deck = new Deck(gameMap->getNumOfCountries());
-		cout << endl << "Number of cards in deck: ";
+		cout << endl
+			<< "Number of cards in deck: ";
 		cout << deck->sizeOfDeck() << endl;
 
 		//Creating new playersfor the players vector
 		numOfPlayers = new int();
-		*numOfPlayers = selectNumPlayers();
+		*numOfPlayers = selectNumPlayers(6);
 		armyCnt = new int();
 		*armyCnt = number_of_armies_given(*numOfPlayers);
-		for (int i = 1; i <= *numOfPlayers; i++) {
-		players.push_back(new Player(i, *armyCnt));
-		players[(i-1)]->setStrategy(new humanPlayer);
+		for (int i = 1; i <= *numOfPlayers; i++)
+		{
+			players.push_back(new Player(i, *armyCnt));
+			players[(i - 1)]->setStrategy(new humanPlayer);
 		}
 		// Shuffle Player Vector To Randomly Determine the order of play
-		for (int i = 0; i < players.size() - 1; i++) {
+		for (int i = 0; i < players.size() - 1; i++)
+		{
 			int j = i + rand() % (players.size() - i);
 			swap(players[i], players[j]);
 		}
-		//Just to test the turns 
+		//Just to test the turns
 		for (int i = 0; i < players.size(); i++)
 			std::cout << "Turn " << (i + 1) << " goes to player: " << players[i]->getPlayerId() << endl;
 	}
-	else {
+	else
+	{
 		std::cout << "Exiting game, goodbye" << endl;
 		exit(0);
 	}
-
-
-
 }
 
-GameEngine::GameEngine(int i) {
+GameEngine::GameEngine(int i)
+{
 	numOfPlayers = new int(i);
 }
 
@@ -91,157 +93,302 @@ GameEngine::~GameEngine()
 	delete gameMap;
 	delete deck;
 }
+GameEngine::GameEngine(int numbOfMaps, int numbOfPlayers, int rounds, int maximumNumberOfTurns)
+{
+	numOfMaps = new int(numbOfMaps);
+	maxNumberOfTurns = new int(maximumNumberOfTurns * numbOfPlayers);
+	//mapsToBePlayed = selectMaps(numOfMaps);
+	selectMaps(numbOfMaps);
+	gamesPlayed = new int(rounds);
+	numOfPlayers = new int(numbOfPlayers);
+	armyCnt = new int(number_of_armies_given(numbOfPlayers));
 
+	//Need to add Map Validation
 
-void GameEngine::startGame()
-{	//Observer call
-		
-		map_assign_startUp(); //Assign random countries to the players, start up phase setting
-		string msg = "Initializing the game's startup phase...\n";
-		Notify(-1, 0, msg);
-		
-		placeArmies_startUpPhase(); //Place all of the player's army count around their countries
-		bool gameIsFinished = false;
+	//this is the main game Loop
 
-		while (!gameIsFinished)
+}
+
+void GameEngine::startTournament()
+{
+	for (int i = 0; i < *numOfMaps; i++)
+	{
+		cout << "You are playing on " << mapsToBePlayed[i] << " map." << endl;
+
+		for (int j = 0; j < *gamesPlayed; j++)
 		{
-
-			for (int i = 0; i < *numOfPlayers; i++)
+			int counter = 0;
+			for (int k = 1; k <= *numOfPlayers; k++)
 			{
-				//OBSERVER CALL
-				int playerTurn = players[i]->getPlayerId();
-				msg = "";
-				Notify(playerTurn, 1, msg);
-				
+				Player* temp = new Player(k, *armyCnt);
+				players.push_back(temp);
+				players[(k - 1)]->setRandomStrategy();
+				cout << players[(k - 1)]->getPlayerType() << " player type will be playing as player " + to_string(k) + "\n";
+			}
+			// Shuffle Player Vector To Randomly Determine the order of play
+			for (int i = 0; i < players.size() - 1; i++)
+			{
+				int f = i + rand() % (players.size() - i);
+				swap(players[i], players[f]);
+			}
 
-				// REINFORCE PHASE
-				cout << "Would you like to Reinforce your board this turn, Yes(1) or No(2) ?: ";
-				int choice = 0;
-				while (choice < 1 || choice > 2)
-				{
-					cin >> choice;
-					if (choice < 1 || choice > 2)
-						cout << "Invalid Choice. Try again" << endl;
-				}
+			for (int i = 0; i < players.size(); i++)
+				std::cout << "Turn " << (i + 1) << " goes to player: " << players[i]->getPlayerId() << endl;
 
-				if (choice == 1)
+			gameMap = map->loadingMap(mapsToBePlayed[i]);
+			deck = new Deck(gameMap->getNumOfCountries());
+			cout << endl
+				<< "Number of cards in deck: ";
+			cout << deck->sizeOfDeck() << endl;
+
+			map_assign_startUp(); //Assign random countries to the players, start up phase setting
+			//string msg = "Initializing the game's startup phase...\n";
+			//Notify(-1, 0, msg);
+			placeArmies_startUpPhase(); //Place all of the player's army count around their countries
+			bool gameIsFinished = false;
+			while (!gameIsFinished )
+			{
+
+				for (int i = 0; i < *numOfPlayers; i++)
 				{
 					//OBSERVER CALL
-					msg = "Player " + to_string(playerTurn)+" has " +
-						to_string(players[i]->getNumOwnedCountry())
-						+" countries to reinforce for this phase and will now reinforce\n";
-					Notify(playerTurn, 1, msg);
-					
+					int playerTurn = players[i]->getPlayerId();//create a type for player like player is a cheater, or a aggressive instead of numeric
+					//msg = "";
+					//Notify(playerTurn, 1, msg);
+
+					//REINFORCE AI
+					//msg = players[i]->getPlayerType + " has " +
+					//	to_string(players[i]->getNumOwnedCountry()) + " countries to reinforce for this phase and will now reinforce\n";
+					//Notify(playerTurn, 1, msg);
+
 					players[i]->reinforce();
 
-					//The player has done this this and this
+					// 	//The player has done this this and this
+					// 	//OBSERVER CALL
+					//msg = players[i]->getPlayerType + " has " +
+					//	to_string(players[i]->getNumOwnedCountry()) + " countries and reinforced " + to_string(players[i]->getActionsInStrat()) + " countries for this phase";
+					//Notify(playerTurn, 1, msg);
+
 					//OBSERVER CALL
-					msg = "Player " + to_string(playerTurn) + " has " +
-						to_string(players[i]->getNumOwnedCountry())
-						+ " countries and reinforced " + to_string(players[i]->getActionsInStrat())
-						+ " countries for this phase" ;
-					Notify(playerTurn, 1, msg);
-					
+					//msg = "";
+					//Notify(playerTurn, 2, msg);
 
-				}
-				else
-				{
-					cout << "On to the next step. " << endl;
-				}
+					//ATTACK PHASE
+					//OBSERVER CALL
+					//msg = "Player " + to_string(playerTurn) + " will  now attack for this phase\n";
+					//Notify(playerTurn, 2, msg);
 
-				//OBSERVER CALL
-				msg = "";
-				Notify(playerTurn, 2, msg);
-				
-				// ATTACK PHASE
-				choice = 0;
-
-				cout << "Would you like to Attack this turn, Yes(1) or No(2) ?: ";
-				while (choice < 1 || choice > 2)
-				{
-					cin >> choice;
-					if (choice < 1 || choice > 2)
-						cout << "Invalid Choice. Try again" << endl;
-				}
-
-				if (choice == 1)
-				{//OBSERVER CALL
-					msg = "Player " + to_string(playerTurn) + " will  now attack for this phase\n";
-					Notify(playerTurn, 2, msg);
-					
 					players[i]->attack();
-					//OBSERVER CALL
-					msg = "Player " + to_string(playerTurn) + " succesfully attacked "
-						+ to_string(players[i]->getActionsInStrat()) +" countries and now owns: "
-						+ to_string(players[i]->getNumOwnedCountry()) + " countries";
-					Notify(playerTurn, 1, msg);
-					
-				}
+					// 	//OBSERVER CALL
+					//msg = "Player " + to_string(playerTurn) + " succesfully attacked " + to_string(players[i]->getActionsInStrat()) + " countries and now owns: " + to_string(players[i]->getNumOwnedCountry()) + " countries";
+					//Notify(playerTurn, 1, msg);
 
-				else
-				{
-					cout << "On to the next step. " << endl;
-				}
+					// //OBSERVER CALL
+					//msg = "";
+					//Notify(playerTurn, 3, msg);
 
-				//OBSERVER CALL
-				msg = "";
-				Notify(playerTurn, 3, msg);
-				
+					// FORTIFICATION PHASE
 
-				// FORTIFICATION PHASE
-				choice = 0;
+					//msg = "Player " + to_string(playerTurn) + " will now fortify for this phase\n";
+					//Notify(playerTurn, 3, msg);
 
-				cout << "Would you like to fortify your board this turn, Yes(1) or No(2) ?: ";
-				while (choice < 1 || choice > 2)
-				{
-					cin >> choice;
-					if (choice < 1 || choice > 2)
-						cout << "Invalid Choice. Try again" << endl;
-				}
-
-				if (choice == 1)
-				{
-					//OBSERVER CALL
-					msg = "Player " + to_string(playerTurn) + " will now fortify for this phase\n";
-					Notify(playerTurn, 3, msg);
-					
 					players[i]->foritfy();
 
 					//Observer call
-					msg = "Player " + to_string(playerTurn) + " has now  finished their forticfication phase and has fortified "
-						+ to_string(players[i]->getActionsInStrat()) + " countries.";
-					Notify(playerTurn, 3, msg);
-					
-				}
-				else
-				{
+					//msg = "Player " + to_string(playerTurn) + " has now  finished their forticfication phase and has fortified " + to_string(players[i]->getActionsInStrat()) + " countries.";
+					//Notify(playerTurn, 3, msg);
+					counter++;
+					cout << players[playerTurn - 1]->getPlayerType() << "\n";
 					cout << "Your turn is coming to an end. " << endl;
-					msg = "Player " + to_string(playerTurn) + " has now  finished their turn for this phase...Moving on...";
-					Notify(playerTurn, -1, msg);
-					
-				}
-				if (testVictoryCondition())
-				{
-					cout << "The Game is Over, Player " << playerTurn << " wins!" << endl;
-					gameIsFinished = true;
-					
+					//msg = "Player " + to_string(playerTurn) + " has now  finished their turn for this phase...Moving on...";
+					//Notify(playerTurn, -1, msg);
+					if (testVictoryCondition() and counter == *maxNumberOfTurns) {
+						cout << "The Game is Over, Player " << playerTurn << " wins!" << endl;
+						gameIsFinished = true;
+						winners.push_back(players[playerTurn - 1]->getPlayerType());
+						for (int i = 0; i < players.size(); ++i) {
+							cout << "BEFORE\n";
+							delete players[i]; // Calls ~object and deallocates *tmp[i]
+							cout << "AFTER\n";
+						}
+						players = vector<Player*>();
+						break;
+					}
+					else if (testVictoryCondition()) {
+						cout << "The Game is Over, Player " << playerTurn << " wins!" << endl;
+						gameIsFinished = true;
+						winners.push_back(players[playerTurn - 1]->getPlayerType());
+						for (int i = 0; i < players.size(); ++i) {
+							delete players[i]; // Calls ~object and deallocates *tmp[i]
+						}
+						players = vector<Player*>();
+						break;
+					}
+					else if (counter == *maxNumberOfTurns) {
+						cout << "The max number of turns has occured, the player who owns the most countries is the winner for this game is:\n";
+						int max = 0;
+						int index_of_winner = 0;
+						for (int j = 0; j < players.size(); ++j)
+						{
+							if (players[j]->getNumOwnedCountry() > max) {
+								max = players[j]->getNumOwnedCountry();
+								index_of_winner = j;
+							}
+						}
+						cout << players[index_of_winner]->getPlayerType() << endl;
+						cout << "With " << players[index_of_winner]->getNumOwnedCountry() << " countries!\n";
+						winners.push_back(players[index_of_winner]->getPlayerType());
+						gameIsFinished = true;
+						for (int i = 0; i < players.size(); ++i) {
+							delete players[i]; // Calls ~object and deallocates *tmp[i]
+						}
+						players = vector<Player*>();
+						break;
+						//delete pointers restart
+					}
 				}
 			}
 		}
+	}
 }
 
+void GameEngine::startGame()
+{ //Observer call
 
-string* GameEngine::selectMap() {
+	map_assign_startUp(); //Assign random countries to the players, start up phase setting
+	string msg = "Initializing the game's startup phase...\n";
+	Notify(-1, 0, msg);
 
-	vector <string> list = getListOfMaps();
+	placeArmies_startUpPhase(); //Place all of the player's army count around their countries
+	bool gameIsFinished = false;
+
+	while (!gameIsFinished)
+	{
+
+		for (int i = 0; i < *numOfPlayers; i++)
+		{
+			//OBSERVER CALL
+			int playerTurn = players[i]->getPlayerId();
+			msg = "";
+			Notify(playerTurn, 1, msg);
+
+			// REINFORCE PHASE
+			cout << "Would you like to Reinforce your board this turn, Yes(1) or No(2) ?: ";
+			int choice = 0;
+			while (choice < 1 || choice > 2)
+			{
+				cin >> choice;
+				if (choice < 1 || choice > 2)
+					cout << "Invalid Choice. Try again" << endl;
+			}
+
+			if (choice == 1)
+			{
+				//OBSERVER CALL
+				msg = "Player " + to_string(playerTurn) + " has " +
+					to_string(players[i]->getNumOwnedCountry()) + " countries to reinforce for this phase and will now reinforce\n";
+				Notify(playerTurn, 1, msg);
+
+				players[i]->reinforce();
+
+				//The player has done this this and this
+				//OBSERVER CALL
+				msg = "Player " + to_string(playerTurn) + " has " +
+					to_string(players[i]->getNumOwnedCountry()) + " countries and reinforced " + to_string(players[i]->getActionsInStrat()) + " countries for this phase";
+				Notify(playerTurn, 1, msg);
+			}
+			else
+			{
+				cout << "On to the next step. " << endl;
+			}
+
+			//OBSERVER CALL
+			msg = "";
+			Notify(playerTurn, 2, msg);
+
+			// ATTACK PHASE
+			choice = 0;
+
+			cout << "Would you like to Attack this turn, Yes(1) or No(2) ?: ";
+			while (choice < 1 || choice > 2)
+			{
+				cin >> choice;
+				if (choice < 1 || choice > 2)
+					cout << "Invalid Choice. Try again" << endl;
+			}
+
+			if (choice == 1)
+			{ //OBSERVER CALL
+				msg = "Player " + to_string(playerTurn) + " will  now attack for this phase\n";
+				Notify(playerTurn, 2, msg);
+
+				players[i]->attack();
+				//OBSERVER CALL
+				msg = "Player " + to_string(playerTurn) + " succesfully attacked " + to_string(players[i]->getActionsInStrat()) + " countries and now owns: " + to_string(players[i]->getNumOwnedCountry()) + " countries";
+				Notify(playerTurn, 1, msg);
+			}
+
+			else
+			{
+				cout << "On to the next step. " << endl;
+			}
+
+			//OBSERVER CALL
+			msg = "";
+			Notify(playerTurn, 3, msg);
+
+			// FORTIFICATION PHASE
+			choice = 0;
+
+			cout << "Would you like to fortify your board this turn, Yes(1) or No(2) ?: ";
+			while (choice < 1 || choice > 2)
+			{
+				cin >> choice;
+				if (choice < 1 || choice > 2)
+					cout << "Invalid Choice. Try again" << endl;
+			}
+
+			if (choice == 1)
+			{
+				//OBSERVER CALL
+				msg = "Player " + to_string(playerTurn) + " will now fortify for this phase\n";
+				Notify(playerTurn, 3, msg);
+
+				players[i]->foritfy();
+
+				//Observer call
+				msg = "Player " + to_string(playerTurn) + " has now  finished their forticfication phase and has fortified " + to_string(players[i]->getActionsInStrat()) + " countries.";
+				Notify(playerTurn, 3, msg);
+			}
+			else
+			{
+				cout << "Your turn is coming to an end. " << endl;
+				msg = "Player " + to_string(playerTurn) + " has now  finished their turn for this phase...Moving on...";
+				Notify(playerTurn, -1, msg);
+			}
+			if (testVictoryCondition())
+			{
+				cout << "The Game is Over, Player " << playerTurn << " wins!" << endl;
+				gameIsFinished = true;
+			}
+		}
+	}
+}
+
+string* GameEngine::selectMap()
+{
+
+	vector<string> list = getListOfMaps();
 	int choice = 0;
 	cout << "Select a map from the following list to play!" << endl;
 	int i = 1;
 	for (auto str : list)
 		std::cout << "(" << i++ << ") " << str << std::endl;
 
-	while (choice < 1 || choice >= i) {
-		cout << endl << "Enter Map choice: ";
+	while (choice < 1 || choice >= i)
+	{
+		cout << endl
+			<< "Enter Map choice: ";
 		cin >> choice;
 		if (choice < 1 || choice >= i)
 			cout << "Invalid Option. Try again." << endl;
@@ -252,9 +399,38 @@ string* GameEngine::selectMap() {
 	return map_select;
 }
 
+void GameEngine::selectMaps(int numbOfMaps)
+{
+
+	vector<string>list = getListOfMaps();
+	int choice = 0;
+	cout << "Select " << numbOfMaps << " maps from the following list to play!" << endl;
+
+	for (int i = 0; i < numbOfMaps; i++)
+	{
+		int x = 1;
+		for (auto str : list)//display all available maps
+			std::cout << "(" << x++ << ") " << str << std::endl;
+
+		while (choice < 1 || choice >= x)
+		{
+			cout << endl
+				<< "Enter Map choice: ";
+			cin >> choice;
+			if (choice < 1 || choice >= x)
+				cout << "Invalid Option. Try again." << endl;
+		}
+		mapsToBePlayed.push_back(list[choice - 1]);
+		cout << mapsToBePlayed[i] << " has been added to the playlist!" << endl;
+		list.erase(list.begin() + (choice - 1));
+		list.shrink_to_fit();
+		choice = 0;
+	}
+
+}
 vector<string> GameEngine::getListOfMaps()
 {
-	string dirPath = "./Maps";
+	string dirPath = "./Map";
 
 	vector<string> listOfFiles;
 	try
@@ -286,31 +462,34 @@ vector<string> GameEngine::getListOfMaps()
 	return listOfFiles;
 }
 
-int GameEngine::selectNumPlayers() {
+int GameEngine::selectNumPlayers(int maxNumberOfPlayers)
+{
 	int num = 0;
-	cout << "========================" << endl;;
+	cout << "========================" << endl;
+	;
 	cout << "Select Number of Players" << endl;
 	cout << "========================" << endl;
 
-
-	cout << "(2)	 2 Players" << endl;
-	cout << "(3)	 3 Players" << endl;
-	cout << "(4)	 4 Players" << endl;
-	cout << "(5)	 5 Players" << endl;
-	cout << "(6)	 6 Players" << endl;
-
-	while (num < 2 || num >6) {
-		cout << "Enter Number of Players in this game: ";
-		cin >> num;
-		if (num < 2 || num >6)
-			cout << "Invalid number of players. Try again." << endl;
+	for (int i = 2; i <= maxNumberOfPlayers; i++)
+	{
+		cout << "(" << i << ")"
+			<< "\t" << i << " Players" << endl;
 	}
 
+	while (num < 2 || num > maxNumberOfPlayers)
+	{
+		cout << "Enter Number of Players in this game: ";
+		cin >> num;
+		if (num < 2 || num > maxNumberOfPlayers)
+			cout << "Invalid number of players. Try again." << endl;
+	}
 
 	return num;
 }
 
-const int GameEngine::number_of_armies_given(int AmtOfPlayers)//A2P2 IAN
+
+
+const int GameEngine::number_of_armies_given(int AmtOfPlayers) //A2P2 IAN
 {
 
 	switch (AmtOfPlayers)
@@ -336,43 +515,37 @@ const int GameEngine::number_of_armies_given(int AmtOfPlayers)//A2P2 IAN
 	}
 }
 
-void GameEngine::map_assign_startUp()//A2P2 IAN
+void GameEngine::map_assign_startUp() //A2P2 IAN
 {
-	cout << "Assinging the start up countries of the game!"<<endl;
+	cout << "Assinging the start up countries of the game!" << endl;
 	int player_tracker = 0;
-	for (int i = 0; i < getMap()->getNumOfCountries(); i++) {
-		getMap()->getCountry(i)->setOwner(players[player_tracker]);
+	for (int i = 0; i < gameMap->getNumOfCountries(); i++)
+	{
+		gameMap->getCountry(i)->setOwner(players[player_tracker]);
+		//ERRORS OCCUR HERE
 		players[player_tracker]->setIndexOfCountry(gameMap->getCountry(i)->getCountryNumber());
 		players[player_tracker]->incrementNumOfCountry();
 		player_tracker++;
 		if (player_tracker == players.size())
 			player_tracker = 0;
 	}
-
-
 }
-void GameEngine::placeArmies_startUpPhase()//A2P2 IAN
+void GameEngine::placeArmies_startUpPhase() //A2P2 IAN
 {
 	//OBSERVER CALL
 	string msg = "Assinging the start up countries of the game!\n";
 	Notify(0, 0, msg);
-	
-	int player_tracker = 0;
-	for (int i = 0; i < getMap()->getNumOfCountries(); i++) {
-		getMap()->getCountry(i)->setOwner(players[player_tracker]);
-		players[player_tracker]->setIndexOfCountry(gameMap->getCountry(i)->getCountryNumber());
-		players[player_tracker]->incrementNumOfCountry();
-		player_tracker++;
-		if (player_tracker == players.size())
-			player_tracker = 0;
-	}
 
+	for (int i = 0; i < players.size(); i++)
+	{
+		players[i]->placeArmy();
+	}
 }
 
-void GameEngine::setMap(Map* GameMap) {
+void GameEngine::setMap(Map* GameMap)
+{
 	gameMap = GameMap;
 }
-
 
 bool GameEngine::testVictoryCondition()
 {
@@ -393,108 +566,7 @@ bool GameEngine::testVictoryCondition()
 	return true;
 }
 
-
-
-
-Map* GameEngine::getMap() {
+Map* GameEngine::getMap()
+{
 	return gameMap;
 }
-
-
-void GameEngine::testPart3AND4() {
-	//Part3 And 4
-// 	//FOR TESTING PURPOSES----------------------------------------------------------------
-	Map* testMap = new Map();
-	Player* testPlayer = new Player();
-	testPlayer->setPlayerId(1);
-
-	Country* tempCountry1 = new Country();
-	tempCountry1->setCountryName("Canada");
-	tempCountry1->setCountryNumber(1);
-	tempCountry1->setOwner(testPlayer);
-	testMap->setCountry(tempCountry1);
-
-	Country* tempCountry2 = new Country();
-	tempCountry2->setCountryName("USA");
-	tempCountry2->setCountryNumber(2);
-	tempCountry2->setOwner(testPlayer);
-	testMap->setCountry(tempCountry2);
-
-	Country* tempCountry3 = new Country();
-	tempCountry3->setCountryName("Mexico");
-	tempCountry3->setCountryNumber(2);
-	tempCountry3->setOwner(testPlayer);
-	testMap->setCountry(tempCountry3);
-
-	Country* tempCountry4 = new Country();
-	tempCountry4->setCountryName("France");
-	tempCountry4->setCountryNumber(3);
-	tempCountry4->setOwner(testPlayer);
-	testMap->setCountry(tempCountry4);
-
-	Country* tempCountry5 = new Country();
-	tempCountry5->setCountryName("England");
-	tempCountry5->setCountryNumber(4);
-	tempCountry5->setOwner(testPlayer);
-	testMap->setCountry(tempCountry5);
-
-	Country* tempCountry6 = new Country();
-	tempCountry6->setCountryName("Spain");
-	tempCountry6->setCountryNumber(5);
-	tempCountry6->setOwner(testPlayer);
-	testMap->setCountry(tempCountry6);
-
-	int numberOfCountries = testMap->getNumOfCountries();
-	Player* owner = testMap->getCountry(0)->getOwner();
-	bool finsihed = true;
-
-	for (int i = 1; i < numberOfCountries; i++)
-	{
-
-		Player* tempOwner = testMap->getCountry(i)->getOwner();
-		if (owner != tempOwner)
-		{
-			finsihed = false;
-			break;
-		}
-	}
-
-	cout << finsihed << endl;
-
-	//FOR TESTING PURPOSES----------------------------------------------------------------
-
-	Card* card1 = new Card(1);
-	Card* card2 = new Card(1);
-	Card* card3 = new Card(1);
-	Card* card4 = new Card(1);
-	Card* card5 = new Card(1);
-	Card* card6 = new Card(2);
-	Card* card7 = new Card(2);
-	Card* card8 = new Card(2);
-	Card* card9 = new Card(2);
-	Card* card10 = new Card(3);
-	Card* card11 = new Card(3);
-	Card* card12 = new Card(3);
-	Card* card13 = new Card(3);
-	Card* card14 = new Card(3);
-	Card* card15 = new Card(3);
-	
-	testPlayer->getHand()->addToHand(card1);
-	testPlayer->getHand()->addToHand(card2);
-	testPlayer->getHand()->addToHand(card3);
-	testPlayer->getHand()->addToHand(card4);
-	testPlayer->getHand()->addToHand(card5);
-	testPlayer->getHand()->addToHand(card6);
-	testPlayer->getHand()->addToHand(card7);
-	testPlayer->getHand()->addToHand(card8);
-	testPlayer->getHand()->addToHand(card9);
-	testPlayer->getHand()->addToHand(card10);
-	testPlayer->getHand()->addToHand(card11);
-	testPlayer->getHand()->addToHand(card12);
-	testPlayer->getHand()->addToHand(card13);
-	testPlayer->getHand()->addToHand(card14);
-	testPlayer->getHand()->addToHand(card15);
-
-	testPlayer->reinforce();
-}
-
